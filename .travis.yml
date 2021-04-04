@@ -1,0 +1,31 @@
+language: python
+python:
+  - "3.9"
+dist: bionic     # https://docs.travis-ci.com/user/languages/python/#python-37-and-higher
+install:
+  - travis_retry pip install -U -r doc/requirements.txt
+  - travis_retry pip install -U -r requirements-dev.txt
+  - travis_retry pip install coveralls
+script:
+  - py.test --cov=swimprotocol
+  - mypy swimprotocol test
+  - flake8 swimprotocol test
+after_success:
+  - coveralls
+  - make -C doc html
+branches:
+  only:
+    - main
+    - /^\d+\.\d+.*$/  # version tags
+deploy:
+  - provider: pages:git
+    local_dir: doc/build/html
+    on:
+      tags: true
+    edge: true
+  - provider: pypi
+    distributions: sdist bdist_wheel
+    skip_existing: true
+    on:
+      tags: true
+    edge: true
