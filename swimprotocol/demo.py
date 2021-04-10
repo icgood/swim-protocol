@@ -53,7 +53,7 @@ async def run(args: Namespace) -> int:
     async with AsyncExitStack() as stack:
         stack.enter_context(suppress(CancelledError))
         await server.start(bind_host, bind_port)
-        forever = asyncio.gather(*[server.wait_closed(), service.start()])
+        forever = asyncio.gather(server.wait_closed(), service.start())
         loop.add_signal_handler(signal.SIGINT, forever.cancel)
         loop.add_signal_handler(signal.SIGTERM, forever.cancel)
         await forever

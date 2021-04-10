@@ -15,12 +15,12 @@ DESCRIPTOR: google.protobuf.descriptor.FileDescriptor = ...
 global___Status = Status
 class _Status(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[Status.V], builtins.type):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor = ...
-    DOWN = Status.V(0)
-    UP = Status.V(1)
+    OFFLINE = Status.V(0)
+    ONLINE = Status.V(1)
 class Status(metaclass=_Status):
     V = typing.NewType('V', builtins.int)
-DOWN = Status.V(0)
-UP = Status.V(1)
+OFFLINE = Status.V(0)
+ONLINE = Status.V(1)
 
 class Ping(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...

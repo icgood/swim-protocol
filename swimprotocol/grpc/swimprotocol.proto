@@ -3,8 +3,8 @@ syntax = "proto3";
 package swimprotocol.grpc;
 
 enum Status {
-  DOWN = 0;
-  UP = 1;
+  OFFLINE = 0;
+  ONLINE = 1;
 }
 
 message Ping {
@@ -38,5 +38,6 @@ message Gossip {
 service SwimProtocol {
   rpc PingCommand (Ping) returns (Ack) {}
   rpc PingReqCommand (PingReq) returns (Ack) {}
+  rpc IntroduceCommand (Update) returns (Gossip) {}
   rpc SyncCommand (Gossip) returns (Gossip) {}
 }

@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n$swimprotocol/grpc/swimprotocol.proto\x12\x11swimprotocol.grpc\"\x06\n\x04Ping\"\x19\n\x07PingReq\x12\x0e\n\x06target\x18\x03 \x01(\t\"H\n\x03\x41\x63k\x12-\n\x07\x66\x61ilure\x18\x01 \x01(\x0b\x32\x1a.swimprotocol.grpc.FailureH\x00\x42\x12\n\x10optional_failure\"G\n\x07\x46\x61ilure\x12\r\n\x03key\x18\x01 \x01(\tH\x00\x12\r\n\x03msg\x18\x02 \x01(\tH\x01\x42\x0e\n\x0coptional_keyB\x0e\n\x0coptional_msg\"\xbf\x01\n\x06Update\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\r\n\x05\x63lock\x18\x02 \x01(\x04\x12)\n\x06status\x18\x03 \x01(\x0e\x32\x19.swimprotocol.grpc.Status\x12\x39\n\x08metadata\x18\x04 \x03(\x0b\x32\'.swimprotocol.grpc.Update.MetadataEntry\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"D\n\x06Gossip\x12\x0e\n\x06source\x18\x01 \x01(\t\x12*\n\x07updates\x18\x02 \x03(\x0b\x32\x19.swimprotocol.grpc.Update*\x1a\n\x06Status\x12\x08\n\x04\x44OWN\x10\x00\x12\x06\n\x02UP\x10\x01\x32\xdf\x01\n\x0cSwimProtocol\x12@\n\x0bPingCommand\x12\x17.swimprotocol.grpc.Ping\x1a\x16.swimprotocol.grpc.Ack\"\x00\x12\x46\n\x0ePingReqCommand\x12\x1a.swimprotocol.grpc.PingReq\x1a\x16.swimprotocol.grpc.Ack\"\x00\x12\x45\n\x0bSyncCommand\x12\x19.swimprotocol.grpc.Gossip\x1a\x19.swimprotocol.grpc.Gossip\"\x00\x62\x06proto3'
+  serialized_pb=b'\n$swimprotocol/grpc/swimprotocol.proto\x12\x11swimprotocol.grpc\"\x06\n\x04Ping\"\x19\n\x07PingReq\x12\x0e\n\x06target\x18\x03 \x01(\t\"H\n\x03\x41\x63k\x12-\n\x07\x66\x61ilure\x18\x01 \x01(\x0b\x32\x1a.swimprotocol.grpc.FailureH\x00\x42\x12\n\x10optional_failure\"G\n\x07\x46\x61ilure\x12\r\n\x03key\x18\x01 \x01(\tH\x00\x12\r\n\x03msg\x18\x02 \x01(\tH\x01\x42\x0e\n\x0coptional_keyB\x0e\n\x0coptional_msg\"\xbf\x01\n\x06Update\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\r\n\x05\x63lock\x18\x02 \x01(\x04\x12)\n\x06status\x18\x03 \x01(\x0e\x32\x19.swimprotocol.grpc.Status\x12\x39\n\x08metadata\x18\x04 \x03(\x0b\x32\'.swimprotocol.grpc.Update.MetadataEntry\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"D\n\x06Gossip\x12\x0e\n\x06source\x18\x01 \x01(\t\x12*\n\x07updates\x18\x02 \x03(\x0b\x32\x19.swimprotocol.grpc.Update*!\n\x06Status\x12\x0b\n\x07OFFLINE\x10\x00\x12\n\n\x06ONLINE\x10\x01\x32\xab\x02\n\x0cSwimProtocol\x12@\n\x0bPingCommand\x12\x17.swimprotocol.grpc.Ping\x1a\x16.swimprotocol.grpc.Ack\"\x00\x12\x46\n\x0ePingReqCommand\x12\x1a.swimprotocol.grpc.PingReq\x1a\x16.swimprotocol.grpc.Ack\"\x00\x12J\n\x10IntroduceCommand\x12\x19.swimprotocol.grpc.Update\x1a\x19.swimprotocol.grpc.Gossip\"\x00\x12\x45\n\x0bSyncCommand\x12\x19.swimprotocol.grpc.Gossip\x1a\x19.swimprotocol.grpc.Gossip\"\x00\x62\x06proto3'
 )
 
 _STATUS = _descriptor.EnumDescriptor(
@@ -31,12 +31,12 @@ _STATUS = _descriptor.EnumDescriptor(
   create_key=_descriptor._internal_create_key,
   values=[
     _descriptor.EnumValueDescriptor(
-      name='DOWN', index=0, number=0,
+      name='OFFLINE', index=0, number=0,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
     _descriptor.EnumValueDescriptor(
-      name='UP', index=1, number=1,
+      name='ONLINE', index=1, number=1,
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
@@ -44,13 +44,13 @@ _STATUS = _descriptor.EnumDescriptor(
   containing_type=None,
   serialized_options=None,
   serialized_start=505,
-  serialized_end=531,
+  serialized_end=538,
 )
 _sym_db.RegisterEnumDescriptor(_STATUS)
 
 Status = enum_type_wrapper.EnumTypeWrapper(_STATUS)
-DOWN = 0
-UP = 1
+OFFLINE = 0
+ONLINE = 1
 
 
 
@@ -409,8 +409,8 @@ _SWIMPROTOCOL = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=534,
-  serialized_end=757,
+  serialized_start=541,
+  serialized_end=840,
   methods=[
   _descriptor.MethodDescriptor(
     name='PingCommand',
@@ -433,9 +433,19 @@ _SWIMPROTOCOL = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
+    name='IntroduceCommand',
+    full_name='swimprotocol.grpc.SwimProtocol.IntroduceCommand',
+    index=2,
+    containing_service=None,
+    input_type=_UPDATE,
+    output_type=_GOSSIP,
+    serialized_options=None,
+    create_key=_descriptor._internal_create_key,
+  ),
+  _descriptor.MethodDescriptor(
     name='SyncCommand',
     full_name='swimprotocol.grpc.SwimProtocol.SyncCommand',
-    index=2,
+    index=3,
     containing_service=None,
     input_type=_GOSSIP,
     output_type=_GOSSIP,

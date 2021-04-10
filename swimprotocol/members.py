@@ -25,7 +25,7 @@ class Member:
         self.local: Final = local
         self.address: Final = address
         self.metadata: dict[str, str] = {}
-        self._status = Status.UP if local else Status.DOWN
+        self._status = Status.ONLINE if local else Status.OFFLINE
         self._clock = 1 if local else 0
 
     def __eq__(self, other: Any) -> bool:
@@ -64,7 +64,7 @@ class Member:
     @status.setter
     def status(self, status: Status.V) -> None:
         if status != self._status:
-            if status == Status.DOWN:
+            if status == Status.OFFLINE:
                 print(f'{self.address!s} is offline: {self.metadata!r}')
             else:
                 print(f'{self.address!s} is online: {self.metadata!r}')
@@ -78,16 +78,14 @@ class Member:
     def get_channel(self) -> Channel:
         return Channel(self.host, self.port, ssl=self.ssl_context)
 
-    def apply(self, update: Update) -> None:
-        if self.clock == 0:
-            self.metadata.update(update.metadata)
-            self.set_status(update.status)
-        elif update.clock > self.clock:
-            self.clock = update.clock
+    def apply(self, update: Update, *, intro: bool = False) -> None:
+        if intro or update.clock > self.clock:
+            self.clock = self.members._clock if intro else update.clock
             self.metadata.update(update.metadata)
             self.status = update.status
 
-    def set_status(self, status: Status.V) -> None:
+    def set_status(self, online: bool) -> None:
+        status = Status.ONLINE if online else Status.OFFLINE
         if status != self._status:
             self.clock = self.members._clock
             self.status = status
@@ -139,6 +137,11 @@ class Members:
             self._non_local.append(member)
             self._members[address] = member
         return member
+
+    def introduce(self, update: Update) -> Gossip:
+        member = self.get(update.address)
+        member.apply(update, intro=True)
+        return self.get_gossip(member)
 
     def apply(self, gossip: Gossip) -> Member:
         source = self.get(gossip.source)

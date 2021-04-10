@@ -46,4 +46,12 @@ class Config:
 
     @property
     def sync_timeout(self) -> float:
+        return 0.5
+
+    @property
+    def introduce_period(self) -> float:
+        return 0.5
+
+    @property
+    def introduce_timeout(self) -> float:
         return 1.0

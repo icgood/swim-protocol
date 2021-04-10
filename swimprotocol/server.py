@@ -2,14 +2,15 @@
 from __future__ import annotations
 
 import asyncio
-from asyncio import wait_for, Future
-from collections.abc import Iterable
+from asyncio import wait_for, Future, Event
+from collections.abc import Iterable, AsyncIterable
 from typing import Final, Optional
 
 from grpclib.server import Stream
 
 from .config import Config
-from .grpc.swimprotocol_pb2 import Ping, PingReq, Ack, Failure, Status, Gossip
+from .grpc.swimprotocol_pb2 import Ping, PingReq, Ack, Failure, \
+    Update, Gossip
 from .grpc.swimprotocol_grpc import SwimProtocolBase, SwimProtocolStub
 from .members import Member, Members
 
@@ -22,21 +23,31 @@ class SwimServer(SwimProtocolBase):
         super().__init__()
         self.config: Final = config
         self.members: Final = members
+        self.introduced: Final = Event()
 
     async def PingCommand(self, stream: Stream[Ping, Ack]) -> None:
         request = await stream.recv_message()
         assert request is not None
+        await self.introduced.wait()
         await stream.send_message(Ack())
 
     async def PingReqCommand(self, stream: Stream[PingReq, Ack]) -> None:
         request = await stream.recv_message()
         assert request is not None
+        await self.introduced.wait()
         member = self.members.get(request.target)
         await stream.send_message(await self._ping(member))
+
+    async def IntroduceCommand(self, stream: Stream[Update, Gossip]) -> None:
+        request = await stream.recv_message()
+        assert request is not None
+        gossip = self.members.introduce(request)
+        await stream.send_message(gossip)
 
     async def SyncCommand(self, stream: Stream[Gossip, Gossip]) -> None:
         request = await stream.recv_message()
         assert request is not None
+        await self.introduced.wait()
         source = self.members.apply(request)
         gossip = self.members.get_gossip(source)
         await stream.send_message(gossip)
@@ -86,8 +97,8 @@ class SwimServer(SwimProtocolBase):
                     success = self._find_success(acks)
                     if success is not None:
                         ack = success
-            status = Status.DOWN if ack.HasField('failure') else Status.UP
-            target.set_status(status)
+            online = not ack.HasField('failure')
+            target.set_status(online)
 
     def _find_success(self, acks: Iterable[Optional[Ack]]) -> Optional[Ack]:
         for ack in acks:
@@ -95,6 +106,22 @@ class SwimServer(SwimProtocolBase):
                 if not ack.HasField('failure'):
                     return ack
         return None
+
+    async def _introduce(self, member: Member, update: Update) \
+            -> Optional[Gossip]:
+        async with member.get_channel() as channel:
+            stub = SwimProtocolStub(channel)
+            try:
+                return await wait_for(
+                    self._introduce_cmd(stub, update),
+                    timeout=self.config.introduce_timeout)
+            except Exception:
+                pass
+        return None
+
+    async def _introduce_cmd(self, stub: SwimProtocolStub,
+                             update: Update) -> Gossip:
+        return await stub.IntroduceCommand(update)
 
     async def _sync(self, member: Member, gossip: Gossip) -> Optional[Gossip]:
         async with member.get_channel() as channel:
@@ -111,7 +138,27 @@ class SwimServer(SwimProtocolBase):
                         gossip: Gossip) -> Gossip:
         return await stub.SyncCommand(gossip)
 
+    async def _run_introductions(self) -> AsyncIterable[Gossip]:
+        local_update = self.members.local.update
+        introduced = self.introduced
+        while not introduced.is_set():
+            pending_intros: set[Future[Optional[Gossip]]] = {
+                asyncio.create_task(self._introduce(target, local_update))
+                for target in self.members.non_local}
+            while pending_intros:
+                done, pending_intros = await asyncio.wait(
+                    pending_intros, return_when=asyncio.FIRST_COMPLETED)
+                for fut in done:
+                    intro_gossip = await fut
+                    if intro_gossip is not None:
+                        yield intro_gossip
+                        introduced.set()
+            if not introduced.is_set():
+                await asyncio.sleep(self.config.introduce_period)
+
     async def _run_dissemination(self) -> None:
+        async for intro_gossip in self._run_introductions():
+            self.members.apply(intro_gossip)
         while True:
             await asyncio.sleep(self.config.sync_period)
             target = self.members.get_target()
