@@ -6,4 +6,4 @@ pytest-asyncio
 pytest-cov
 rope
 
--e '.'
+-e '.[build]'

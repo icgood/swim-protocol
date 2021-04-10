@@ -1,0 +1,42 @@
+syntax = "proto3";
+
+package swimprotocol.grpc;
+
+enum Status {
+  DOWN = 0;
+  UP = 1;
+}
+
+message Ping {
+}
+
+message PingReq {
+  string target = 3;
+}
+
+message Ack {
+  oneof optional_failure { Failure failure = 1; }
+}
+
+message Failure {
+  oneof optional_key { string key = 1; }
+  oneof optional_msg { string msg = 2; }
+}
+
+message Update {
+  string address = 1;
+  uint64 clock = 2;
+  Status status = 3;
+  map<string, string> metadata = 4;
+}
+
+message Gossip {
+  string source = 1;
+  repeated Update updates = 2;
+}
+
+service SwimProtocol {
+  rpc PingCommand (Ping) returns (Ack) {}
+  rpc PingReqCommand (PingReq) returns (Ack) {}
+  rpc SyncCommand (Gossip) returns (Gossip) {}
+}

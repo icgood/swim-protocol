@@ -47,8 +47,10 @@ setup(name='swim-protocol',
       python_requires='~=3.9',
       include_package_data=True,
       packages=find_packages(),
-      install_requires=[],
-      extras_require={},
+      install_requires=[
+          'grpclib', 'protobuf', 'googleapis-common-protos'],
+      extras_require={
+          'build': ['grpcio-tools', 'mypy-protobuf']},
       entry_points={
           'console_scripts': [
-              'swim-protocol = swimprotocol.main:main']})
+              'swim-protocol-demo = swimprotocol.demo:main']})
