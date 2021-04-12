@@ -5,22 +5,19 @@ import random
 from collections.abc import Sequence
 from typing import Final, Union, Any
 
-from grpclib.client import Channel
-
-from . import Address
 from .config import Config
-from .grpc.swimprotocol_pb2 import Status, Update, Gossip
+from .types import Address, Status, Update, Gossip
 
 __all__ = ['Member', 'Members']
 
 
 class Member:
 
-    def __init__(self, members: Members, address: Address, index: int,
-                 local: bool) -> None:
+    def __init__(self, config: Config, members: Members, address: Address,
+                 index: int, local: bool) -> None:
         super().__init__()
+        self.config: Final = config
         self.members: Final = members
-        self.ssl_context: Final = members.config.ssl_context
         self.index: Final = index
         self.local: Final = local
         self.address: Final = address
@@ -40,14 +37,6 @@ class Member:
         return f'Member<{self.address}>'
 
     @property
-    def host(self) -> str:
-        return self.address.host
-
-    @property
-    def port(self) -> int:
-        return self.address.port
-
-    @property
     def clock(self) -> int:
         return self._clock
 
@@ -58,11 +47,11 @@ class Member:
             self.members._clock = clock + 1
 
     @property
-    def status(self) -> Status.V:
+    def status(self) -> Status:
         return self._status
 
     @status.setter
-    def status(self, status: Status.V) -> None:
+    def status(self, status: Status) -> None:
         if status != self._status:
             if status == Status.OFFLINE:
                 print(f'{self.address!s} is offline: {self.metadata!r}')
@@ -72,11 +61,8 @@ class Member:
 
     @property
     def update(self) -> Update:
-        return Update(address=str(self.address), clock=self.clock,
+        return Update(address=self.address, clock=self.clock,
                       status=self._status, metadata=self.metadata)
-
-    def get_channel(self) -> Channel:
-        return Channel(self.host, self.port, ssl=self.ssl_context)
 
     def apply(self, update: Update, *, intro: bool = False) -> None:
         if intro or update.clock > self.clock:
@@ -97,7 +83,7 @@ class Members:
         super().__init__()
         self.config: Final = config
         self._clock = 0
-        self._local = Member(self, config.local_address, -1, True)
+        self._local = Member(config, self, config.local_address, -1, True)
         self._local.metadata.update(config.local_metadata)
         self._members = {config.local_address: self._local}
         self._non_local: list[Member] = []
@@ -133,7 +119,7 @@ class Members:
         member = self._members.get(address)
         if member is None:
             index = len(self._non_local)
-            member = Member(self, address, index, False)
+            member = Member(self.config, self, address, index, False)
             self._non_local.append(member)
             self._members[address] = member
         return member
@@ -157,4 +143,4 @@ class Members:
         for member in self._non_local:
             if member.clock > clock:
                 updates.append(member.update)
-        return Gossip(source=str(local.address), updates=updates)
+        return Gossip(source=local.address, updates=updates)

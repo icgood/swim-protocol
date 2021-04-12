@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 #
 
-from setuptools import setup, find_packages
+from setuptools import setup, find_packages  # type: ignore
 
 with open('README.md') as f:
     readme = f.read()
@@ -47,10 +47,12 @@ setup(name='swim-protocol',
       python_requires='~=3.9',
       include_package_data=True,
       packages=find_packages(),
-      install_requires=[
-          'grpclib', 'protobuf', 'googleapis-common-protos'],
+      install_requires=[],
       extras_require={
+          'grpc': ['grpclib', 'protobuf', 'googleapis-common-protos'],
           'build': ['grpcio-tools', 'mypy-protobuf']},
       entry_points={
           'console_scripts': [
-              'swim-protocol-demo = swimprotocol.demo:main']})
+              'swim-protocol-demo = swimprotocol.demo:main'],
+          'swimprotocol.transport': [
+              'grpc = swimprotocol.grpc:GrpcTransport [grpc]']})

@@ -12,24 +12,26 @@ import typing_extensions
 
 DESCRIPTOR: google.protobuf.descriptor.FileDescriptor = ...
 
-global___Status = Status
-class _Status(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[Status.V], builtins.type):
+global___SwimStatus = SwimStatus
+class _SwimStatus(google.protobuf.internal.enum_type_wrapper._EnumTypeWrapper[SwimStatus.V], builtins.type):
     DESCRIPTOR: google.protobuf.descriptor.EnumDescriptor = ...
-    OFFLINE = Status.V(0)
-    ONLINE = Status.V(1)
-class Status(metaclass=_Status):
+    OFFLINE = SwimStatus.V(0)
+    ONLINE = SwimStatus.V(1)
+    SUSPECT = SwimStatus.V(2)
+class SwimStatus(metaclass=_SwimStatus):
     V = typing.NewType('V', builtins.int)
-OFFLINE = Status.V(0)
-ONLINE = Status.V(1)
+OFFLINE = SwimStatus.V(0)
+ONLINE = SwimStatus.V(1)
+SUSPECT = SwimStatus.V(2)
 
-class Ping(google.protobuf.message.Message):
+class SwimPing(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
 
     def __init__(self,
         ) -> None: ...
-global___Ping = Ping
+global___SwimPing = SwimPing
 
-class PingReq(google.protobuf.message.Message):
+class SwimPingReq(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     TARGET_FIELD_NUMBER: builtins.int
     target: typing.Text = ...
@@ -39,45 +41,21 @@ class PingReq(google.protobuf.message.Message):
         target : typing.Text = ...,
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal[u"target",b"target"]) -> None: ...
-global___PingReq = PingReq
+global___SwimPingReq = SwimPingReq
 
-class Ack(google.protobuf.message.Message):
+class SwimAck(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    FAILURE_FIELD_NUMBER: builtins.int
-
-    @property
-    def failure(self) -> global___Failure: ...
+    ONLINE_FIELD_NUMBER: builtins.int
+    online: builtins.bool = ...
 
     def __init__(self,
         *,
-        failure : typing.Optional[global___Failure] = ...,
+        online : builtins.bool = ...,
         ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal[u"failure",b"failure",u"optional_failure",b"optional_failure"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal[u"failure",b"failure",u"optional_failure",b"optional_failure"]) -> None: ...
-    def WhichOneof(self, oneof_group: typing_extensions.Literal[u"optional_failure",b"optional_failure"]) -> typing_extensions.Literal["failure"]: ...
-global___Ack = Ack
+    def ClearField(self, field_name: typing_extensions.Literal[u"online",b"online"]) -> None: ...
+global___SwimAck = SwimAck
 
-class Failure(google.protobuf.message.Message):
-    DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
-    KEY_FIELD_NUMBER: builtins.int
-    MSG_FIELD_NUMBER: builtins.int
-    key: typing.Text = ...
-    msg: typing.Text = ...
-
-    def __init__(self,
-        *,
-        key : typing.Text = ...,
-        msg : typing.Text = ...,
-        ) -> None: ...
-    def HasField(self, field_name: typing_extensions.Literal[u"key",b"key",u"msg",b"msg",u"optional_key",b"optional_key",u"optional_msg",b"optional_msg"]) -> builtins.bool: ...
-    def ClearField(self, field_name: typing_extensions.Literal[u"key",b"key",u"msg",b"msg",u"optional_key",b"optional_key",u"optional_msg",b"optional_msg"]) -> None: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal[u"optional_key",b"optional_key"]) -> typing_extensions.Literal["key"]: ...
-    @typing.overload
-    def WhichOneof(self, oneof_group: typing_extensions.Literal[u"optional_msg",b"optional_msg"]) -> typing_extensions.Literal["msg"]: ...
-global___Failure = Failure
-
-class Update(google.protobuf.message.Message):
+class SwimUpdate(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     class MetadataEntry(google.protobuf.message.Message):
         DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
@@ -99,7 +77,7 @@ class Update(google.protobuf.message.Message):
     METADATA_FIELD_NUMBER: builtins.int
     address: typing.Text = ...
     clock: builtins.int = ...
-    status: global___Status.V = ...
+    status: global___SwimStatus.V = ...
 
     @property
     def metadata(self) -> google.protobuf.internal.containers.ScalarMap[typing.Text, typing.Text]: ...
@@ -108,25 +86,25 @@ class Update(google.protobuf.message.Message):
         *,
         address : typing.Text = ...,
         clock : builtins.int = ...,
-        status : global___Status.V = ...,
+        status : global___SwimStatus.V = ...,
         metadata : typing.Optional[typing.Mapping[typing.Text, typing.Text]] = ...,
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal[u"address",b"address",u"clock",b"clock",u"metadata",b"metadata",u"status",b"status"]) -> None: ...
-global___Update = Update
+global___SwimUpdate = SwimUpdate
 
-class Gossip(google.protobuf.message.Message):
+class SwimGossip(google.protobuf.message.Message):
     DESCRIPTOR: google.protobuf.descriptor.Descriptor = ...
     SOURCE_FIELD_NUMBER: builtins.int
     UPDATES_FIELD_NUMBER: builtins.int
     source: typing.Text = ...
 
     @property
-    def updates(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___Update]: ...
+    def updates(self) -> google.protobuf.internal.containers.RepeatedCompositeFieldContainer[global___SwimUpdate]: ...
 
     def __init__(self,
         *,
         source : typing.Text = ...,
-        updates : typing.Optional[typing.Iterable[global___Update]] = ...,
+        updates : typing.Optional[typing.Iterable[global___SwimUpdate]] = ...,
         ) -> None: ...
     def ClearField(self, field_name: typing_extensions.Literal[u"source",b"source",u"updates",b"updates"]) -> None: ...
-global___Gossip = Gossip
+global___SwimGossip = SwimGossip

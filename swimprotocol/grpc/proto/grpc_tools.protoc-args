@@ -2,4 +2,4 @@
 --python_out=.
 --python_grpc_out=.
 --mypy_out=.
-swimprotocol/grpc/swimprotocol.proto
+swimprotocol/grpc/proto/swimprotocol.proto

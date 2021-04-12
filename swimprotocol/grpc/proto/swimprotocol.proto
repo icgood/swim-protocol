@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package swimprotocol.grpc.proto;
+
+enum SwimStatus {
+  OFFLINE = 0;
+  ONLINE = 1;
+  SUSPECT = 2;
+}
+
+message SwimPing {
+}
+
+message SwimPingReq {
+  string target = 3;
+}
+
+message SwimAck {
+  bool online = 1;
+}
+
+message SwimUpdate {
+  string address = 1;
+  uint64 clock = 2;
+  SwimStatus status = 3;
+  map<string, string> metadata = 4;
+}
+
+message SwimGossip {
+  string source = 1;
+  repeated SwimUpdate updates = 2;
+}
+
+service SwimProtocol {
+  rpc Ping (SwimPing) returns (SwimAck) {}
+  rpc PingReq (SwimPingReq) returns (SwimAck) {}
+  rpc Introduce (SwimUpdate) returns (SwimGossip) {}
+  rpc Sync (SwimGossip) returns (SwimGossip) {}
+}
