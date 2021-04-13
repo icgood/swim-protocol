@@ -4,13 +4,11 @@ from __future__ import annotations
 from argparse import Namespace
 from collections.abc import Mapping
 from ssl import SSLContext
-from typing import TypeVar, Final, Optional
+from typing import Final, Optional
 
 from .types import Address
 
 __all__ = ['Config']
-
-_T = TypeVar('_T', bound='type')
 
 
 class Config:
@@ -19,7 +17,7 @@ class Config:
         super().__init__()
         self.args: Final = args
         local_address: Address = args.local
-        local_metadata: Mapping[str, str] = args.metadata
+        local_metadata: Mapping[str, str] = dict(args.metadata)
         self.local_address: Final = local_address
         self.local_metadata: Final = local_metadata
 
@@ -50,11 +48,3 @@ class Config:
     @property
     def sync_timeout(self) -> float:
         return 0.5
-
-    @property
-    def introduce_period(self) -> float:
-        return 0.5
-
-    @property
-    def introduce_timeout(self) -> float:
-        return 1.0

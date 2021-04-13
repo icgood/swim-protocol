@@ -5,7 +5,6 @@ package swimprotocol.grpc.proto;
 enum SwimStatus {
   OFFLINE = 0;
   ONLINE = 1;
-  SUSPECT = 2;
 }
 
 message SwimPing {
@@ -21,19 +20,19 @@ message SwimAck {
 
 message SwimUpdate {
   string address = 1;
-  uint64 clock = 2;
+  oneof optional_modified { uint64 modified = 2; }
   SwimStatus status = 3;
   map<string, string> metadata = 4;
 }
 
 message SwimGossip {
   string source = 1;
-  repeated SwimUpdate updates = 2;
+  uint64 clock = 2;
+  repeated SwimUpdate updates = 3;
 }
 
 service SwimProtocol {
   rpc Ping (SwimPing) returns (SwimAck) {}
   rpc PingReq (SwimPingReq) returns (SwimAck) {}
-  rpc Introduce (SwimUpdate) returns (SwimGossip) {}
   rpc Sync (SwimGossip) returns (SwimGossip) {}
 }

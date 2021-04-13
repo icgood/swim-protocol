@@ -23,10 +23,6 @@ class SwimProtocolBase(abc.ABC):
         pass
 
     @abc.abstractmethod
-    async def Introduce(self, stream: 'grpclib.server.Stream[swimprotocol.grpc.proto.swimprotocol_pb2.SwimUpdate, swimprotocol.grpc.proto.swimprotocol_pb2.SwimGossip]') -> None:
-        pass
-
-    @abc.abstractmethod
     async def Sync(self, stream: 'grpclib.server.Stream[swimprotocol.grpc.proto.swimprotocol_pb2.SwimGossip, swimprotocol.grpc.proto.swimprotocol_pb2.SwimGossip]') -> None:
         pass
 
@@ -43,12 +39,6 @@ class SwimProtocolBase(abc.ABC):
                 grpclib.const.Cardinality.UNARY_UNARY,
                 swimprotocol.grpc.proto.swimprotocol_pb2.SwimPingReq,
                 swimprotocol.grpc.proto.swimprotocol_pb2.SwimAck,
-            ),
-            '/swimprotocol.grpc.proto.SwimProtocol/Introduce': grpclib.const.Handler(
-                self.Introduce,
-                grpclib.const.Cardinality.UNARY_UNARY,
-                swimprotocol.grpc.proto.swimprotocol_pb2.SwimUpdate,
-                swimprotocol.grpc.proto.swimprotocol_pb2.SwimGossip,
             ),
             '/swimprotocol.grpc.proto.SwimProtocol/Sync': grpclib.const.Handler(
                 self.Sync,
@@ -73,12 +63,6 @@ class SwimProtocolStub:
             '/swimprotocol.grpc.proto.SwimProtocol/PingReq',
             swimprotocol.grpc.proto.swimprotocol_pb2.SwimPingReq,
             swimprotocol.grpc.proto.swimprotocol_pb2.SwimAck,
-        )
-        self.Introduce = grpclib.client.UnaryUnaryMethod(
-            channel,
-            '/swimprotocol.grpc.proto.SwimProtocol/Introduce',
-            swimprotocol.grpc.proto.swimprotocol_pb2.SwimUpdate,
-            swimprotocol.grpc.proto.swimprotocol_pb2.SwimGossip,
         )
         self.Sync = grpclib.client.UnaryUnaryMethod(
             channel,

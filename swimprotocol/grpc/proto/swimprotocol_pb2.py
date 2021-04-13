@@ -20,7 +20,7 @@ DESCRIPTOR = _descriptor.FileDescriptor(
   syntax='proto3',
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_pb=b'\n*swimprotocol/grpc/proto/swimprotocol.proto\x12\x17swimprotocol.grpc.proto\"\n\n\x08SwimPing\"\x1d\n\x0bSwimPingReq\x12\x0e\n\x06target\x18\x03 \x01(\t\"\x19\n\x07SwimAck\x12\x0e\n\x06online\x18\x01 \x01(\x08\"\xd7\x01\n\nSwimUpdate\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\r\n\x05\x63lock\x18\x02 \x01(\x04\x12\x33\n\x06status\x18\x03 \x01(\x0e\x32#.swimprotocol.grpc.proto.SwimStatus\x12\x43\n\x08metadata\x18\x04 \x03(\x0b\x32\x31.swimprotocol.grpc.proto.SwimUpdate.MetadataEntry\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\"R\n\nSwimGossip\x12\x0e\n\x06source\x18\x01 \x01(\t\x12\x34\n\x07updates\x18\x02 \x03(\x0b\x32#.swimprotocol.grpc.proto.SwimUpdate*2\n\nSwimStatus\x12\x0b\n\x07OFFLINE\x10\x00\x12\n\n\x06ONLINE\x10\x01\x12\x0b\n\x07SUSPECT\x10\x02\x32\xdf\x02\n\x0cSwimProtocol\x12M\n\x04Ping\x12!.swimprotocol.grpc.proto.SwimPing\x1a .swimprotocol.grpc.proto.SwimAck\"\x00\x12S\n\x07PingReq\x12$.swimprotocol.grpc.proto.SwimPingReq\x1a .swimprotocol.grpc.proto.SwimAck\"\x00\x12W\n\tIntroduce\x12#.swimprotocol.grpc.proto.SwimUpdate\x1a#.swimprotocol.grpc.proto.SwimGossip\"\x00\x12R\n\x04Sync\x12#.swimprotocol.grpc.proto.SwimGossip\x1a#.swimprotocol.grpc.proto.SwimGossip\"\x00\x62\x06proto3'
+  serialized_pb=b'\n*swimprotocol/grpc/proto/swimprotocol.proto\x12\x17swimprotocol.grpc.proto\"\n\n\x08SwimPing\"\x1d\n\x0bSwimPingReq\x12\x0e\n\x06target\x18\x03 \x01(\t\"\x19\n\x07SwimAck\x12\x0e\n\x06online\x18\x01 \x01(\x08\"\xf1\x01\n\nSwimUpdate\x12\x0f\n\x07\x61\x64\x64ress\x18\x01 \x01(\t\x12\x12\n\x08modified\x18\x02 \x01(\x04H\x00\x12\x33\n\x06status\x18\x03 \x01(\x0e\x32#.swimprotocol.grpc.proto.SwimStatus\x12\x43\n\x08metadata\x18\x04 \x03(\x0b\x32\x31.swimprotocol.grpc.proto.SwimUpdate.MetadataEntry\x1a/\n\rMetadataEntry\x12\x0b\n\x03key\x18\x01 \x01(\t\x12\r\n\x05value\x18\x02 \x01(\t:\x02\x38\x01\x42\x13\n\x11optional_modified\"a\n\nSwimGossip\x12\x0e\n\x06source\x18\x01 \x01(\t\x12\r\n\x05\x63lock\x18\x02 \x01(\x04\x12\x34\n\x07updates\x18\x03 \x03(\x0b\x32#.swimprotocol.grpc.proto.SwimUpdate*%\n\nSwimStatus\x12\x0b\n\x07OFFLINE\x10\x00\x12\n\n\x06ONLINE\x10\x01\x32\x86\x02\n\x0cSwimProtocol\x12M\n\x04Ping\x12!.swimprotocol.grpc.proto.SwimPing\x1a .swimprotocol.grpc.proto.SwimAck\"\x00\x12S\n\x07PingReq\x12$.swimprotocol.grpc.proto.SwimPingReq\x1a .swimprotocol.grpc.proto.SwimAck\"\x00\x12R\n\x04Sync\x12#.swimprotocol.grpc.proto.SwimGossip\x1a#.swimprotocol.grpc.proto.SwimGossip\"\x00\x62\x06proto3'
 )
 
 _SWIMSTATUS = _descriptor.EnumDescriptor(
@@ -40,23 +40,17 @@ _SWIMSTATUS = _descriptor.EnumDescriptor(
       serialized_options=None,
       type=None,
       create_key=_descriptor._internal_create_key),
-    _descriptor.EnumValueDescriptor(
-      name='SUSPECT', index=2, number=2,
-      serialized_options=None,
-      type=None,
-      create_key=_descriptor._internal_create_key),
   ],
   containing_type=None,
   serialized_options=None,
-  serialized_start=443,
-  serialized_end=493,
+  serialized_start=484,
+  serialized_end=521,
 )
 _sym_db.RegisterEnumDescriptor(_SWIMSTATUS)
 
 SwimStatus = enum_type_wrapper.EnumTypeWrapper(_SWIMSTATUS)
 OFFLINE = 0
 ONLINE = 1
-SUSPECT = 2
 
 
 
@@ -183,8 +177,8 @@ _SWIMUPDATE_METADATAENTRY = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=310,
-  serialized_end=357,
+  serialized_start=315,
+  serialized_end=362,
 )
 
 _SWIMUPDATE = _descriptor.Descriptor(
@@ -203,7 +197,7 @@ _SWIMUPDATE = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='clock', full_name='swimprotocol.grpc.proto.SwimUpdate.clock', index=1,
+      name='modified', full_name='swimprotocol.grpc.proto.SwimUpdate.modified', index=1,
       number=2, type=4, cpp_type=4, label=1,
       has_default_value=False, default_value=0,
       message_type=None, enum_type=None, containing_type=None,
@@ -234,9 +228,14 @@ _SWIMUPDATE = _descriptor.Descriptor(
   syntax='proto3',
   extension_ranges=[],
   oneofs=[
+    _descriptor.OneofDescriptor(
+      name='optional_modified', full_name='swimprotocol.grpc.proto.SwimUpdate.optional_modified',
+      index=0, containing_type=None,
+      create_key=_descriptor._internal_create_key,
+    fields=[]),
   ],
   serialized_start=142,
-  serialized_end=357,
+  serialized_end=383,
 )
 
 
@@ -256,8 +255,15 @@ _SWIMGOSSIP = _descriptor.Descriptor(
       is_extension=False, extension_scope=None,
       serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
     _descriptor.FieldDescriptor(
-      name='updates', full_name='swimprotocol.grpc.proto.SwimGossip.updates', index=1,
-      number=2, type=11, cpp_type=10, label=3,
+      name='clock', full_name='swimprotocol.grpc.proto.SwimGossip.clock', index=1,
+      number=2, type=4, cpp_type=4, label=1,
+      has_default_value=False, default_value=0,
+      message_type=None, enum_type=None, containing_type=None,
+      is_extension=False, extension_scope=None,
+      serialized_options=None, file=DESCRIPTOR,  create_key=_descriptor._internal_create_key),
+    _descriptor.FieldDescriptor(
+      name='updates', full_name='swimprotocol.grpc.proto.SwimGossip.updates', index=2,
+      number=3, type=11, cpp_type=10, label=3,
       has_default_value=False, default_value=[],
       message_type=None, enum_type=None, containing_type=None,
       is_extension=False, extension_scope=None,
@@ -274,13 +280,16 @@ _SWIMGOSSIP = _descriptor.Descriptor(
   extension_ranges=[],
   oneofs=[
   ],
-  serialized_start=359,
-  serialized_end=441,
+  serialized_start=385,
+  serialized_end=482,
 )
 
 _SWIMUPDATE_METADATAENTRY.containing_type = _SWIMUPDATE
 _SWIMUPDATE.fields_by_name['status'].enum_type = _SWIMSTATUS
 _SWIMUPDATE.fields_by_name['metadata'].message_type = _SWIMUPDATE_METADATAENTRY
+_SWIMUPDATE.oneofs_by_name['optional_modified'].fields.append(
+  _SWIMUPDATE.fields_by_name['modified'])
+_SWIMUPDATE.fields_by_name['modified'].containing_oneof = _SWIMUPDATE.oneofs_by_name['optional_modified']
 _SWIMGOSSIP.fields_by_name['updates'].message_type = _SWIMUPDATE
 DESCRIPTOR.message_types_by_name['SwimPing'] = _SWIMPING
 DESCRIPTOR.message_types_by_name['SwimPingReq'] = _SWIMPINGREQ
@@ -343,8 +352,8 @@ _SWIMPROTOCOL = _descriptor.ServiceDescriptor(
   index=0,
   serialized_options=None,
   create_key=_descriptor._internal_create_key,
-  serialized_start=496,
-  serialized_end=847,
+  serialized_start=524,
+  serialized_end=786,
   methods=[
   _descriptor.MethodDescriptor(
     name='Ping',
@@ -367,19 +376,9 @@ _SWIMPROTOCOL = _descriptor.ServiceDescriptor(
     create_key=_descriptor._internal_create_key,
   ),
   _descriptor.MethodDescriptor(
-    name='Introduce',
-    full_name='swimprotocol.grpc.proto.SwimProtocol.Introduce',
-    index=2,
-    containing_service=None,
-    input_type=_SWIMUPDATE,
-    output_type=_SWIMGOSSIP,
-    serialized_options=None,
-    create_key=_descriptor._internal_create_key,
-  ),
-  _descriptor.MethodDescriptor(
     name='Sync',
     full_name='swimprotocol.grpc.proto.SwimProtocol.Sync',
-    index=3,
+    index=2,
     containing_service=None,
     input_type=_SWIMGOSSIP,
     output_type=_SWIMGOSSIP,

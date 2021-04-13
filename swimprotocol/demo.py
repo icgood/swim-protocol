@@ -11,9 +11,10 @@ from argparse import Namespace, ArgumentParser
 from asyncio import CancelledError
 from contextlib import suppress, AsyncExitStack
 
+from .config import Config
 from .members import Members
 from .transport import load_transport
-from .types import Address
+from .types import Address, Status, Update
 from .worker import Worker
 
 __all__ = ['main']
@@ -33,6 +34,7 @@ def main() -> int:
     parser.add_argument('peers', metavar='peer-addr',
                         type=Address.parse, nargs='+',
                         help='External connection address for peers.')
+    parser.set_defaults(config_type=Config)
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO,
@@ -41,14 +43,23 @@ def main() -> int:
     return asyncio.run(run(args))
 
 
+async def _print(update: Update) -> None:
+    if update.status == Status.OFFLINE:
+        print(f'{update.address!s} is offline: {update.metadata!r}')
+    else:
+        print(f'{update.address!s} is online: {update.metadata!r}')
+
+
 async def run(args: Namespace) -> int:
     loop = asyncio.get_running_loop()
-    transport = load_transport(args)
-    members = Members(transport.config, args.peers)
-    worker = Worker(transport.config, members, transport.client)
+    config: Config = args.config_type(args)
+    transport = load_transport(config, args.transport)
+    members = Members(config, args.peers)
+    worker = Worker(config, members, transport.client)
     async with AsyncExitStack() as stack:
         stack.enter_context(suppress(CancelledError))
         await stack.enter_async_context(transport.enter(worker))
+        await stack.enter_async_context(members.listener.on_update(_print))
         task = await worker.start()
         loop.add_signal_handler(signal.SIGINT, task.cancel)
         loop.add_signal_handler(signal.SIGTERM, task.cancel)

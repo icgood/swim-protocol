@@ -5,7 +5,7 @@ from abc import abstractmethod
 from collections.abc import Sequence, Mapping
 from dataclasses import dataclass
 from enum import auto, Flag
-from typing import Protocol
+from typing import Optional, Protocol
 
 __all__ = ['Address', 'Status', 'Update', 'Gossip']
 
@@ -29,13 +29,12 @@ class Address:
 class Status(Flag):
     OFFLINE = auto()
     ONLINE = auto()
-    SUSPECT = OFFLINE | ONLINE
 
 
 @dataclass(frozen=True)
 class Update:
     address: Address
-    clock: int
+    modified: Optional[int]
     status: Status
     metadata: Mapping[str, str]
 
@@ -47,6 +46,7 @@ class Update:
 @dataclass(frozen=True)
 class Gossip:
     source: Address
+    clock: int
     updates: Sequence[Update]
 
     @property
@@ -62,10 +62,6 @@ class Handlers(Protocol):
 
     @abstractmethod
     async def handle_ping_req(self, target: str) -> bool:
-        ...
-
-    @abstractmethod
-    async def handle_introduce(self, update: Update) -> Gossip:
         ...
 
     @abstractmethod

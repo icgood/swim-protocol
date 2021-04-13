@@ -16,8 +16,6 @@ def status_to_proto(status: Status) -> SwimStatus.V:
         return SwimStatus.OFFLINE
     elif status == Status.ONLINE:
         return SwimStatus.ONLINE
-    elif status == Status.SUSPECT:
-        return SwimStatus.SUSPECT
     else:
         raise ValueError(status)
 
@@ -27,24 +25,25 @@ def proto_to_status(status: SwimStatus.V) -> Status:
         return Status.OFFLINE
     elif status == SwimStatus.ONLINE:
         return Status.ONLINE
-    elif status == SwimStatus.SUSPECT:
-        return Status.SUSPECT
     else:
         raise ValueError(status)
 
 
 def update_to_proto(update: Optional[Update]) -> SwimUpdate:
     assert update is not None
-    return SwimUpdate(address=str(update.address),
-                      clock=update.clock,
-                      status=status_to_proto(update.status),
-                      metadata=update.metadata)
+    proto = SwimUpdate(address=str(update.address),
+                       status=status_to_proto(update.status),
+                       metadata=update.metadata)
+    if update.modified is not None:
+        proto.MergeFrom(SwimUpdate(modified=update.modified))
+    return proto
 
 
 def proto_to_update(update: Optional[SwimUpdate]) -> Update:
     assert update is not None
+    modified = update.modified if update.HasField('modified') else None
     return Update(address=Address.parse(update.address),
-                  clock=update.clock,
+                  modified=modified,
                   status=proto_to_status(update.status),
                   metadata=update.metadata)
 
@@ -52,6 +51,7 @@ def proto_to_update(update: Optional[SwimUpdate]) -> Update:
 def gossip_to_proto(gossip: Optional[Gossip]) -> SwimGossip:
     assert gossip is not None
     return SwimGossip(source=str(gossip.source),
+                      clock=gossip.clock,
                       updates=[update_to_proto(update)
                                for update in gossip.updates])
 
@@ -59,5 +59,6 @@ def gossip_to_proto(gossip: Optional[Gossip]) -> SwimGossip:
 def proto_to_gossip(gossip: Optional[SwimGossip]) -> Gossip:
     assert gossip is not None
     return Gossip(source=Address.parse(gossip.source),
+                  clock=gossip.clock,
                   updates=[proto_to_update(update)
                            for update in gossip.updates])

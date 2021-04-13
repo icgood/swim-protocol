@@ -1,9 +1,9 @@
 
 from __future__ import annotations
 
-from argparse import Namespace
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
+from typing import Final
 
 from grpclib.server import Server
 
@@ -18,14 +18,11 @@ __all__ = ['GrpcTransport']
 
 class GrpcTransport(Transport):
 
-    def __init__(self, args: Namespace) -> None:
-        super().__init__(args)
-        self._config = config = Config(args)
+    def __init__(self, config: Config) -> None:
+        super().__init__()
+        self.config: Final = config
+        self.args: Final = config.args
         self._client = GrpcClient(config)
-
-    @property
-    def config(self) -> Config:
-        return self._config
 
     @property
     def client(self) -> GrpcClient:
@@ -47,3 +44,7 @@ class GrpcTransport(Transport):
         yield
         server.close()
         await server.wait_closed()
+
+    @classmethod
+    def init(cls, config: Config) -> Transport:
+        return cls(config)

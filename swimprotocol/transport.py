@@ -1,31 +1,21 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod, ABCMeta
-from argparse import Namespace
+from abc import abstractmethod
 from contextlib import AbstractAsyncContextManager
-from typing import Final, Optional, Protocol
-
-from pkg_resources import iter_entry_points, EntryPoint
+from typing import Optional, Protocol
 
 from .config import Config
 from .members import Member
-from .types import Update, Gossip, Handlers
+from .types import Gossip, Handlers
+from .util import load_plugin
 
 __all__ = ['load_transport', 'Transport']
 
 
-def load_transport(args: Namespace, *, group: str = __name__) -> Transport:
-    name: Optional[str] = args.transport
-    selected_entry_point: Optional[EntryPoint] = None
-    for entry_point in iter_entry_points(group, name):
-        selected_entry_point = entry_point
-    assert selected_entry_point is not None, \
-        f'{group!r} entry point has no matching implementations'
-    load_cls: type[Transport] = selected_entry_point.load()
-    assert issubclass(load_cls, Transport), \
-        f'{selected_entry_point.name!r} is not a {Transport!r}'
-    return load_cls(args)
+def load_transport(config: Config, name: Optional[str]) -> Transport:
+    transport_cls = load_plugin(Transport, group=__name__, name=name)
+    return transport_cls.init(config)
 
 
 class Client(Protocol):
@@ -39,24 +29,15 @@ class Client(Protocol):
         ...
 
     @abstractmethod
-    async def introduce(self, member: Member, update: Update) \
-            -> Optional[Gossip]:
-        ...
-
-    @abstractmethod
     async def sync(self, member: Member, gossip: Gossip) -> Optional[Gossip]:
         ...
 
 
-class Transport(metaclass=ABCMeta):
+class Transport(Protocol):
 
-    def __init__(self, args: Namespace) -> None:
-        super().__init__()
-        self.args: Final = args
-
-    @property
+    @classmethod
     @abstractmethod
-    def config(self) -> Config:
+    def init(cls, config: Config) -> Transport:
         ...
 
     @property

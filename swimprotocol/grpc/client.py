@@ -7,13 +7,13 @@ from weakref import WeakKeyDictionary
 
 from grpclib.client import Channel
 
-from .adapter import update_to_proto, gossip_to_proto, proto_to_gossip
+from .adapter import gossip_to_proto, proto_to_gossip
 from .proto.swimprotocol_grpc import SwimProtocolStub
 from .proto.swimprotocol_pb2 import SwimPing, SwimPingReq
 from ..config import Config
 from ..members import Member
 from ..transport import Client
-from ..types import Update, Gossip
+from ..types import Gossip
 
 __all__ = ['GrpcClient']
 
@@ -64,23 +64,6 @@ class GrpcClient(Client):
                     timeout=self.config.ping_req_timeout)
             except Exception:
                 return False
-
-    async def _introduce_call(self, stub: SwimProtocolStub,
-                              update: Update) -> Gossip:
-        update_proto = update_to_proto(update)
-        return proto_to_gossip(await stub.Introduce(update_proto))
-
-    async def introduce(self, member: Member, update: Update) \
-            -> Optional[Gossip]:
-        async with self.get_channel(member) as channel:
-            stub = SwimProtocolStub(channel)
-            try:
-                return await asyncio.wait_for(
-                    self._introduce_call(stub, update),
-                    timeout=self.config.introduce_timeout)
-            except Exception:
-                pass
-        return None
 
     async def _sync_call(self, stub: SwimProtocolStub,
                          gossip: Gossip) -> Gossip:
