@@ -2,8 +2,7 @@
 from __future__ import annotations
 
 import asyncio
-from asyncio import Task
-from typing import Final
+from typing import Final, NoReturn
 
 from .config import Config
 from .members import Members
@@ -71,11 +70,9 @@ class Worker(Handlers):
             if their_gossip is not None:
                 self.members.apply(their_gossip)
 
-    async def _run(self) -> None:
+    async def run(self) -> NoReturn:
+        await self._run_introductions()
         await asyncio.gather(
             self._run_failure_detection(),
             self._run_dissemination())
-
-    async def start(self) -> Task[None]:
-        await self._run_introductions()
-        return asyncio.create_task(self._run())
+        raise RuntimeError()

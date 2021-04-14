@@ -12,9 +12,9 @@ from asyncio import CancelledError
 from contextlib import suppress, AsyncExitStack
 
 from .config import Config
-from .members import Members
+from .members import Member, Members
 from .transport import load_transport
-from .types import Address, Status, Update
+from .types import Address, Status
 from .worker import Worker
 
 __all__ = ['main']
@@ -43,11 +43,11 @@ def main() -> int:
     return asyncio.run(run(args))
 
 
-async def _print(update: Update) -> None:
-    if update.status == Status.OFFLINE:
-        print(f'{update.address!s} is offline: {update.metadata!r}')
+async def _print(updated: Member) -> None:
+    if updated.status == Status.OFFLINE:
+        print(f'{updated.address!s} is offline: {updated.metadata!r}')
     else:
-        print(f'{update.address!s} is online: {update.metadata!r}')
+        print(f'{updated.address!s} is online: {updated.metadata!r}')
 
 
 async def run(args: Namespace) -> int:
@@ -58,9 +58,9 @@ async def run(args: Namespace) -> int:
     worker = Worker(config, members, transport.client)
     async with AsyncExitStack() as stack:
         stack.enter_context(suppress(CancelledError))
+        stack.enter_context(members.listener.on_update(_print))
         await stack.enter_async_context(transport.enter(worker))
-        await stack.enter_async_context(members.listener.on_update(_print))
-        task = await worker.start()
+        task = asyncio.create_task(worker.run())
         loop.add_signal_handler(signal.SIGINT, task.cancel)
         loop.add_signal_handler(signal.SIGTERM, task.cancel)
         await task

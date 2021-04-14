@@ -82,7 +82,7 @@ class Member:
     def _notify(self) -> None:
         if self._should_notify:
             self._should_notify = False
-            self.members.listener.notify(self.update)
+            self.members.listener.notify(self)
 
     @property
     def update(self) -> Update:
@@ -120,7 +120,7 @@ class Members:
     def __init__(self, config: Config, peers: Sequence[Address]) -> None:
         super().__init__()
         self.config: Final = config
-        self.listener: Final = Listener()
+        self.listener: Final = Listener(Member)
         self._clock = 0
         self._local = Member(config, self, config.local_address,
                              config.local_metadata, -1, True)
