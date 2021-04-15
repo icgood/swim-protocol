@@ -7,7 +7,7 @@ from typing import Final, NoReturn
 from .config import Config
 from .members import Members
 from .transport import Client
-from .types import Gossip, Handlers
+from .types import Status, Gossip, Handlers
 from .util import as_available
 
 __all__ = ['Worker']
@@ -59,7 +59,8 @@ class Worker(Handlers):
                 async for online in as_available(pending_ping_reqs):
                     if online:
                         break
-            self.members.set_status(target, online)
+            target.status = Status.ONLINE if online else Status.OFFLINE
+            self.members.notify(target)
 
     async def _run_dissemination(self) -> None:
         while True:

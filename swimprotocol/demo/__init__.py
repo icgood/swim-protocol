@@ -12,6 +12,7 @@ from asyncio import CancelledError
 from contextlib import suppress, AsyncExitStack
 
 from .screen import run_screen
+from .changes import change_metadata
 from ..config import Config
 from ..members import Members
 from ..transport import load_transport
@@ -52,6 +53,7 @@ async def run(args: Namespace) -> int:
     worker = Worker(config, members, transport.client)
     async with AsyncExitStack() as stack:
         stack.enter_context(suppress(CancelledError))
+        await stack.enter_async_context(change_metadata(members))
         await stack.enter_async_context(run_screen(members))
         await stack.enter_async_context(transport.enter(worker))
         task = asyncio.create_task(worker.run())

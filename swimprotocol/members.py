@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import random
-from collections.abc import Collection, Sequence, Mapping
+from collections.abc import Sequence, Mapping
 from typing import Final, Union, Optional, Any
 from weakref import WeakSet
 
@@ -26,7 +26,7 @@ class Member:
         self._metadata = metadata
         self._metadata_set = frozenset(metadata.items())
         self._status = Status.ONLINE if local else Status.OFFLINE
-        self._clock = 0
+        self._last_clock = 0
         self._modified: Optional[int] = None
         self._should_notify = False
 
@@ -79,11 +79,6 @@ class Member:
             self._metadata_set = metadata_set
             self._should_notify = True
 
-    def _notify(self) -> None:
-        if self._should_notify:
-            self._should_notify = False
-            self.members.listener.notify(self)
-
     @property
     def update(self) -> Update:
         return Update(address=self.address, modified=self._modified,
@@ -92,27 +87,27 @@ class Member:
     def apply(self, update: Update, next_clock: int) -> bool:
         cur_mod = self._modified
         update_mod = update.modified
+        used_next_clock = False
         if cur_mod is None or update_mod is None or update_mod > cur_mod:
             if update_mod is not None:
-                self.modified = update_mod
+                new_mod = update_mod
             elif cur_mod is None:
-                self.modified = next_clock
+                used_next_clock = True
+                new_mod = next_clock
+            else:
+                new_mod = cur_mod
             self.metadata = update.metadata
             self.status = update.status
-            self._notify()
-            return True
-        else:
-            return False
+            self.notify(new_mod)
+        return used_next_clock
 
-    def set_status(self, online: bool, next_clock: int) -> bool:
-        status = Status.ONLINE if online else Status.OFFLINE
-        if status != self._status:
+    def notify(self, next_clock: int) -> bool:
+        should_notify = self._should_notify
+        if should_notify:
+            self._should_notify = False
             self.modified = next_clock
-            self.status = status
-            self._notify()
-            return True
-        else:
-            return False
+            self.members.listener.notify(self)
+        return should_notify
 
 
 class Members:
@@ -137,11 +132,15 @@ class Members:
 
     @property
     def non_local(self) -> Sequence[Member]:
-        return self._non_local
+        return list(self._non_local)
 
     @property
-    def all(self) -> Collection[Member]:
-        return self._members.values()
+    def all(self) -> Sequence[Member]:
+        return list(self._members.values())
+
+    @property
+    def clock(self) -> int:
+        return self._clock
 
     def get_target(self) -> Member:
         return random.choice(self._non_local)
@@ -168,14 +167,14 @@ class Members:
             self._members[address] = member
         return member
 
-    def set_status(self, target: Member, online: bool) -> None:
+    def notify(self, target: Member) -> None:
         next_clock = self._clock + 1
-        if target.set_status(online, next_clock):
+        if target.notify(next_clock):
             self._clock = next_clock
 
     def apply(self, gossip: Gossip) -> Member:
         source = self.get(gossip.source)
-        source._clock = gossip.clock
+        source._last_clock = gossip.clock
         next_clock = max(self._clock, gossip.clock) + 1
         updated = False
         for update in gossip.updates:
@@ -183,13 +182,16 @@ class Members:
                 updated = True
         if updated:
             self._clock = next_clock
+        elif gossip.clock > self._clock:
+            self._clock = gossip.clock
         return source
 
     def get_gossip(self, target: Member) -> Gossip:
         local = self._local
         updates = []
-        updates.append(local.update)
+        if self._clock > target._last_clock:
+            updates.append(local.update)
         for member in self._non_local:
-            if member != target and member.modified > target._clock:
+            if member != target and member.modified > target._last_clock:
                 updates.append(member.update)
         return Gossip(source=local.address, clock=self._clock, updates=updates)
