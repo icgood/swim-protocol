@@ -10,7 +10,7 @@ from typing import Optional, Protocol
 __all__ = ['Address', 'Status', 'Update', 'Gossip']
 
 
-@dataclass(frozen=True)
+@dataclass(frozen=True, order=True)
 class Address:
     host: str
     port: int

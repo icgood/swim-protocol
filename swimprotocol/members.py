@@ -2,7 +2,7 @@
 from __future__ import annotations
 
 import random
-from collections.abc import Sequence, Mapping
+from collections.abc import Collection, Sequence, Mapping
 from typing import Final, Union, Optional, Any
 from weakref import WeakSet
 
@@ -138,6 +138,10 @@ class Members:
     @property
     def non_local(self) -> Sequence[Member]:
         return self._non_local
+
+    @property
+    def all(self) -> Collection[Member]:
+        return self._members.values()
 
     def get_target(self) -> Member:
         return random.choice(self._non_local)
