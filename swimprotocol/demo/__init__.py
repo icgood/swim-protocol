@@ -30,8 +30,7 @@ def main() -> int:
                         help='The transport plugin name.')
     parser.add_argument('-s', '--secret', metavar='STRING',
                         help='The secret string used to verify messages.')
-    parser.add_argument('--no-curses', dest='curses', action='store_false',
-                        help=SUPPRESS)
+    parser.add_argument('-c', '--curses', action='store_true', help=SUPPRESS)
     parser.add_argument('local', metavar='local-name',
                         help='External name or address for this node.')
     parser.add_argument('peers', metavar='peer-name', nargs='+',

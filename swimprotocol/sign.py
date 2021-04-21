@@ -16,8 +16,6 @@ _SigTuple = tuple[bytes, bytes]
 
 class Signatures:
 
-    MAGIC_PREFIX = b'SWIM'
-
     def __init__(self, secret: Union[None, str, bytes], *,
                  hash_name: str = 'sha256',
                  salt_len: int = 16,
