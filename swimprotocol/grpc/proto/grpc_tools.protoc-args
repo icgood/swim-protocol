@@ -1,5 +1,0 @@
--I.
---python_out=.
---python_grpc_out=.
---mypy_out=.
-swimprotocol/grpc/proto/swimprotocol.proto

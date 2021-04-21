@@ -23,7 +23,6 @@ class Screen:
 
     async def update(self, updated: Member) -> None:
         with self.ready:
-            self._updated = updated
             self.ready.notify()
 
     def cancel(self) -> None:
@@ -32,7 +31,7 @@ class Screen:
             self.ready.notify()
 
     def _add_metadata(self, stdscr: Any, i: int, member: Member) -> None:
-        metadata = member.metadata
+        metadata = member.metadata or {}
         for key in sorted(metadata):
             stdscr.addstr(' ')
             stdscr.addstr(key)
@@ -41,20 +40,22 @@ class Screen:
                           curses.color_pair(i+1) | curses.A_BOLD)
 
     def _render(self, stdscr: Any) -> None:
-        members = sorted(self.members.all, key=lambda m: m.address)
+        members = sorted(self.members.all)
         for i, member in enumerate(members):
-            stdscr.move(i, 0)
-            stdscr.addstr(f'{member.address}',
-                          curses.color_pair(i+1) | curses.A_BOLD)
+            stdscr.move(i, 4)
+            stdscr.addstr(member.name, curses.color_pair(i+1) | curses.A_BOLD)
             stdscr.addstr(' is ')
             stdscr.addstr(member.status.name,
                           curses.color_pair(i+1) | curses.A_BOLD)
-            if member.local:
-                stdscr.addstr('<', curses.A_BOLD)
-            stdscr.move(i, 27)
-            stdscr.addstr(f' {member.modified}', curses.A_BOLD)
-            stdscr.move(i, 35)
+            stdscr.move(i, 30)
+            stdscr.addstr(f' {member.clock}', curses.A_BOLD)
+            stdscr.move(i, 38)
             self._add_metadata(stdscr, i, member)
+            if member.local:
+                stdscr.move(i, 0)
+                stdscr.addstr('>>> ', curses.A_BOLD)
+                stdscr.move(i, curses.COLS - 4)
+                stdscr.addstr(' <<<', curses.A_BOLD)
         stdscr.move(curses.LINES - 1, curses.COLS - 17)
         stdscr.addstr('Clock: ')
         stdscr.addstr(f'{self.members.clock}', curses.A_BOLD)
@@ -79,11 +80,15 @@ class Screen:
             with self.ready:
                 self.ready.wait(timeout=1.0)
 
+    async def run_thread(self) -> None:
+        await asyncio.to_thread(wrapper, self.main)
+
 
 def run_screen(members: Members) -> AsyncExitStack:
     exit_stack = AsyncExitStack()
     screen = Screen(members)
-    exit_stack.callback(screen.cancel)
+    main_task = asyncio.create_task(screen.run_thread())
+    exit_stack.push_async_callback(asyncio.wait_for, main_task, None)
     exit_stack.enter_context(members.listener.on_update(screen.update))
-    asyncio.create_task(asyncio.to_thread(wrapper, screen.main))
+    exit_stack.callback(screen.cancel)
     return exit_stack

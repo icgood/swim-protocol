@@ -14,6 +14,7 @@ __all__ = ['change_metadata']
 
 async def _randomize_local(members: Members) -> NoReturn:
     local = members.local
+    assert local.metadata
     while True:
         new_token = uuid.uuid4().hex
         local.metadata = dict(local.metadata) | {'token': new_token}

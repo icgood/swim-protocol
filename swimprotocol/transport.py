@@ -2,49 +2,33 @@
 from __future__ import annotations
 
 from abc import abstractmethod
+from argparse import ArgumentParser
 from contextlib import AbstractAsyncContextManager
-from typing import Optional, Protocol
+from typing import Protocol
 
 from .config import Config
-from .members import Member
-from .types import Gossip, Handlers
-from .util import load_plugin
+from .members import Members
+from .plugin import Plugins
+from .worker import Worker
 
-__all__ = ['load_transport', 'Transport']
-
-
-def load_transport(config: Config, name: Optional[str]) -> Transport:
-    transport_cls = load_plugin(Transport, group=__name__, name=name)
-    return transport_cls.init(config)
-
-
-class Client(Protocol):
-
-    @abstractmethod
-    async def ping(self, member: Member) -> bool:
-        ...
-
-    @abstractmethod
-    async def ping_req(self, member: Member, target: Member) -> bool:
-        ...
-
-    @abstractmethod
-    async def sync(self, member: Member, gossip: Gossip) -> Optional[Gossip]:
-        ...
+__all__ = ['Transport', 'transport_plugins']
 
 
 class Transport(Protocol):
 
     @classmethod
     @abstractmethod
+    def add_arguments(cls, name: str, parser: ArgumentParser) -> None:
+        ...
+
+    @classmethod
+    @abstractmethod
     def init(cls, config: Config) -> Transport:
         ...
 
-    @property
     @abstractmethod
-    def client(self) -> Client:
+    def enter(self, members: Members) -> AbstractAsyncContextManager[Worker]:
         ...
 
-    @abstractmethod
-    def enter(self, handlers: Handlers) -> AbstractAsyncContextManager[None]:
-        ...
+
+transport_plugins = Plugins(Transport, __name__)
