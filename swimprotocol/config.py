@@ -16,7 +16,7 @@ class Config:
         super().__init__()
         self.args: Final = args
         local_name: str = args.local
-        local_metadata: Mapping[str, str] = dict(args.metadata)
+        local_metadata: Mapping[bytes, bytes] = dict(args.metadata)
         self.local_name: Final = local_name
         self.local_metadata: Final = local_metadata
         self.signatures: Final = Signatures(args.secret)

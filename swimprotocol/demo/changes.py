@@ -16,8 +16,8 @@ async def _randomize_local(members: Members) -> NoReturn:
     local = members.local
     assert local.metadata
     while True:
-        new_token = uuid.uuid4().hex
-        local.metadata = dict(local.metadata) | {'token': new_token}
+        new_token = uuid.uuid4().bytes
+        local.metadata = dict(local.metadata) | {b'token': new_token}
         members.notify(local)
         sleep_sec = random.normalvariate(10.0, 2.0)
         await asyncio.sleep(sleep_sec)

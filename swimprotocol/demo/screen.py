@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import curses
+import quopri
 from contextlib import AsyncExitStack
 from curses import wrapper
 from threading import Event, Condition
@@ -33,11 +34,12 @@ class Screen:
     def _add_metadata(self, stdscr: Any, i: int, member: Member) -> None:
         metadata = member.metadata or {}
         for key in sorted(metadata):
+            key_str = key.decode('ascii')
+            val_str = quopri.encodestring(metadata[key]).decode('ascii')
             stdscr.addstr(' ')
-            stdscr.addstr(key)
+            stdscr.addstr(key_str)
             stdscr.addstr('=', curses.A_DIM)
-            stdscr.addstr(metadata[key],
-                          curses.color_pair(i+1) | curses.A_BOLD)
+            stdscr.addstr(val_str, curses.color_pair(i+1) | curses.A_BOLD)
 
     def _render(self, stdscr: Any) -> None:
         members = sorted(self.members.all)

@@ -45,4 +45,4 @@ class Gossip(Packet):
     name: str
     clock: int
     status: Status
-    metadata: Optional[Mapping[str, str]]
+    metadata: Optional[Mapping[bytes, bytes]]

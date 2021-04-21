@@ -24,7 +24,7 @@ __all__ = ['main']
 def main() -> int:
     parser = ArgumentParser(description=__doc__)
     parser.add_argument('-m', '--metadata', nargs=2, metavar=('KEY', 'VAL'),
-                        default=[], action='append',
+                        default=[], action='append', type=_utf8,
                         help='Metadata for this node.')
     parser.add_argument('-t', '--transport', metavar='NAME', default='udp',
                         help='The transport plugin name.')
@@ -46,6 +46,10 @@ def main() -> int:
                         format='%(asctime)-15s %(name)s %(message)s')
 
     return asyncio.run(run(args))
+
+
+def _utf8(val: str) -> bytes:
+    return val.encode('utf-8')
 
 
 async def run(args: Namespace) -> int:

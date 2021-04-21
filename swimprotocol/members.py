@@ -17,7 +17,7 @@ __all__ = ['Member', 'Members']
 class Member:
 
     def __init__(self, config: Config, members: Members, name: str,
-                 metadata: Optional[Mapping[str, str]],
+                 metadata: Optional[Mapping[bytes, bytes]],
                  index: int, local: bool) -> None:
         super().__init__()
         self.config: Final = config
@@ -67,11 +67,11 @@ class Member:
             self._should_notify = True
 
     @property
-    def metadata(self) -> Optional[Mapping[str, str]]:
+    def metadata(self) -> Optional[Mapping[bytes, bytes]]:
         return self._metadata
 
     @metadata.setter
-    def metadata(self, metadata: Optional[Mapping[str, str]]) -> None:
+    def metadata(self, metadata: Optional[Mapping[bytes, bytes]]) -> None:
         if metadata is not None:
             metadata_set = frozenset(metadata.items())
             if metadata_set != self._metadata_set:
