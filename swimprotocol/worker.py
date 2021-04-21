@@ -58,7 +58,7 @@ class Worker:
                 event.set()
 
     def _get_listening(self, member: Member) -> Sequence[Member]:
-        listening = self._listening.get(member)
+        listening = self._listening.pop(member, None)
         if listening is not None:
             return list(listening)
         else:

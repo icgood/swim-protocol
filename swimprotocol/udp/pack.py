@@ -16,11 +16,13 @@ _prefix = struct.Struct('!BBH')
 class UdpPack:
 
     def __init__(self, signatures: Signatures, *,
+                 pickle_protocol: int = pickle.HIGHEST_PROTOCOL,
                  prefix_xor: bytes = b'SWIM') -> None:
         super().__init__()
         if len(prefix_xor) != _prefix.size:
             raise ValueError(f'{prefix_xor!r} must be {_prefix.size} bytes')
         self.signatures: Final = signatures
+        self.pickle_protocol: Final = pickle_protocol
         self.prefix_xor: Final = prefix_xor
 
     def _xor_prefix(self, prefix: bytes) -> bytes:
@@ -28,7 +30,7 @@ class UdpPack:
         return bytes([left ^ right for left, right in zipped])
 
     def pack(self, packet: Packet) -> bytes:
-        pickled = pickle.dumps(packet)
+        pickled = pickle.dumps(packet, self.pickle_protocol)
         salt, digest = self.signatures.sign(pickled)
         salt_start = _prefix.size
         digest_start = salt_start + len(salt)
