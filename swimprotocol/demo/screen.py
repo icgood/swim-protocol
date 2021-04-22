@@ -3,13 +3,13 @@ from __future__ import annotations
 
 import asyncio
 import curses
-import quopri
 from contextlib import AsyncExitStack
 from curses import wrapper
 from threading import Event, Condition
 from typing import Final, Any
 
 from ..members import Member, Members
+from ..packet import Status
 
 __all__ = ['run_screen']
 
@@ -31,11 +31,17 @@ class Screen:
         with self.ready:
             self.ready.notify()
 
+    def _decode(self, val: bytes) -> str:
+        try:
+            return val.decode('utf-8')
+        except UnicodeDecodeError:
+            return val.hex()
+
     def _add_metadata(self, stdscr: Any, i: int, member: Member) -> None:
         metadata = member.metadata or {}
         for key in sorted(metadata):
-            key_str = key.decode('ascii')
-            val_str = quopri.encodestring(metadata[key]).decode('ascii')
+            key_str = self._decode(key)
+            val_str = self._decode(metadata[key])
             stdscr.addstr(' ')
             stdscr.addstr(key_str)
             stdscr.addstr('=', curses.A_DIM)
@@ -58,8 +64,12 @@ class Screen:
                 stdscr.addstr('>>> ', curses.A_BOLD)
                 stdscr.move(i, curses.COLS - 4)
                 stdscr.addstr(' <<<', curses.A_BOLD)
-        stdscr.move(curses.LINES - 1, curses.COLS - 17)
-        stdscr.addstr('Clock: ')
+        stdscr.move(curses.LINES - 1, curses.COLS - 35)
+        stdscr.addstr(' Available: ')
+        available = len(self.members.get_all(Status.AVAILABLE))
+        stdscr.addstr(f'{available}', curses.A_BOLD)
+        stdscr.move(curses.LINES - 1, curses.COLS - 18)
+        stdscr.addstr(' Clock: ')
         stdscr.addstr(f'{self.members.clock}', curses.A_BOLD)
 
     def main(self, stdscr: Any) -> None:

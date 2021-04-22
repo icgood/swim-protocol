@@ -45,3 +45,7 @@ class Config:
     @property
     def sync_period(self) -> float:
         return 1.0
+
+    @property
+    def suspect_period(self) -> float:
+        return 10.0

@@ -2,9 +2,12 @@
 from __future__ import annotations
 
 import random
+import time
+from collections import defaultdict
 from collections.abc import Generator, Sequence, Mapping
 from functools import total_ordering
 from typing import Final, Optional, Any
+from weakref import WeakSet
 
 from .config import Config
 from .listener import Listener
@@ -28,6 +31,7 @@ class Member:
         self._metadata = metadata
         self._metadata_set = frozenset(metadata.items() if metadata else [])
         self._status = Status.ONLINE if local else Status.OFFLINE
+        self._status_change = time.time()
         self._clock = 0
         self._should_notify = False
 
@@ -62,9 +66,19 @@ class Member:
 
     @status.setter
     def status(self, status: Status) -> None:
+        if status == Status.SUSPECT and self._status == Status.OFFLINE:
+            status = Status.OFFLINE
+        elif status == Status.OFFLINE and self._status == Status.ONLINE:
+            status = Status.SUSPECT
         if status != self._status:
+            self.members._refresh_statuses(self, self._status, status)
             self._status = status
+            self._status_change = time.time()
             self._should_notify = True
+
+    @property
+    def status_change(self) -> float:
+        return self._status_change
 
     @property
     def metadata(self) -> Optional[Mapping[bytes, bytes]]:
@@ -110,8 +124,19 @@ class Members:
                              config.local_metadata, -1, True)
         self._members = {config.local_name: self._local}
         self._non_local: list[Member] = []
+        self._statuses: defaultdict[Status, WeakSet[Member]] = \
+            defaultdict(WeakSet)
+        self._refresh_statuses(self._local, Status.OFFLINE, Status.ONLINE)
         for peer in peers:
             self.get(peer)
+
+    def _refresh_statuses(self, member: Member,
+                          before: Status, after: Status) -> None:
+        for status in Status:
+            if before & status and not after & status:
+                self._statuses[status].discard(member)
+            elif not before & status and after & status:
+                self._statuses[status].add(member)
 
     @property
     def local(self) -> Member:
@@ -146,6 +171,9 @@ class Members:
             if idx != target_idx:
                 indexes.add(idx)
         return [non_local[idx] for idx in indexes]
+
+    def get_all(self, status: Status) -> frozenset[Member]:
+        return frozenset(self._statuses[status])
 
     def get(self, name: str) -> Member:
         member = self._members.get(name)

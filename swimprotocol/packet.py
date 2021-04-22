@@ -13,11 +13,11 @@ __all__ = ['Status', 'Packet', 'Ping', 'PingReq', 'Ack', 'Gossip']
 class Status(Flag):
     ONLINE = auto()
     OFFLINE = auto()
-    BAD_SIG = auto()
+    SUSPECT = auto()
 
     # Aggregates
-    AVAILABLE = ONLINE
-    UNAVAILABLE = OFFLINE | BAD_SIG
+    AVAILABLE = ONLINE | SUSPECT
+    UNAVAILABLE = OFFLINE
 
 
 @dataclass(frozen=True)

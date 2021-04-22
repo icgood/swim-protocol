@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import time
 from abc import abstractmethod
 from asyncio import Event, TimeoutError
 from collections.abc import Sequence
@@ -101,7 +102,7 @@ class Worker:
                         source=local.name, target=target.name))
                     for indirect in indirects])
                 online = await self._wait(target, self.config.ping_req_timeout)
-        new_status = Status.ONLINE if online else Status.OFFLINE
+        new_status = Status.ONLINE if online else Status.SUSPECT
         self.members.notify(target, new_status=new_status)
 
     async def _disseminate(self, target: Member) -> None:
@@ -120,9 +121,18 @@ class Worker:
             asyncio.create_task(self._disseminate(target))
             await asyncio.sleep(self.config.sync_period)
 
+    async def _run_suspect_timeout(self) -> None:
+        while True:
+            before = time.time()
+            await asyncio.sleep(self.config.suspect_period)
+            for member in self.members.get_all(Status.SUSPECT):
+                if member.status_change < before:
+                    self.members.notify(member, new_status=Status.OFFLINE)
+
     async def run(self) -> NoReturn:
         await asyncio.gather(
             self._run_handler(),
             self._run_failure_detection(),
-            self._run_dissemination())
+            self._run_dissemination(),
+            self._run_suspect_timeout())
         raise RuntimeError()
