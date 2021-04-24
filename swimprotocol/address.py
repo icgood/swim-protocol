@@ -9,11 +9,25 @@ __all__ = ['Address', 'AddressParser']
 
 @dataclass(frozen=True, order=True)
 class Address:
+    """Manages an address for socket connections.
+
+    Args:
+        host: The address hostname string.
+        port: The address port number.
+
+    """
+
     host: str
     port: int
 
     @classmethod
     def get(cls, addr: tuple[str, int]) -> Address:
+        """Return an :class:`Address` from a ``(host, port)`` tuple.
+
+        Args:
+            addr: The address tuple from :mod:`socket` functions.
+
+        """
         return cls(addr[0], addr[1])
 
     def __str__(self) -> str:
@@ -21,6 +35,16 @@ class Address:
 
 
 class AddressParser:
+    """Manages the defaults to use when parsing an address string.
+
+    Args:
+        address_type: Override the :class:`Address` implementation.
+        default_host: The default hostname, if missing from the address string
+            (e.g. ``:1234:``).
+        default_port: The default port number, if missing from the address
+            string (e.g. ``example.tld``).
+
+    """
 
     def __init__(self, address_type: type[Address] = Address, *,
                  default_host: Optional[str] = None,

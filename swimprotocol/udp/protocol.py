@@ -17,6 +17,11 @@ __all__ = ['SwimProtocol']
 
 
 class SwimProtocol(DatagramProtocol, IO):
+    """Implements :class:`~asyncio.DatagramProtocol` and
+    :class:`~swimprotocol.worker.IO` to send and receive UDP as SWIM protocol
+    packets.
+
+    """
 
     def __init__(self, address_parser: AddressParser,
                  udp_pack: UdpPack) -> None:
@@ -29,14 +34,27 @@ class SwimProtocol(DatagramProtocol, IO):
 
     @property
     def transport(self) -> DatagramTransport:
+        """The current :class:`~asyncio.DatagramTransport` object."""
         transport = self._transport
         assert transport is not None
         return transport
 
     def connection_made(self, transport: BaseTransport) -> None:
+        """Called when the UDP socket is initialized.
+
+        See Also:
+            :meth:`asyncio.BaseProtocol.connection_made`
+
+        """
         self._transport = cast(DatagramTransport, transport)
 
     def datagram_received(self, data: bytes, addr: tuple[str, int]) -> None:
+        """Called when data is received on the UDP socket.
+
+        See Also:
+            :meth:`asyncio.DatagramProtocol.datagram_received`
+
+        """
         packet = self.udp_pack.unpack(data)
         if packet is None:
             return

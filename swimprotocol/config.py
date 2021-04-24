@@ -3,7 +3,7 @@ from __future__ import annotations
 
 from argparse import Namespace
 from collections.abc import Mapping, Sequence
-from typing import Final
+from typing import Final, Union
 
 from .sign import Signatures
 
@@ -11,41 +11,70 @@ __all__ = ['Config']
 
 
 class Config:
+    """Configure the cluster behavior and characteristics.
 
-    def __init__(self, args: Namespace) -> None:
+    Args:
+        args: Command-line arguments namespace.
+        secret: The shared secret for cluster packet signatures.
+        local_name: The unique name of the local cluster member.
+        local_metadata: The local cluster member metadata.
+        peers: At least one name of another known node in the cluster.
+        ping_interval: Time between *ping* attempts to random cluster members.
+        ping_timeout: Time to wait for an *ack* after sending a *ping*.
+        ping_req_count: Number of nodes to send a *ping-req* when a *ping*
+            fails.
+        ping_req_timeout: Time to wait for an *ack* after sending *ping-req*'s.
+        suspect_timeout: Time to wait after losing connectivity with a cluster
+            member before marking it offline.
+        sync_count: Minimum number of cluster members to sync on each attempt.
+            Members with changes are always sent, and then random members are
+            chosen until this number is met.
+        sync_interval: Time between sync attempts to disseminate cluster
+            changes.
+
+    """
+
+    def __init__(self, args: Namespace, *,
+                 secret: Union[str, bytes],
+                 local_name: str,
+                 local_metadata: Mapping[bytes, bytes],
+                 peers: Sequence[str],
+                 ping_interval: float = 1.0,
+                 ping_timeout: float = 0.3,
+                 ping_req_count: int = 1,
+                 ping_req_timeout: float = 0.9,
+                 suspect_timeout: float = 5.0,
+                 sync_count: int = 2,
+                 sync_interval: float = 0.5) -> None:
         super().__init__()
         self.args: Final = args
-        local_name: str = args.local
-        local_metadata: Mapping[bytes, bytes] = dict(args.metadata)
+        self._signatures = Signatures(secret)
         self.local_name: Final = local_name
         self.local_metadata: Final = local_metadata
-        self.signatures: Final = Signatures(args.secret)
+        self.peers: Final = peers
+        self.ping_interval: Final = ping_interval
+        self.ping_timeout: Final = ping_timeout
+        self.ping_req_count: Final = ping_req_count
+        self.ping_req_timeout: Final = ping_req_timeout
+        self.suspect_timeout: Final = suspect_timeout
+        self.sync_count: Final = sync_count
+        self.sync_interval: Final = sync_interval
+
+    @classmethod
+    def from_args(cls, args: Namespace) -> Config:
+        """Build a :class:`Config` from command-line arguments and sensible
+        defaults.
+
+        Args:
+            args: The command-line arguments namespace.
+
+        """
+        return cls(args, secret=args.secret,
+                   local_name=args.local,
+                   local_metadata=dict(args.metadata),
+                   peers=args.peers)
 
     @property
-    def peers(self) -> Sequence[str]:
-        peers: list[str] = self.args.peers
-        return peers
-
-    @property
-    def num_indirect(self) -> int:
-        return 1
-
-    @property
-    def ping_period(self) -> float:
-        return 1.0
-
-    @property
-    def ping_timeout(self) -> float:
-        return 0.3
-
-    @property
-    def ping_req_timeout(self) -> float:
-        return 0.9
-
-    @property
-    def sync_period(self) -> float:
-        return 1.0
-
-    @property
-    def suspect_period(self) -> float:
-        return 10.0
+    def signatures(self) -> Signatures:
+        """Generates and verifies cluster packet signatures."""
+        return self._signatures

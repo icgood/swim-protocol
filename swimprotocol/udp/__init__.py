@@ -19,6 +19,17 @@ __all__ = ['UdpTransport']
 
 
 class UdpTransport(Transport):
+    """Implements :class:`~swimprotocol.transport.Transport` using UDP, without
+    `broadcast <https://en.wikipedia.org/wiki/Broadcast_address>`_.
+
+    This transport assumes that the name of each cluster member is in
+    ``host:port`` format, and that any cluster member can receive UDP packets
+    from any other cluster member.
+
+    Args:
+        config: The cluster configuration object.
+
+    """
 
     def __init__(self, config: Config) -> None:
         super().__init__()
@@ -32,11 +43,24 @@ class UdpTransport(Transport):
 
     @property
     def bind_host(self) -> str:
+        """The local bind address used to open the UDP socket to receive
+        packets.
+
+        See Also:
+            :func:`asyncio.loop.create_datagram_endpoint`
+
+        """
         bind: Optional[str] = self.args.udp_bind
         return bind or self._local_address.host
 
     @property
     def bind_port(self) -> int:
+        """The local bind port used to open the UDP socket to receive packets.
+
+        See Also:
+            :func:`asyncio.loop.create_datagram_endpoint`
+
+        """
         return self._local_address.port
 
     @asynccontextmanager

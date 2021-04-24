@@ -1,4 +1,7 @@
-"""
+"""Runs a single cluster member for demo purposes, displaying status and
+metadata changes to all cluster members as they occur. On a random interval of
+approximately 10 seconds, a metadata field "token" is updated on each cluster
+member, and should be disseminated to all other members.
 
 """
 
@@ -31,10 +34,10 @@ def main() -> int:
     parser.add_argument('-s', '--secret', metavar='STRING',
                         help='The secret string used to verify messages.')
     parser.add_argument('-c', '--curses', action='store_true', help=SUPPRESS)
-    parser.add_argument('local', metavar='local-name',
+    parser.add_argument('local', metavar='localname',
                         help='External name or address for this node.')
-    parser.add_argument('peers', metavar='peer-name', nargs='+',
-                        help='External names or addresses for peers.')
+    parser.add_argument('peers', metavar='peername', nargs='+',
+                        help='At least one name or address of a known peer.')
     parser.set_defaults(config_type=Config)
 
     for transport_name, transport_type in transport_plugins.loaded.items():
@@ -54,9 +57,9 @@ def _utf8(val: str) -> bytes:
 
 async def run(args: Namespace) -> int:
     loop = asyncio.get_running_loop()
-    config: Config = args.config_type(args)
+    config: Config = args.config_type.from_args(args)
     transport = transport_plugins.choose(args.transport).init(config)
-    members = Members(config, args.peers)
+    members = Members(config)
     async with AsyncExitStack() as stack:
         stack.enter_context(suppress(CancelledError))
         worker = await stack.enter_async_context(transport.enter(members))

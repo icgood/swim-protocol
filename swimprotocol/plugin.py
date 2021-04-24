@@ -12,6 +12,15 @@ TypeT = TypeVar('TypeT', bound='type')
 
 
 class Plugins(Generic[TypeT]):
+    """Allows a generic base type to be implemented using
+    `plugins <https://setuptools.readthedocs.io/en/latest/pkg_resources.html>`_
+    defined internally in ``setup.py`` or other Python libraries.
+
+    Args:
+        base: The base type to be implemented.
+        group: The entry point group name.
+
+    """
 
     def __init__(self, base: TypeT, group: str) -> None:
         super().__init__()
@@ -22,6 +31,11 @@ class Plugins(Generic[TypeT]):
 
     @property
     def loaded(self) -> Mapping[str, TypeT]:
+        """A mapping of plugin name to the *base* implementation sub-class.
+        Accessing this property will cause lazy-loading of all plugins, and
+        plugins that failed to load will not appear.
+
+        """
         loaded = self._loaded
         if loaded is None:
             self._loaded = loaded = self._load(self.group)
@@ -40,6 +54,18 @@ class Plugins(Generic[TypeT]):
         return loaded
 
     def choose(self, name: str) -> TypeT:
+        """Given a plugin name, return the *base* implementation sub-class as
+        loaded from the entry points.
+
+        Args:
+            name: The name of the plugin entry point.
+
+        Raises:
+            DistributionNotFound: The plugin failed to load due to missing
+                dependencies.
+            ValueError: The plugin name was not found.
+
+        """
         loaded = self.loaded
         if name not in loaded:
             if name in self._failures:
