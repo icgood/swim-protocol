@@ -9,7 +9,7 @@ from contextlib import ExitStack
 from typing import TypeVar, Generic, Protocol, NoReturn
 from weakref import WeakKeyDictionary
 
-__all__ = ['Listener']
+__all__ = ['ListenerCallback', 'Listener']
 
 ListenT = TypeVar('ListenT')
 ListenT_contra = TypeVar('ListenT_contra', contravariant=True)

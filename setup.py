@@ -31,8 +31,8 @@ setup(name='swim-protocol',
       version='0.1.0',
       author='Ian Good',
       author_email='ian@icgood.net',
-      description='SWIM protocol implementation for exchanging membership '
-                  'status and metadata.',
+      description='SWIM protocol implementation for exchanging cluster '
+                  'membership status and metadata.',
       long_description=readme + license,
       long_description_content_type='text/markdown',
       license='MIT',

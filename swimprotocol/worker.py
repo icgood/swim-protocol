@@ -15,7 +15,7 @@ from .members import Member, Members
 from .packet import Packet, Ping, PingReq, Ack, Gossip
 from .status import Status
 
-__all__ = ['Worker']
+__all__ = ['IO', 'Worker']
 
 
 class IO(Protocol):

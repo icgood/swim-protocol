@@ -4,6 +4,7 @@
 
 .. automodule:: swimprotocol
    :members:
+   :special-members:
 
 ``swimprotocol.address``
 ------------------------

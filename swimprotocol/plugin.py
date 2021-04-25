@@ -74,3 +74,7 @@ class Plugins(Generic[TypeT]):
                 msg = f'{name!r} is not a valid {self.group!r} plugin'
                 raise ValueError(msg)
         return loaded[name]
+
+    def __repr__(self) -> str:
+        cls_name = self.__class__.__name__
+        return f'{cls_name}({self.base!r}, {self.group!r}'

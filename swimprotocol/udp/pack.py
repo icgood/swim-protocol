@@ -21,7 +21,7 @@ class UdpPack:
 
     Args:
         signatures: Generates and verifies cluster packet signatures.
-        pickle_protocol. The :mod:`pickle` protocol version number.
+        pickle_protocol: The :mod:`pickle` protocol version number.
         prefix_xor: A 4-byte string used to XOR the packet prefix, as a sanity
             check to detect malformed or incomplete UDP packets.
 

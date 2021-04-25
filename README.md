@@ -151,6 +151,6 @@ hinting to the extent possible and common in the rest of the codebase.
 [9]: https://docs.python.org/3/library/uuid.html#uuid.getnode
 [10]: https://en.wikipedia.org/wiki/Maximum_transmission_unit
 
-[100]: #Config
-[101]: #Members
-[102]: #UdpTransport
+[100]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.config.Config
+[101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Member
+[102]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpTransport
