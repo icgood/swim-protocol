@@ -13,7 +13,7 @@ metadata.
 This library is intended to fit into an [asyncio][1] event loop to help
 synchronize a distributed group of processes.
 
-#### [Introduction](file:///Users/ian/dev/swim-protocol/docs/_build/html/intro.html)
+#### [Introduction](https://icgood.github.io/swim-protocol/intro.html)
 
 #### [API Documentation](https://icgood.github.io/swim-protocol/)
 
