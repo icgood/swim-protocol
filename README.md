@@ -13,6 +13,8 @@ metadata.
 This library is intended to fit into an [asyncio][1] event loop to help
 synchronize a distributed group of processes.
 
+#### [Introduction](file:///Users/ian/dev/swim-protocol/docs/_build/html/intro.html)
+
 #### [API Documentation](https://icgood.github.io/swim-protocol/)
 
 ## Install and Usage
@@ -90,12 +92,12 @@ Alternatively, listen for status or metadata changes on all members:
 ```python
 from swimprotocol.member import Member
 
-async def _on_update(member: Member) -> None:
+async def _on_updated(member: Member) -> None:
     print('updated:', member.name, member.status, member.metadata)
 
 async with AsyncExitStack() as stack:
     # ...
-    stack.enter_context(members.listener.on_update(_on_update))
+    stack.enter_context(members.listener.on_notify(_on_updated))
 ```
 
 ### UDP Transport Security

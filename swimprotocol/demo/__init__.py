@@ -10,7 +10,7 @@ from __future__ import annotations
 import asyncio
 import logging
 import signal
-from argparse import Namespace, ArgumentParser, SUPPRESS
+from argparse import Namespace, ArgumentParser
 from asyncio import CancelledError
 from contextlib import suppress, AsyncExitStack
 
@@ -33,7 +33,10 @@ def main() -> int:
                         help='The transport plugin name.')
     parser.add_argument('-s', '--secret', metavar='STRING',
                         help='The secret string used to verify messages.')
-    parser.add_argument('-c', '--curses', action='store_true', help=SUPPRESS)
+    parser.add_argument('-c', '--curses', action='store_true',
+                        help='Enable the curses display.')
+    parser.add_argument('-i', '--token-interval', type=float, default=10.0,
+                        help='Cluster member token update interval.')
     parser.add_argument('local', metavar='localname',
                         help='External name or address for this node.')
     parser.add_argument('peers', metavar='peername', nargs='+',
@@ -67,7 +70,8 @@ async def run(args: Namespace) -> int:
             await stack.enter_async_context(run_screen(members))
         else:
             stack.enter_context(run_logging(members))
-        await stack.enter_async_context(change_metadata(members))
+        await stack.enter_async_context(change_metadata(
+            members, args.token_interval))
         task = asyncio.create_task(worker.run())
         loop.add_signal_handler(signal.SIGINT, task.cancel)
         loop.add_signal_handler(signal.SIGTERM, task.cancel)

@@ -12,12 +12,11 @@ __all__ = ['run_logging']
 logger = logging.getLogger(__name__)
 
 
-async def update(updated: Member) -> None:
-    logger.info(f'{updated.name} is {updated.status.name}:'
-                f' {updated.metadata!r}')
+async def update(member: Member) -> None:
+    logger.info(f'{member.name} is {member.status.name}: {member.metadata!r}')
 
 
 @contextmanager
 def run_logging(members: Members) -> Iterator[None]:
-    with members.listener.on_update(update):
+    with members.listener.on_notify(update):
         yield

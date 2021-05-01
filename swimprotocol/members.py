@@ -4,13 +4,14 @@ from __future__ import annotations
 import random
 import time
 from collections import defaultdict
-from collections.abc import Collection, Sequence, Mapping
+from collections.abc import Generator, Iterator, Mapping, Set
 from functools import total_ordering
 from typing import Final, Optional, Any
-from weakref import WeakSet, WeakValueDictionary
+from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from .config import Config
 from .listener import Listener
+from .shuffle import Shuffle, WeakShuffle
 from .status import Status
 
 __all__ = ['Member', 'Members']
@@ -18,7 +19,7 @@ __all__ = ['Member', 'Members']
 
 @total_ordering
 class Member:
-    """Represents a member node of the cluster."""
+    """Represents a :term:`member` node of the cluster."""
 
     #: Before a non-local cluster member metadata has been initialized with a
     #: known value, it is assigned this empty :class:`dict` for
@@ -26,12 +27,14 @@ class Member:
     #: <https://docs.python.org/3/reference/expressions.html#is-not>`_.
     METADATA_UNKNOWN: Mapping[bytes, bytes] = {}
 
-    def __init__(self, name: str, index: int, local: bool) -> None:
+    def __init__(self, name: str, local: bool) -> None:
         super().__init__()
         self.name: Final = name
-        self.index: Final = index
         self.local: Final = local
         self._clock = 0
+        self._validity = random.randbytes(8)
+        self._known_clocks: WeakKeyDictionary[Member, int] = \
+            WeakKeyDictionary()
         self._status = Status.OFFLINE
         self._status_time = time.time()
         self._metadata: frozenset[tuple[bytes, bytes]] = frozenset()
@@ -57,17 +60,21 @@ class Member:
         return f'Member<{self.name}>'
 
     @property
+    def source(self) -> tuple[str, bytes]:
+        return self.name, self._validity
+
+    @property
     def clock(self) -> int:
-        """The sequence clock tracking changes distributed across the cluster.
-        This value is always increasing, as changes are made to the member
-        status or metadata.
+        """The :term:`sequence clock` tracking changes distributed across the
+        cluster.  This value is always increasing, as changes are made to the
+        member status or metadata.
 
         """
         return self._clock
 
     @property
     def status(self) -> Status:
-        """The last known status of the cluster member."""
+        """The last known :term:`status` of the cluster member."""
         return self._status
 
     @property
@@ -77,10 +84,14 @@ class Member:
 
     @property
     def metadata(self) -> Mapping[bytes, bytes]:
-        """The last known metadata of the cluster member."""
+        """The last known :term:`metadata` of the cluster member."""
         return self._metadata_dict
 
-    def _set_clock(self, clock: int) -> None:
+    def _needs_gossip(self, member: Member) -> bool:
+        known_clock = self._known_clocks.get(member, -1)
+        return member.clock > known_clock
+
+    def _set_clock(self, clock: int, next_clock: int) -> None:
         assert self._pending_clock is None
         if clock > self._clock:
             self._pending_clock = clock
@@ -97,33 +108,36 @@ class Member:
         if pending_metadata != self._metadata:
             self._pending_metadata = pending_metadata
 
-    def _save(self) -> bool:
+    def _save(self, source: Optional[Member], next_clock: int) -> bool:
         updated = False
+        ignore_update = self.local and source is not None
         pending_clock = self._pending_clock
         pending_status = self._pending_status
         pending_metadata = self._pending_metadata
-        if pending_clock is None:
-            self._pending_status = None
-            self._pending_metadata = None
+        self._pending_clock = None
+        self._pending_status = None
+        self._pending_metadata = None
+        if pending_clock is None and self != source:
             return False
+        elif ignore_update:
+            pending_clock = next_clock
         if pending_status is not None:
             updated = True
-            self._status = pending_status
-            self._status_time = time.time()
-            self._pending_status = None
+            if not ignore_update:
+                self._status = pending_status
+                self._status_time = time.time()
         if pending_metadata is not None:
             updated = True
-            self._metadata = pending_metadata
-            self._metadata_dict = dict(pending_metadata)
-            self._pending_metadata = None
-        if updated:
+            if not ignore_update:
+                self._metadata = pending_metadata
+                self._metadata_dict = dict(pending_metadata)
+        if updated and pending_clock is not None:
             self._clock = pending_clock
-        self._pending_clock = None
         return updated
 
 
-class Members:
-    """Manages the members of the cluster.
+class Members(Set[Member]):
+    """Manages the :term:`members <member>` of the cluster.
 
     Args:
         config: The cluster config object.
@@ -134,136 +148,173 @@ class Members:
         super().__init__()
         self.listener: Final = Listener(Member)
         self._next_clock = 1
-        self._local = Member(config.local_name, -1, True)
-        self._non_local: list[Member] = []
+        self._local = Member(config.local_name, True)
+        self._non_local: set[Member] = set()
         self._members = WeakValueDictionary({config.local_name: self._local})
-        self._statuses: defaultdict[Status, WeakSet[Member]] = \
-            defaultdict(WeakSet)
+        self._statuses: defaultdict[Status, WeakShuffle[Member]] = \
+            defaultdict(WeakShuffle)
         for peer in config.peers:
             self.get(peer)
         self.update(self._local, new_status=Status.ONLINE,
                     new_metadata=config.local_metadata)
 
-    def _refresh_statuses(self, member: Member,
-                          before: Status, after: Status) -> None:
+    def __contains__(self, val: object) -> bool:
+        return val in self._members
+
+    def __iter__(self) -> Iterator[Member]:
+        return self._members.values()
+
+    def __len__(self) -> int:
+        return len(self._members)
+
+    def _refresh_statuses(self, member: Member) -> None:
+        member_status = member.status
         for status in Status:
-            if before & status and not after & status:
-                self._statuses[status].discard(member)
-            elif not before & status and after & status:
+            if member_status & status:
                 self._statuses[status].add(member)
+            else:
+                self._statuses[status].discard(member)
 
     @property
     def local(self) -> Member:
-        """The cluster member for the local instance."""
+        """The :term:`local member` for the process."""
         return self._local
 
     @property
-    def non_local(self) -> Sequence[Member]:
-        """All of the non-local cluster members."""
-        return list(self._non_local)
+    def non_local(self) -> Set[Member]:
+        """All of the non-local cluster :term:`members <member>`."""
+        return self._non_local
 
-    @property
-    def all(self) -> Sequence[Member]:
-        """All of the cluster members, local and non-local."""
-        return list(self._members.values())
-
-    def get_target(self) -> Member:
-        """Return a random non-local cluster member."""
-        return random.choice(self._non_local)
-
-    def get_targets(self, count: int, exclude: Collection[Member]) \
-            -> Sequence[Member]:
-        """Return a sub-set of non-local cluster members.
+    def find(self, count: int, *, status: Status = Status.ALL,
+             exclude: Set[Member] = frozenset()) -> frozenset[Member]:
+        """Return a randomly-chosen subset of non-local cluster members that
+        meet the given criteria.
 
         Args:
-            count: The number of members to choose.
+            count: At most this many members will be returned.
+            status: The real or aggregate status of the members.
             exclude: Members that must not be included in the resulting list.
 
         """
-        indexes: set[int] = set()
-        exclude_indexes = {member.index for member in exclude}
-        non_local = self._non_local
-        num_results = min(len(non_local) - len(exclude), count)
-        while len(indexes) < num_results:
-            idx = random.randrange(0, len(non_local))
-            if idx not in exclude_indexes:
-                indexes.add(idx)
-        return [non_local[idx] for idx in indexes]
+        shuffle = self._statuses[status]
+        results: set[Member] = set()
+        num_excluded = sum(1 for member in exclude if member in shuffle)
+        num_remaining = len(shuffle) - num_excluded
+        num_results = min(num_remaining, count)
+        while len(results) < num_results:
+            results.add(shuffle.choice())
+        return frozenset(results)
 
-    def get_status(self, status: Status) -> frozenset[Member]:
-        """Return all of the cluster members with the given status.
+    def get_status(self, status: Status) -> Shuffle[Member]:
+        """Return all of the non-local cluster members with the given status.
 
         Args:
             status: A real status like
-                :attr:`~swimprotocol.packet.Status.ONLINE` or an aggregate
-                status like :attr:`~swimprotocol.packet.Status.AVAILABLE`.
+                :attr:`~swimprotocol.status.Status.ONLINE` or an aggregate
+                status like :attr:`~swimprotocol.status.Status.AVAILABLE`.
 
         """
-        return frozenset(self._statuses[status])
+        return self._statuses[status]
 
-    def get(self, name: str) -> Member:
+    def get(self, name: str, validity: Optional[bytes] = None) -> Member:
         """Return the cluster member with the given name, creating it if does
         not exist.
 
+        If *validity* is given and *name* matches an existing non-local member,
+        it is compared to the previous validity value, causing a full
+        resynchronize if they are different.
+
         Args:
-            The unique name of the cluster member.
+            name: The unique name of the cluster member.
+            validity: Random bytes used to check existing member validity.
 
         """
         member = self._members.get(name)
         if member is None:
-            index = len(self._non_local)
-            member = Member(name, index, False)
-            self._non_local.append(member)
+            member = Member(name, False)
+            self._non_local.add(member)
             self._members[name] = member
+            for status in Status:
+                if member.status & status:
+                    self._statuses[status].add(member)
+        if not member.local and validity is not None \
+                and member._validity != validity:
+            member._known_clocks.clear()
+            member._validity = validity
         return member
 
-    def update(self, member: Member, clock: Optional[int] = None, *,
+    def _update(self, member: Member, source: Optional[Member],
+                clock: int, status: Optional[Status],
+                metadata: Optional[Mapping[bytes, bytes]]) -> None:
+        next_clock = self._next_clock
+        member._set_clock(clock, next_clock)
+        if status is not None:
+            member._set_status(status)
+        if metadata is not None:
+            member._set_metadata(metadata)
+        if member._save(source, next_clock):
+            self._refresh_statuses(member)
+            self.listener.notify(member)
+        if member.clock >= next_clock:
+            self._next_clock = member.clock + 1
+
+    def update(self, member: Member, *,
                new_status: Optional[Status] = None,
                new_metadata: Optional[Mapping[bytes, bytes]] = None) -> None:
         """Update the cluster member status or metadata.
 
         Args:
             member: The cluster member to update.
-            clock: The sequence clock for the update, or ``None`` to assign the
-                next available.
             new_status: A new status for the member, if any.
             new_metadata: New metadata dictionary for the member, if any.
 
         """
-        if clock is None:
-            clock = self._next_clock
-        elif member.local:
-            return
-        before_status = member.status
-        member._set_clock(clock)
-        if new_status is not None:
-            member._set_status(new_status)
-        if new_metadata is not None:
-            member._set_metadata(new_metadata)
-        if member._save():
-            self._refresh_statuses(member, before_status, member.status)
-            if member.clock >= self._next_clock:
-                self._next_clock += 1
-            self.listener.notify(member)
+        self._update(member, None, self._next_clock, new_status, new_metadata)
 
-    def get_gossip(self, target: Member, count: int) -> Sequence[Member]:
-        """Iterates through cluster members looking for changes that should be
-        sent to *target*. Cluster members are returned if their
-        :attr:`~Member.clock` is higher than the *target* clock.
+    def apply(self, member: Member, source: Member, clock: int, *,
+              status: Status, metadata: Optional[Mapping[bytes, bytes]]) \
+            -> None:
+        """Apply a disseminated update from *source* to *member*.
+
+        Args:
+            member: The cluster member to update.
+            source: The cluster member that disseminated the update.
+            clock: The sequence clock of the update.
+            status: The status to apply to *member*.
+            metadata: The metadata to apply to *member*, if known.
+
+        """
+        self._update(member, source, clock, status, metadata)
+
+    def get_gossip(self, target: Member) -> Generator[Member, None, None]:
+        """Iterates through cluster members looking for :term:`gossip` that
+        should be sent to *target*.
+
+        See Also:
+            :ref:`Dissemination`
 
         Args:
             target: The recipient of the cluster gossip.
-            count: Minimum number of members to return, if possible.
 
         """
         local = self._local
-        results = []
-        if local.clock > target.clock:
-            results.append(local)
+        if target._needs_gossip(local):
+            yield local
         for member in self._non_local:
-            if member != target and member.clock > target.clock:
-                results.append(member)
-        remaining = count - len(results)
-        if remaining > 0:
-            results.extend(self.get_targets(remaining, results))
-        return results
+            if member.metadata is not Member.METADATA_UNKNOWN and \
+                    target._needs_gossip(member):
+                yield member
+
+    def ack_gossip(self, member: Member, source: Member, clock: int) -> None:
+        """Marks the *source* cluster member as having received updates about
+        *member* up to the given sequence clock. This prevents repeated
+        transfer of known gossip.
+
+        Args:
+            member: The cluster member that was updated.
+            source: The cluster member that received the update.
+            clock: The sequence clock of the update.
+
+        """
+        assert clock <= self._next_clock
+        source._known_clocks[member] = clock

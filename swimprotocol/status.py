@@ -7,8 +7,8 @@ __all__ = ['Status']
 
 
 class Status(Flag):
-    """Possible cluster member statuses. The local cluster member instance will
-    always see itself as :attr:`.ONLINE`.
+    """Possible cluster member :term:`status` values, as well as aggregate
+    values that can be used with bitwise operations but must not be assigned.
 
     """
 
@@ -29,6 +29,9 @@ class Status(Flag):
     #: Aggregate status for statuses that are not considered responding,
     #: :attr:`.OFFLINE` and :attr:`.SUSPECT`, for use with bitwise operations.
     UNAVAILABLE = OFFLINE | SUSPECT
+
+    #: Aggregate status for all statuses, for use with bitwise operations.
+    ALL = AVAILABLE | UNAVAILABLE
 
     def transition(self, to: Status) -> Status:
         """Prevents impossible status transitions, returning a new status to

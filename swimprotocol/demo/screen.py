@@ -51,7 +51,7 @@ class Screen:
             stdscr.addstr(val_str, curses.color_pair(i+1) | curses.A_BOLD)
 
     def _render(self, stdscr: Any) -> None:
-        members = sorted(self.members.all)
+        members = sorted(self.members)
         for i, member in enumerate(members):
             stdscr.move(i, 4)
             stdscr.addstr(member.name, curses.color_pair(i+1) | curses.A_BOLD)
@@ -69,7 +69,7 @@ class Screen:
                 stdscr.addstr(' <<<', curses.A_BOLD)
         stdscr.move(curses.LINES - 1, curses.COLS - 18)
         stdscr.addstr(' Available: ')
-        available = len(self.members.get_status(Status.AVAILABLE))
+        available = len(self.members.get_status(Status.AVAILABLE)) + 1
         stdscr.addstr(f'{available}', curses.A_BOLD)
 
     def main(self, stdscr: Any) -> None:
@@ -101,6 +101,6 @@ def run_screen(members: Members) -> AsyncExitStack:
     screen = Screen(members)
     main_task = asyncio.create_task(screen.run_thread())
     exit_stack.push_async_callback(asyncio.wait_for, main_task, None)
-    exit_stack.enter_context(members.listener.on_update(screen.update))
+    exit_stack.enter_context(members.listener.on_notify(screen.update))
     exit_stack.callback(screen.cancel)
     return exit_stack

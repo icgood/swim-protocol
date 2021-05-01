@@ -12,26 +12,24 @@ __all__ = ['Packet', 'Ping', 'PingReq', 'Ack', 'Gossip']
 
 @dataclass(frozen=True)
 class Packet:
-    """Base class for "packets" sent between cluster members.
+    """Base class for a :term:`packet` sent between cluster members.
 
     :class:`~swimprotocol.transport.Transport` implementations may use these
-    directly, e.g. :class:`~swimprotocol.udp.UdpPack`, or adapt their contents
-    into another protocol.
+    directly, e.g. :class:`~swimprotocol.udp.pack.UdpPack`, or adapt their
+    contents into another protocol.
 
     Args:
         source: The name of the local cluster member that created the packet.
 
     """
 
-    source: str
+    source: tuple[str, bytes]
 
 
 @dataclass(frozen=True)
 class Ping(Packet):
-    """Packets used for the SWIM protocol *ping* operation, which do not
-    explicitly contain any other information other than the *source*. The
-    *ping* operation simply asks the destination member to send it an *ack*
-    response.
+    """Packets used for the SWIM protocol :term:`ping` operation, which do not
+    explicitly contain any other information other than the *source*.
 
     """
     pass
@@ -39,10 +37,8 @@ class Ping(Packet):
 
 @dataclass(frozen=True)
 class PingReq(Packet):
-    """Packets used for the SWIM protocol *ping-req* operation, which contain
-    a *target* member in addition to *source*. The *ping-req* operation asks
-    another member to *ping* the target, and forward any received *ack*
-    responses back to the source.
+    """Packets used for the SWIM protocol :term:`ping-req` operation, which
+    contain a *target* member in addition to *source*.
 
     Args:
         target: The name of the target cluster member.
@@ -54,8 +50,8 @@ class PingReq(Packet):
 
 @dataclass(frozen=True)
 class Ack(Packet):
-    """Packets used for the SWIM protocol *ack* response, which indicates that
-    *source* is online.
+    """Packets used for the SWIM protocol :term:`ack` response, which indicates
+    that *source* is online.
 
     """
 
@@ -64,7 +60,7 @@ class Ack(Packet):
 
 @dataclass(frozen=True)
 class Gossip(Packet):
-    """Packets used for SWIM protocol dissemination, which alert other members
+    """Packets used for SWIM protocol :term:`gossip`, which alert other members
     when a cluster member has changed status or metadata. This information is
     intended to travel around the cluster until all members are aware of the
     change.
@@ -81,3 +77,17 @@ class Gossip(Packet):
     clock: int
     status: Status
     metadata: Optional[Mapping[bytes, bytes]]
+
+
+@dataclass(frozen=True)
+class GossipAck(Packet):
+    """Packets used to acknowledge receipt of a :class:`Gossip` packet.
+
+    Args:
+        name: The name of the cluster member from the :class:`Gossip` packet.
+        clock: The sequence clock from the :class:`Gossip` packet.
+
+    """
+
+    name: str
+    clock: int

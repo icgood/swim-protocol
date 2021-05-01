@@ -19,16 +19,16 @@ class Config:
         local_name: The unique name of the local cluster member.
         local_metadata: The local cluster member metadata.
         peers: At least one name of another known node in the cluster.
-        ping_interval: Time between *ping* attempts to random cluster members.
-        ping_timeout: Time to wait for an *ack* after sending a *ping*.
-        ping_req_count: Number of nodes to send a *ping-req* when a *ping*
-            fails.
-        ping_req_timeout: Time to wait for an *ack* after sending *ping-req*'s.
+        ping_interval: Time between :term:`ping` attempts to random cluster
+            members.
+        ping_timeout: Time to wait for an :term:`ack` after sending a
+            :term:`ping`.
+        ping_req_count: Number of nodes to send a :term:`ping-req` when a
+            :term:`ping` fails.
+        ping_req_timeout: Time to wait for an *ack* after sending a
+            :term:`ping-req`.
         suspect_timeout: Time to wait after losing connectivity with a cluster
             member before marking it offline.
-        sync_count: Minimum number of cluster members to sync on each attempt.
-            Members with changes are always sent, and then random members are
-            chosen until this number is met.
         sync_interval: Time between sync attempts to disseminate cluster
             changes.
 
@@ -44,7 +44,6 @@ class Config:
                  ping_req_count: int = 1,
                  ping_req_timeout: float = 0.9,
                  suspect_timeout: float = 5.0,
-                 sync_count: int = 2,
                  sync_interval: float = 0.5) -> None:
         super().__init__()
         self.args: Final = args
@@ -57,7 +56,6 @@ class Config:
         self.ping_req_count: Final = ping_req_count
         self.ping_req_timeout: Final = ping_req_timeout
         self.suspect_timeout: Final = suspect_timeout
-        self.sync_count: Final = sync_count
         self.sync_interval: Final = sync_interval
 
     @classmethod

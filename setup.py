@@ -28,7 +28,7 @@ with open('LICENSE.md') as f:
     license = f.read()
 
 setup(name='swim-protocol',
-      version='0.1.0',
+      version='0.2.0',
       author='Ian Good',
       author_email='ian@icgood.net',
       description='SWIM protocol implementation for exchanging cluster '

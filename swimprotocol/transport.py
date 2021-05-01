@@ -15,10 +15,11 @@ __all__ = ['Transport', 'transport_plugins']
 
 
 class Transport(Protocol):
-    """Interface of the basic functionality needed to act as the transport
-    layer for the SWIM protocol. The transport layer is responsible for sending
-    and receiving *ping*, *ping-req*, and *ack* packets for failure detection,
-    and transmitting gossip for dissemination.
+    """Interface of the basic functionality needed to act as the
+    :term:`transport` layer for the SWIM protocol. The transport layer is
+    responsible for sending and receiving :term:`ping`, :term:`ping-req`, and
+    :term:`ack` packets for failure detection, and transmitting :term:`gossip`
+    for dissemination.
 
     """
 
