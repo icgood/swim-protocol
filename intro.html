@@ -1,0 +1,276 @@
+
+
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>SWIM Introduction &#8212; swim-protocol 0.2.0 documentation</title>
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/doctools.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="swimprotocol" href="swimprotocol.html" />
+    <link rel="prev" title="swim-protocol Documentation" href="index.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="swimprotocol.html" title="swimprotocol"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="swim-protocol Documentation"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <div class="section" id="swim-introduction">
+<h1>SWIM Introduction<a class="headerlink" href="#swim-introduction" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="goals">
+<h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
+<p>This project is intended to implement the <a class="reference external" href="https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf">SWIM</a> white paper, with elements
+drawn from <a class="reference external" href="https://www.serf.io/docs/internals/gossip.html">Serf</a> as well. The goals are simple:</p>
+<ul class="simple">
+<li><p>Each <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> in a cluster should be <em>eventually</em> aware of all other
+nodes in the cluster, and is able to run code when a node’s <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a>
+changes.</p></li>
+<li><p>Each <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> may define a set of key/value strings as its
+<a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a>. All members are <em>eventually</em> aware of all other members’
+metadata, as well as any changes.</p></li>
+</ul>
+<div class="section" id="failure-detection">
+<h3>Failure Detection<a class="headerlink" href="#failure-detection" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a> chooses a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> at random and sent a
+<a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a>. If the remote member does not respond with an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> within
+a timeout, at least one other remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> is chosen and sent a
+<a class="reference internal" href="#term-ping-req"><span class="xref std std-term">ping-req</span></a>. If the remote member <em>still</em> does not respond with an
+<a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a>, it is declared <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a>. This process repeats indefinitely
+across every member of the cluster. If ever a <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a> or
+<a class="reference internal" href="#term-offline"><span class="xref std std-term">offline</span></a> member responds with an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> via either a <a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a>
+or a <a class="reference internal" href="#term-ping-req"><span class="xref std std-term">ping-req</span></a>, it is immediately returned to <a class="reference internal" href="#term-online"><span class="xref std std-term">online</span></a> status.</p>
+</div>
+<div class="section" id="dissemination">
+<h3>Dissemination<a class="headerlink" href="#dissemination" title="Permalink to this headline">¶</a></h3>
+<p>The <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a> chooses a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> at random to send
+<a class="reference internal" href="#term-gossip"><span class="xref std std-term">gossip</span></a>. The last known <a class="reference internal" href="#term-sequence-clock"><span class="xref std std-term">sequence clock</span></a> of the remote member is
+used to determine what other <a class="reference internal" href="#term-member"><span class="xref std std-term">members</span></a> to gossip about.  For
+example, if member <strong>A</strong> wanted to gossip about member <strong>B</strong> to member <strong>C</strong>,
+and member <strong>C</strong> last reported a sequence clock of <em>9</em>, while <strong>B</strong> was last
+updated at sequence clock <em>13</em>, then <strong>A</strong> would send the gossip. <strong>C</strong> would
+then report a new sequence clock of <em>13</em> (or higher!) and future gossip about
+<strong>B</strong> would not be sent. This process repeats indefinitely across every member
+of the cluster. At rest, where all members have received the most recent gossip
+about all other members, no gossip is sent at all until the next time a
+<a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> changes <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> or <a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a>.</p>
+</div>
+</div>
+<div class="section" id="glossary">
+<h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
+<dl class="glossary simple">
+<dt id="term-SWIM">SWIM<a class="headerlink" href="#term-SWIM" title="Permalink to this term">¶</a></dt><dd><p>Scalable Weakly-consistent Infection-style Process Group Membership
+Protocol, defined in the <a class="reference external" href="https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf">SWIM</a> white paper.</p>
+</dd>
+<dt id="term-member">member<a class="headerlink" href="#term-member" title="Permalink to this term">¶</a></dt><dt id="term-node">node<a class="headerlink" href="#term-node" title="Permalink to this term">¶</a></dt><dd><p>A member is an instance that is initially aware of at least one other
+member, and then transitively is made aware of other members that are
+known by that member, forming a cluster.</p>
+</dd>
+<dt id="term-local-member">local member<a class="headerlink" href="#term-local-member" title="Permalink to this term">¶</a></dt><dd><p>The <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> corresponding to the current process. This
+<a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> is <em>always</em> online and is the only <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> whose
+<a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a> may be changed. The local member perceives other members
+in the cluster based on their most recently known <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> and
+<a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a>.</p>
+</dd>
+<dt id="term-status">status<a class="headerlink" href="#term-status" title="Permalink to this term">¶</a></dt><dd><p>One of three states that a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> can hold, as perceived
+the <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a>: <a class="reference internal" href="#term-online"><span class="xref std std-term">online</span></a>, <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a>, or
+<a class="reference internal" href="#term-offline"><span class="xref std std-term">offline</span></a>.</p>
+</dd>
+<dt id="term-online">online<a class="headerlink" href="#term-online" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> meaning recent failure detection attempts have
+successfully received an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> from the remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>.</p>
+</dd>
+<dt id="term-suspect">suspect<a class="headerlink" href="#term-suspect" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> meaning that a recently-online <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> has not
+responded to at least one failure detection attempt.</p>
+</dd>
+<dt id="term-offline">offline<a class="headerlink" href="#term-offline" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> meaning the <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> has not responded with an
+<a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> to any recent failure detection attempts. A <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a>
+member becomes <a class="reference internal" href="#term-offline"><span class="xref std std-term">offline</span></a> only after some time elapses, to prevent
+false positives.</p>
+</dd>
+<dt id="term-metadata">metadata<a class="headerlink" href="#term-metadata" title="Permalink to this term">¶</a></dt><dd><p>An immutable mapping of key/value <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> associated with each
+<a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>. New mappings may be assigned, and the latest mapping will
+always be disseminated across the cluster.</p>
+</dd>
+<dt id="term-transport">transport<a class="headerlink" href="#term-transport" title="Permalink to this term">¶</a></dt><dd><p>An interface for implementing alternative transmission mechanisms instead
+of the builtin <a class="reference internal" href="swimprotocol.udp.html#module-swimprotocol.udp" title="swimprotocol.udp"><code class="xref py py-mod docutils literal notranslate"><span class="pre">udp</span></code></a>. A transport is capable of
+sending and receiving <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> messages.</p>
+</dd>
+<dt id="term-packet">packet<a class="headerlink" href="#term-packet" title="Permalink to this term">¶</a></dt><dd><p>A simple, one-way message that is sent from the <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> to
+another. In <a class="reference internal" href="swimprotocol.udp.html#module-swimprotocol.udp" title="swimprotocol.udp"><code class="xref py py-mod docutils literal notranslate"><span class="pre">udp</span></code></a>, these directly correspond to
+<a class="reference external" href="https://en.wikipedia.org/wiki/Datagram">datagrams</a>.</p>
+</dd>
+<dt id="term-ping">ping<a class="headerlink" href="#term-ping" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that requests that a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> reply to the
+source <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> with an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a>. This is the most basic attempt
+to detect when members have gone offline.</p>
+</dd>
+<dt id="term-ping-req">ping-req<a class="headerlink" href="#term-ping-req" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that requests that a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> send its own
+<a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a> to a second remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>. If the recipient receives
+an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a>, it is forwarded back to the source <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>.</p>
+</dd>
+<dt id="term-ack">ack<a class="headerlink" href="#term-ack" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> sent in response to a <a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a> or <a class="reference internal" href="#term-ping-req"><span class="xref std std-term">ping-req</span></a>
+indicating that the source <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> is <a class="reference internal" href="#term-online"><span class="xref std std-term">online</span></a>.</p>
+</dd>
+<dt id="term-gossip">gossip<a class="headerlink" href="#term-gossip" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that informs one <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> of the currently
+known <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> and <a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a> of another <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>.</p>
+</dd>
+<dt id="term-sequence-clock">sequence clock<a class="headerlink" href="#term-sequence-clock" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Lamport_timestamp">Lamport timestamp</a>, an always-increasing counter where the next value
+is always higher than any other observed value, used to determine whether
+<a class="reference internal" href="#term-gossip"><span class="xref std std-term">gossip</span></a> is new enough to be applied or disseminated.</p>
+</dd>
+</dl>
+</div>
+</div>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#">SWIM Introduction</a><ul>
+<li><a class="reference internal" href="#goals">Goals</a><ul>
+<li><a class="reference internal" href="#failure-detection">Failure Detection</a></li>
+<li><a class="reference internal" href="#dissemination">Dissemination</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#glossary">Glossary</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="index.html"
+                          title="Previous page">&larr; <code class="docutils literal notranslate"><span class="pre">swim-protocol</span></code> Documentation</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="swimprotocol.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/intro.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" />
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>$('#searchbox').show(0);</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="swimprotocol.html" title="swimprotocol"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="index.html" title="swim-protocol Documentation"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2021, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

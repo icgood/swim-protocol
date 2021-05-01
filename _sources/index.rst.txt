@@ -9,6 +9,7 @@ Table of Contents
    :maxdepth: 2
    :caption: Contents:
 
+   intro
    swimprotocol
    swimprotocol.udp
 

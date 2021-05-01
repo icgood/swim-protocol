@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; swim-protocol 0.1.0 documentation</title>
+    <title>Index &#8212; swim-protocol 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -48,7 +48,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.1.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
@@ -78,7 +78,15 @@
  | <a href="#N"><strong>N</strong></a>
  | <a href="#O"><strong>O</strong></a>
  | <a href="#P"><strong>P</strong></a>
+ | <a href="#packet"><strong>packet</strong></a>
+ | <a href="#P"><strong>P</strong></a>
+ | <a href="#packet"><strong>packet</strong></a>
+ | <a href="#P"><strong>P</strong></a>
  | <a href="#R"><strong>R</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#status"><strong>status</strong></a>
+ | <a href="#S"><strong>S</strong></a>
+ | <a href="#status"><strong>status</strong></a>
  | <a href="#S"><strong>S</strong></a>
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
@@ -90,6 +98,10 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.packet.Ack">Ack (class in swimprotocol.packet)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.members.Members.ack_gossip">ack_gossip() (swimprotocol.members.Members method)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.shuffle.WeakShuffle.add">add() (swimprotocol.shuffle.WeakShuffle method)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.transport.Transport.add_arguments">add_arguments() (swimprotocol.transport.Transport class method)</a>
 
@@ -103,7 +115,9 @@
 </li>
       <li><a href="swimprotocol.html#swimprotocol.address.AddressParser">AddressParser (class in swimprotocol.address)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.members.Members.all">all() (swimprotocol.members.Members property)</a>
+      <li><a href="swimprotocol.html#swimprotocol.status.Status.ALL">ALL (swimprotocol.status.Status attribute)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.members.Members.apply">apply() (swimprotocol.members.Members method)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.status.Status.AVAILABLE">AVAILABLE (swimprotocol.status.Status attribute)</a>
 </li>
@@ -125,12 +139,20 @@
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.worker.Worker.check">check() (swimprotocol.worker.Worker method)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.shuffle.Shuffle.choice">choice() (swimprotocol.shuffle.Shuffle method)</a>
+
+      <ul>
+        <li><a href="swimprotocol.html#swimprotocol.shuffle.WeakShuffle.choice">(swimprotocol.shuffle.WeakShuffle method)</a>
+</li>
+      </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.plugin.Plugins.choose">choose() (swimprotocol.plugin.Plugins method)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.members.Member.clock">clock() (swimprotocol.members.Member property)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.config.Config">Config (class in swimprotocol.config)</a>
 </li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.connection_made">connection_made() (swimprotocol.udp.protocol.SwimProtocol method)</a>
@@ -142,6 +164,12 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.datagram_received">datagram_received() (swimprotocol.udp.protocol.SwimProtocol method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.shuffle.WeakShuffle.discard">discard() (swimprotocol.shuffle.WeakShuffle method)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.worker.Worker.disseminate">disseminate() (swimprotocol.worker.Worker method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -161,6 +189,10 @@
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.members.Members.find">find() (swimprotocol.members.Members method)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.config.Config.from_args">from_args() (swimprotocol.config.Config class method)</a>
 </li>
   </ul></td>
@@ -175,15 +207,11 @@
         <li><a href="swimprotocol.html#swimprotocol.members.Members.get">(swimprotocol.members.Members method)</a>
 </li>
       </ul></li>
-      <li><a href="swimprotocol.html#swimprotocol.members.Members.get_gossip">get_gossip() (swimprotocol.members.Members method)</a>
-</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.members.Members.get_gossip">get_gossip() (swimprotocol.members.Members method)</a>
+</li>
       <li><a href="swimprotocol.html#swimprotocol.members.Members.get_status">get_status() (swimprotocol.members.Members method)</a>
-</li>
-      <li><a href="swimprotocol.html#swimprotocol.members.Members.get_target">get_target() (swimprotocol.members.Members method)</a>
-</li>
-      <li><a href="swimprotocol.html#swimprotocol.members.Members.get_targets">get_targets() (swimprotocol.members.Members method)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.packet.Gossip">Gossip (class in swimprotocol.packet)</a>
 </li>
@@ -200,6 +228,10 @@
 </li>
       </ul></li>
   </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.worker.IO">IO (class in swimprotocol.worker)</a>
+</li>
+  </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
@@ -207,9 +239,11 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.listener.Listener">Listener (class in swimprotocol.listener)</a>
 </li>
+      <li><a href="swimprotocol.html#swimprotocol.plugin.Plugins.loaded">loaded() (swimprotocol.plugin.Plugins property)</a>
+</li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.plugin.Plugins.loaded">loaded() (swimprotocol.plugin.Plugins property)</a>
+      <li><a href="intro.html#term-local-member"><strong>local member</strong></a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.members.Members.local">local() (swimprotocol.members.Members property)</a>
 </li>
@@ -219,9 +253,13 @@
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-member"><strong>member</strong></a>
+</li>
       <li><a href="swimprotocol.html#swimprotocol.members.Member">Member (class in swimprotocol.members)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.members.Members">Members (class in swimprotocol.members)</a>
+</li>
+      <li><a href="intro.html#term-metadata"><strong>metadata</strong></a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.members.Member.metadata">metadata() (swimprotocol.members.Member property)</a>
 </li>
@@ -245,6 +283,8 @@
 </li>
         <li><a href="swimprotocol.html#module-swimprotocol.plugin">swimprotocol.plugin</a>
 </li>
+        <li><a href="swimprotocol.html#module-swimprotocol.shuffle">swimprotocol.shuffle</a>
+</li>
         <li><a href="swimprotocol.html#module-swimprotocol.sign">swimprotocol.sign</a>
 </li>
         <li><a href="swimprotocol.html#module-swimprotocol.status">swimprotocol.status</a>
@@ -266,10 +306,12 @@
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.members.Members.non_local">non_local() (swimprotocol.members.Members property)</a>
+      <li><a href="intro.html#term-node"><strong>node</strong></a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.members.Members.non_local">non_local() (swimprotocol.members.Members property)</a>
+</li>
       <li><a href="swimprotocol.html#swimprotocol.listener.Listener.notify">notify() (swimprotocol.listener.Listener method)</a>
 </li>
   </ul></td>
@@ -282,7 +324,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.listener.Listener.on_update">on_update() (swimprotocol.listener.Listener method)</a>
+      <li><a href="swimprotocol.html#swimprotocol.listener.Listener.on_notify">on_notify() (swimprotocol.listener.Listener method)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.status.Status.ONLINE">ONLINE (swimprotocol.status.Status attribute)</a>
 </li>
@@ -294,6 +336,44 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.pack.UdpPack.pack">pack() (swimprotocol.udp.pack.UdpPack method)</a>
 </li>
+  </ul></td>
+</tr></table>
+
+<h2 id="packet">packet</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-ack"><strong>ack</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-gossip"><strong>gossip</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-packet"><strong>packet</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="packet">packet</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-ping"><strong>ping</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-ping-req"><strong>ping-req</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="P">P</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.packet.Packet">Packet (class in swimprotocol.packet)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.packet.Ping">Ping (class in swimprotocol.packet)</a>
@@ -313,10 +393,18 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.recv">recv() (swimprotocol.udp.protocol.SwimProtocol method)</a>
+
+      <ul>
+        <li><a href="swimprotocol.html#swimprotocol.worker.IO.recv">(swimprotocol.worker.IO method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.worker.Worker.run">run() (swimprotocol.worker.Worker method)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.worker.Worker.run_dissemination">run_dissemination() (swimprotocol.worker.Worker method)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.worker.Worker.run_failure_detection">run_failure_detection() (swimprotocol.worker.Worker method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -325,6 +413,16 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.send">send() (swimprotocol.udp.protocol.SwimProtocol method)</a>
+
+      <ul>
+        <li><a href="swimprotocol.html#swimprotocol.worker.IO.send">(swimprotocol.worker.IO method)</a>
+</li>
+      </ul></li>
+      <li><a href="intro.html#term-sequence-clock"><strong>sequence clock</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.shuffle.Shuffle">Shuffle (class in swimprotocol.shuffle)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.sign.Signatures.sign">sign() (swimprotocol.sign.Signatures method)</a>
 </li>
@@ -332,6 +430,40 @@
 </li>
       <li><a href="swimprotocol.html#swimprotocol.config.Config.signatures">signatures() (swimprotocol.config.Config property)</a>
 </li>
+  </ul></td>
+</tr></table>
+
+<h2 id="status">status</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-offline"><strong>offline</strong></a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-online"><strong>online</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-status"><strong>status</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="status">status</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="intro.html#term-suspect"><strong>suspect</strong></a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="S">S</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.status.Status">Status (class in swimprotocol.status)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.members.Member.status">status() (swimprotocol.members.Member property)</a>
@@ -339,6 +471,8 @@
       <li><a href="swimprotocol.html#swimprotocol.members.Member.status_time">status_time() (swimprotocol.members.Member property)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.status.Status.SUSPECT">SUSPECT (swimprotocol.status.Status attribute)</a>
+</li>
+      <li><a href="intro.html#term-SWIM"><strong>SWIM</strong></a>
 </li>
       <li>
     swimprotocol
@@ -377,8 +511,6 @@
         <li><a href="swimprotocol.html#module-swimprotocol.members">module</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     swimprotocol.packet
 
@@ -386,11 +518,20 @@
         <li><a href="swimprotocol.html#module-swimprotocol.packet">module</a>
 </li>
       </ul></li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li>
     swimprotocol.plugin
 
       <ul>
         <li><a href="swimprotocol.html#module-swimprotocol.plugin">module</a>
+</li>
+      </ul></li>
+      <li>
+    swimprotocol.shuffle
+
+      <ul>
+        <li><a href="swimprotocol.html#module-swimprotocol.shuffle">module</a>
 </li>
       </ul></li>
       <li>
@@ -450,10 +591,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.status.Status.transition">transition() (swimprotocol.status.Status method)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.transport.Transport">Transport (class in swimprotocol.transport)</a>
+      <li><a href="intro.html#term-transport"><strong>transport</strong></a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.transport.Transport">Transport (class in swimprotocol.transport)</a>
+</li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.transport">transport() (swimprotocol.udp.protocol.SwimProtocol property)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.transport.transport_plugins">transport_plugins (in module swimprotocol.transport)</a>
@@ -489,6 +632,10 @@
 
 <h2 id="W">W</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.shuffle.WeakShuffle">WeakShuffle (class in swimprotocol.shuffle)</a>
+</li>
+  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.worker.Worker">Worker (class in swimprotocol.worker)</a>
 </li>
@@ -545,7 +692,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.1.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>

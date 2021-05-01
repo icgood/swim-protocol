@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>swimprotocol.udp &#8212; swim-protocol 0.1.0 documentation</title>
+    <title>swimprotocol.udp &#8212; swim-protocol 0.2.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.1.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
@@ -70,7 +70,8 @@
 <dl class="py class">
 <dt id="swimprotocol.udp.UdpTransport">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></code><code class="sig-name descname"><span class="pre">UdpTransport</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> using UDP, without
+<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.transport.Transport</span></code></a></p>
+<p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> using UDP, without
 <a class="reference external" href="https://en.wikipedia.org/wiki/Broadcast_address">broadcast</a>.</p>
 <p>This transport assumes that the name of each cluster member is in
 <code class="docutils literal notranslate"><span class="pre">host:port</span></code> format, and that any cluster member can receive UDP packets
@@ -168,21 +169,21 @@ be accessed on <code class="docutils literal notranslate"><span class="pre">conf
 <dl class="py class">
 <dt id="swimprotocol.udp.pack.UdpPack">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">swimprotocol.udp.pack.</span></code><code class="sig-name descname"><span class="pre">UdpPack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signatures</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">pickle_protocol</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix_xor</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">b'SWIM'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.pack.UdpPack" title="Permalink to this definition">¶</a></dt>
-<dd><p>Packs and unpacks SWIM protocol <a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Packs and unpacks SWIM protocol <a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a>
 objects from raw UDP packets. The <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> module is used for
 serialization, so <a class="reference internal" href="swimprotocol.html#swimprotocol.sign.Signatures" title="swimprotocol.sign.Signatures"><code class="xref py py-class docutils literal notranslate"><span class="pre">Signatures</span></code></a> is used to sign
 the payloads.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>signatures</strong> (<a class="reference internal" href="swimprotocol.html#swimprotocol.sign.Signatures" title="swimprotocol.sign.Signatures"><code class="xref py py-class docutils literal notranslate"><span class="pre">Signatures</span></code></a>) – Generates and verifies cluster packet signatures.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>signatures</strong> (<a class="reference internal" href="swimprotocol.html#swimprotocol.sign.Signatures" title="swimprotocol.sign.Signatures"><code class="xref py py-class docutils literal notranslate"><span class="pre">Signatures</span></code></a>) – Generates and verifies cluster packet signatures.</p></li>
+<li><p><strong>pickle_protocol</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>) – The <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> protocol version number.</p></li>
+<li><p><strong>prefix_xor</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a>) – A 4-byte string used to XOR the packet prefix, as a sanity
+check to detect malformed or incomplete UDP packets.</p></li>
+</ul>
 </dd>
 </dl>
-<p>:param pickle_protocol. The <a class="reference external" href="https://docs.python.org/3/library/pickle.html#module-pickle" title="(in Python v3.9)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">pickle</span></code></a> protocol version number.:
-:type prefix_xor: <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a>
-:param prefix_xor: A 4-byte string used to XOR the packet prefix, as a sanity</p>
-<blockquote>
-<div><p>check to detect malformed or incomplete UDP packets.</p>
-</div></blockquote>
 <dl class="py method">
 <dt id="swimprotocol.udp.pack.UdpPack.pack">
 <code class="sig-name descname"><span class="pre">pack</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">packet</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.pack.UdpPack.pack" title="Permalink to this definition">¶</a></dt>
@@ -230,8 +231,9 @@ indicate that <em>data</em> was malformed or incomplete.</p>
 <dl class="py class">
 <dt id="swimprotocol.udp.protocol.SwimProtocol">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">swimprotocol.udp.protocol.</span></code><code class="sig-name descname"><span class="pre">SwimProtocol</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address_parser</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.protocol.SwimProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Implements <a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.DatagramProtocol" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatagramProtocol</span></code></a> and
-<code class="xref py py-class docutils literal notranslate"><span class="pre">IO</span></code> to send and receive UDP as SWIM protocol
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">asyncio.protocols.DatagramProtocol</span></code>, <a class="reference internal" href="swimprotocol.html#swimprotocol.worker.IO" title="swimprotocol.worker.IO"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.worker.IO</span></code></a></p>
+<p>Implements <a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.DatagramProtocol" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatagramProtocol</span></code></a> and
+<a class="reference internal" href="swimprotocol.html#swimprotocol.worker.IO" title="swimprotocol.worker.IO"><code class="xref py py-class docutils literal notranslate"><span class="pre">IO</span></code></a> to send and receive UDP as SWIM protocol
 packets.</p>
 <dl class="py method">
 <dt id="swimprotocol.udp.protocol.SwimProtocol.transport">
@@ -382,7 +384,7 @@ return it.</p>
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.1.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
