@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; swim-protocol 0.2.0 documentation</title>
+    <title>Index &#8212; swim-protocol 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -48,7 +48,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>
@@ -65,7 +65,8 @@
 <h1 id="index">Index</h1>
 
 <div class="genindex-jumpbox">
- <a href="#A"><strong>A</strong></a>
+ <a href="#_"><strong>_</strong></a>
+ | <a href="#A"><strong>A</strong></a>
  | <a href="#B"><strong>B</strong></a>
  | <a href="#C"><strong>C</strong></a>
  | <a href="#D"><strong>D</strong></a>
@@ -94,6 +95,14 @@
  | <a href="#W"><strong>W</strong></a>
  
 </div>
+<h2 id="_">_</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.listener.ListenerCallback.__call__">__call__() (swimprotocol.listener.ListenerCallback method)</a>
+</li>
+  </ul></td>
+</tr></table>
+
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -103,10 +112,10 @@
 </li>
       <li><a href="swimprotocol.html#swimprotocol.shuffle.WeakShuffle.add">add() (swimprotocol.shuffle.WeakShuffle method)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.transport.Transport.add_arguments">add_arguments() (swimprotocol.transport.Transport class method)</a>
+      <li><a href="swimprotocol.html#swimprotocol.config.BaseConfig.add_arguments">add_arguments() (swimprotocol.config.BaseConfig class method)</a>
 
       <ul>
-        <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport.add_arguments">(swimprotocol.udp.UdpTransport class method)</a>
+        <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpConfig.add_arguments">(swimprotocol.udp.UdpConfig class method)</a>
 </li>
       </ul></li>
   </ul></td>
@@ -127,10 +136,12 @@
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport.bind_host">bind_host() (swimprotocol.udp.UdpTransport property)</a>
+      <li><a href="swimprotocol.html#swimprotocol.config.BaseConfig">BaseConfig (class in swimprotocol.config)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport.bind_host">bind_host() (swimprotocol.udp.UdpTransport property)</a>
+</li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport.bind_port">bind_port() (swimprotocol.udp.UdpTransport property)</a>
 </li>
   </ul></td>
@@ -147,13 +158,19 @@
         <li><a href="swimprotocol.html#swimprotocol.shuffle.WeakShuffle.choice">(swimprotocol.shuffle.WeakShuffle method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.plugin.Plugins.choose">choose() (swimprotocol.plugin.Plugins method)</a>
-</li>
       <li><a href="swimprotocol.html#swimprotocol.members.Member.clock">clock() (swimprotocol.members.Member property)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.config.Config">Config (class in swimprotocol.config)</a>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.transport.Transport.config_type">config_type (swimprotocol.transport.Transport attribute)</a>
+
+      <ul>
+        <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport.config_type">(swimprotocol.udp.UdpTransport attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="swimprotocol.html#swimprotocol.config.ConfigError">ConfigError</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.config.ConfigT_co">ConfigT_co (in module swimprotocol.config)</a>
 </li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.connection_made">connection_made() (swimprotocol.udp.protocol.SwimProtocol method)</a>
 </li>
@@ -164,6 +181,8 @@
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.datagram_received">datagram_received() (swimprotocol.udp.protocol.SwimProtocol method)</a>
+</li>
+      <li><a href="intro.html#term-demo"><strong>demo</strong></a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
@@ -193,7 +212,7 @@
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.config.Config.from_args">from_args() (swimprotocol.config.Config class method)</a>
+      <li><a href="swimprotocol.html#swimprotocol.config.BaseConfig.from_args">from_args() (swimprotocol.config.BaseConfig class method)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -207,27 +226,21 @@
         <li><a href="swimprotocol.html#swimprotocol.members.Members.get">(swimprotocol.members.Members method)</a>
 </li>
       </ul></li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.members.Members.get_gossip">get_gossip() (swimprotocol.members.Members method)</a>
 </li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.members.Members.get_status">get_status() (swimprotocol.members.Members method)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.packet.Gossip">Gossip (class in swimprotocol.packet)</a>
+</li>
+      <li><a href="swimprotocol.html#swimprotocol.packet.GossipAck">GossipAck (class in swimprotocol.packet)</a>
 </li>
   </ul></td>
 </tr></table>
 
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.transport.Transport.init">init() (swimprotocol.transport.Transport class method)</a>
-
-      <ul>
-        <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport.init">(swimprotocol.udp.UdpTransport class method)</a>
-</li>
-      </ul></li>
-  </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.worker.IO">IO (class in swimprotocol.worker)</a>
 </li>
@@ -239,10 +252,12 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.listener.Listener">Listener (class in swimprotocol.listener)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.plugin.Plugins.loaded">loaded() (swimprotocol.plugin.Plugins property)</a>
+      <li><a href="swimprotocol.html#swimprotocol.listener.ListenerCallback">ListenerCallback (class in swimprotocol.listener)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.html#swimprotocol.transport.load_transport">load_transport() (in module swimprotocol.transport)</a>
+</li>
       <li><a href="intro.html#term-local-member"><strong>local member</strong></a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.members.Members.local">local() (swimprotocol.members.Members property)</a>
@@ -280,8 +295,6 @@
         <li><a href="swimprotocol.html#module-swimprotocol.members">swimprotocol.members</a>
 </li>
         <li><a href="swimprotocol.html#module-swimprotocol.packet">swimprotocol.packet</a>
-</li>
-        <li><a href="swimprotocol.html#module-swimprotocol.plugin">swimprotocol.plugin</a>
 </li>
         <li><a href="swimprotocol.html#module-swimprotocol.shuffle">swimprotocol.shuffle</a>
 </li>
@@ -376,13 +389,17 @@
   <td style="width: 33%; vertical-align: top;"><ul>
       <li><a href="swimprotocol.html#swimprotocol.packet.Packet">Packet (class in swimprotocol.packet)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.packet.Ping">Ping (class in swimprotocol.packet)</a>
+      <li><a href="swimprotocol.html#swimprotocol.config.BaseConfig.parse_args">parse_args() (swimprotocol.config.BaseConfig class method)</a>
+
+      <ul>
+        <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpConfig.parse_args">(swimprotocol.udp.UdpConfig class method)</a>
 </li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="swimprotocol.html#swimprotocol.packet.PingReq">PingReq (class in swimprotocol.packet)</a>
+      <li><a href="swimprotocol.html#swimprotocol.packet.Ping">Ping (class in swimprotocol.packet)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.plugin.Plugins">Plugins (class in swimprotocol.plugin)</a>
+      <li><a href="swimprotocol.html#swimprotocol.packet.PingReq">PingReq (class in swimprotocol.packet)</a>
 </li>
       <li><a href="swimprotocol.html#swimprotocol.listener.Listener.poll">poll() (swimprotocol.listener.Listener method)</a>
 </li>
@@ -428,7 +445,7 @@
 </li>
       <li><a href="swimprotocol.html#swimprotocol.sign.Signatures">Signatures (class in swimprotocol.sign)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.config.Config.signatures">signatures() (swimprotocol.config.Config property)</a>
+      <li><a href="swimprotocol.html#swimprotocol.config.BaseConfig.signatures">signatures() (swimprotocol.config.BaseConfig property)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -521,13 +538,6 @@
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
       <li>
-    swimprotocol.plugin
-
-      <ul>
-        <li><a href="swimprotocol.html#module-swimprotocol.plugin">module</a>
-</li>
-      </ul></li>
-      <li>
     swimprotocol.shuffle
 
       <ul>
@@ -599,7 +609,7 @@
 </li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.protocol.SwimProtocol.transport">transport() (swimprotocol.udp.protocol.SwimProtocol property)</a>
 </li>
-      <li><a href="swimprotocol.html#swimprotocol.transport.transport_plugins">transport_plugins (in module swimprotocol.transport)</a>
+      <li><a href="swimprotocol.html#swimprotocol.transport.TransportT">TransportT (in module swimprotocol.transport)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -607,6 +617,8 @@
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpConfig">UdpConfig (class in swimprotocol.udp)</a>
+</li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.pack.UdpPack">UdpPack (class in swimprotocol.udp.pack)</a>
 </li>
       <li><a href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport">UdpTransport (class in swimprotocol.udp)</a>
@@ -692,7 +704,7 @@
         <li class="right" >
           <a href="py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">Index</a></li> 
       </ul>

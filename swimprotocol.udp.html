@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>swimprotocol.udp &#8212; swim-protocol 0.2.0 documentation</title>
+    <title>swimprotocol.udp &#8212; swim-protocol 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -52,7 +52,7 @@
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
@@ -68,9 +68,89 @@
   <div class="section" id="module-swimprotocol.udp">
 <span id="swimprotocol-udp"></span><h1><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code><a class="headerlink" href="#module-swimprotocol.udp" title="Permalink to this headline">¶</a></h1>
 <dl class="py class">
+<dt id="swimprotocol.udp.UdpConfig">
+<em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></code><code class="sig-name descname"><span class="pre">UdpConfig</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.config.BaseConfig</span></code></a></p>
+<p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a>, adding additional
+configuration required for <a class="reference internal" href="#swimprotocol.udp.UdpTransport" title="swimprotocol.udp.UdpTransport"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpTransport</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>bind_host</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]) – The hostname or IP address to bind the UDP socket. The
+hostname from the <em>local_name</em> address is used by default.</p></li>
+<li><p><strong>bind_port</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]) – The port number to bind the UDP socket. The port from the
+<em>local_name</em> address is used by default.</p></li>
+<li><p><strong>default_host</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]) – The hostname or IP address to connect to if an address
+string does not specify a hostname, e.g. <code class="docutils literal notranslate"><span class="pre">':1234'</span></code>.</p></li>
+<li><p><strong>default_port</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code></a>]) – The port number to connect to if an address string does
+not specify a port number, e.g. <code class="docutils literal notranslate"><span class="pre">'myhost'</span></code>.</p></li>
+<li><p><strong>kwargs</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>) – Additional keyword arguments passed to the
+<a class="reference internal" href="swimprotocol.html#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a> constructor.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="swimprotocol.udp.UdpConfig.add_arguments">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">add_arguments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpConfig.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementations (such as the <a class="reference internal" href="intro.html#term-demo"><span class="xref std std-term">demo</span></a>) may use this method to
+add command-line based configuration for the transport.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Arguments added should use <em>prefix</em> and explicitly provide a unique
+name, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">arg&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_arg&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This prevents collision with other argument names and allows custom
+<em>prefix</em> values without affecting the <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Namespace</span></code></a>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parser</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a>) – The argument parser.</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The prefix for added arguments, which should start with
+<code class="docutils literal notranslate"><span class="pre">--</span></code> and end with <code class="docutils literal notranslate"><span class="pre">-</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">'--'</span></code> or <code class="docutils literal notranslate"><span class="pre">'--foo-'</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="swimprotocol.udp.UdpConfig.parse_args">
+<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">parse_args</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SWIM'</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpConfig.parse_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the given <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Namespace</span></code></a> into a dictionary of
+keyword arguments for the <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code> constructor. Sub-classes
+should override this method to add additional keyword arguments as
+needed.</p>
+<p>The <a class="reference external" href="https://docs.python.org/3/library/os.html#os.getenv" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">os.getenv()</span></code></a> function can also be used, and will take priority
+over values in <em>args</em>:</p>
+<ul class="simple">
+<li><p><code class="docutils literal notranslate"><span class="pre">SWIM_SECRET</span></code>: The <em>secret</em> keyword argument.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SWIM_NAME</span></code>: The <em>local_name</em> keyword argument.</p></li>
+<li><p><code class="docutils literal notranslate"><span class="pre">SWIM_PEERS</span></code>: Comma-separated <em>peers</em> keyword argument.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Namespace</span></code></a>) – The command-line arguments.</p></li>
+<li><p><strong>env_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – Prefix for the environment variables.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt id="swimprotocol.udp.UdpTransport">
 <em class="property"><span class="pre">class</span> </em><code class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></code><code class="sig-name descname"><span class="pre">UdpTransport</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.transport.Transport</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.transport.Transport</span></code></a>[<a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.udp.UdpConfig</span></code></a>]</p>
 <p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> using UDP, without
 <a class="reference external" href="https://en.wikipedia.org/wiki/Broadcast_address">broadcast</a>.</p>
 <p>This transport assumes that the name of each cluster member is in
@@ -78,9 +158,15 @@
 from any other cluster member.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="swimprotocol.html#swimprotocol.config.Config" title="swimprotocol.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a>) – The cluster configuration object.</p>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a>) – The cluster configuration object.</p>
 </dd>
 </dl>
+<dl class="py attribute">
+<dt id="swimprotocol.udp.UdpTransport.config_type">
+<code class="sig-name descname"><span class="pre">config_type</span></code><a class="headerlink" href="#swimprotocol.udp.UdpTransport.config_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.udp.UdpConfig</span></code></a></p>
+</dd></dl>
+
 <dl class="py method">
 <dt id="swimprotocol.udp.UdpTransport.bind_host">
 <em class="property"><span class="pre">property</span> </em><code class="sig-name descname"><span class="pre">bind_host</span></code><a class="headerlink" href="#swimprotocol.udp.UdpTransport.bind_host" title="Permalink to this definition">¶</a></dt>
@@ -124,40 +210,6 @@ for transmitting and receiving SWIM protocol packets.</p>
 </dd>
 <dt class="field-even">Return type</dt>
 <dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">AsyncIterator</span></code></a>[<a class="reference internal" href="swimprotocol.html#swimprotocol.worker.Worker" title="swimprotocol.worker.Worker"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worker</span></code></a>]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="swimprotocol.udp.UdpTransport.add_arguments">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">add_arguments</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">parser</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpTransport.add_arguments" title="Permalink to this definition">¶</a></dt>
-<dd><p>Additional configuration needed by the transport may be added to the
-current argument <em>parser</em>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>) – The name of the transport plugin.</p></li>
-<li><p><strong>parser</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">ArgumentParser</span></code></a>) – The argument parser.</p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt id="swimprotocol.udp.UdpTransport.init">
-<em class="property"><span class="pre">classmethod</span> </em><code class="sig-name descname"><span class="pre">init</span></code><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.UdpTransport.init" title="Permalink to this definition">¶</a></dt>
-<dd><p>Initializes the <code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code> and returns a new instance
-given the <em>config</em>. Any arguments added by <a class="reference internal" href="#swimprotocol.udp.UdpTransport.add_arguments" title="swimprotocol.udp.UdpTransport.add_arguments"><code class="xref py py-meth docutils literal notranslate"><span class="pre">add_arguments()</span></code></a> can
-be accessed on <code class="docutils literal notranslate"><span class="pre">config.args</span></code>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="swimprotocol.html#swimprotocol.config.Config" title="swimprotocol.config.Config"><code class="xref py py-class docutils literal notranslate"><span class="pre">Config</span></code></a>) – The cluster configuration object.</p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a></p>
 </dd>
 </dl>
 </dd></dl>
@@ -384,7 +436,7 @@ return it.</p>
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>

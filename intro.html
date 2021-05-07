@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SWIM Introduction &#8212; swim-protocol 0.2.0 documentation</title>
+    <title>SWIM Introduction &#8212; swim-protocol 0.3.0 documentation</title>
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -56,7 +56,7 @@
         <li class="right" >
           <a href="index.html" title="swim-protocol Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
       </ul>
@@ -140,7 +140,7 @@ responded to at least one failure detection attempt.</p>
 member becomes <a class="reference internal" href="#term-offline"><span class="xref std std-term">offline</span></a> only after some time elapses, to prevent
 false positives.</p>
 </dd>
-<dt id="term-metadata">metadata<a class="headerlink" href="#term-metadata" title="Permalink to this term">¶</a></dt><dd><p>An immutable mapping of key/value <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">bytes</span></code></a> associated with each
+<dt id="term-metadata">metadata<a class="headerlink" href="#term-metadata" title="Permalink to this term">¶</a></dt><dd><p>An immutable mapping of key/value strings associated with each
 <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>. New mappings may be assigned, and the latest mapping will
 always be disseminated across the cluster.</p>
 </dd>
@@ -169,6 +169,10 @@ known <a class="reference internal" href="#term-status"><span class="xref std st
 <dt id="term-sequence-clock">sequence clock<a class="headerlink" href="#term-sequence-clock" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference external" href="https://en.wikipedia.org/wiki/Lamport_timestamp">Lamport timestamp</a>, an always-increasing counter where the next value
 is always higher than any other observed value, used to determine whether
 <a class="reference internal" href="#term-gossip"><span class="xref std std-term">gossip</span></a> is new enough to be applied or disseminated.</p>
+</dd>
+<dt id="term-demo">demo<a class="headerlink" href="#term-demo" title="Permalink to this term">¶</a></dt><dd><p>The included <a class="reference external" href="https://github.com/icgood/swim-protocol#running-the-demo">demo</a> is designed to randomize metadata changes on an
+interval to see them disseminated across the cluster, as well as watch as
+<a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> statuses change as demo instances are stopped and started.</p>
 </dd>
 </dl>
 </div>
@@ -260,7 +264,7 @@ is always higher than any other observed value, used to determine whether
         <li class="right" >
           <a href="index.html" title="swim-protocol Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.2.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
       </ul>
