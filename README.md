@@ -23,15 +23,17 @@ synchronize a distributed group of processes.
 $ pip install swim-protocol
 ```
 
+#### Running the Demo
+
 There is a [demo][2] application included as a reference implementation. Try it
 out by running the following, each from a new terminal window, and use _Ctrl-C_
 to exit:
 
 ```console
-$ swim-protocol-demo -c -m name one 127.0.0.1:2001 127.0.0.1:2003
-$ swim-protocol-demo -c -m name two 127.0.0.1:2002 127.0.0.1:2001
-$ swim-protocol-demo -c -m name three 127.0.0.1:2003 127.0.0.1:2001
-$ swim-protocol-demo -c -m name four 127.0.0.1:2004 127.0.0.1:2003
+$ swim-protocol-demo -c --name 127.0.0.1:2001 --peer 127.0.0.1:2003 --metadata name one
+$ swim-protocol-demo -c --name 127.0.0.1:2002 --peer 127.0.0.1:2001 --metadata name two
+$ swim-protocol-demo -c --name 127.0.0.1:2003 --peer 127.0.0.1:2001 --metadata name three
+$ swim-protocol-demo -c --name 127.0.0.1:2004 --peer 127.0.0.1:2003 --metadata name four
 ```
 
 Every 10 seconds or so, each member will randomize its `token` metadata field,
@@ -39,18 +41,14 @@ which should be disseminated across the cluster with [eventual consistency][6].
 
 ### Getting Started
 
-First you should create a new [Config][100] object:
+First you should create a new [UdpConfig][100] object:
 
 ```python
-from argparse import ArgumentParser
-from swimprotocol.config import Config
+from swimprotocol.udp import UdpConfig
 
-parser = ArgumentParser(...)
-args = parser.parse_args()
-config = Config(args, secret=b'...',
-                local_name='127.0.0.1:2001',
-                local_metadata={b'name': b'one'},
-                peers=['127.0.0.1:2002'])
+config = UdpConfig(local_name='127.0.0.1:2001',
+                   local_metadata={'name': b'one'},
+                   peers=['127.0.0.1:2002'])
 ```
 
 All other config arguments have default values, which are tuned somewhat
@@ -61,15 +59,19 @@ the event loop:
 
 ```python
 from contextlib import AsyncExitStack
-from swimprotocol.transport import transport_plugins
 from swimprotocol.members import Members
+from swimprotocol.udp import UdpTransport
 
-transport = transport_plugins.choose('udp').init(config)
+transport = UdpTransport(config)
 members = Members(config)
 async with AsyncExitStack() as stack:
     worker = await stack.enter_async_context(transport.enter(members))
     await worker.run()  # or schedule as a task
 ```
+
+These snippets demonstrate the UDP transport layer directly. For a more generic
+approach that uses [argparse][11] and [load_transport][12], check out the
+[demo][2].
 
 ### Checking Members
 
@@ -92,12 +94,12 @@ Alternatively, listen for status or metadata changes on all members:
 ```python
 from swimprotocol.member import Member
 
-async def _on_updated(member: Member) -> None:
+async def _updated(member: Member) -> None:
     print('updated:', member.name, member.status, member.metadata)
 
 async with AsyncExitStack() as stack:
     # ...
-    stack.enter_context(members.listener.on_notify(_on_updated))
+    stack.enter_context(members.listener.on_notify(_updated))
 ```
 
 ### UDP Transport Security
@@ -152,7 +154,9 @@ hinting to the extent possible and common in the rest of the codebase.
 [8]: https://en.wikipedia.org/wiki/Shared_secret
 [9]: https://docs.python.org/3/library/uuid.html#uuid.getnode
 [10]: https://en.wikipedia.org/wiki/Maximum_transmission_unit
+[11]: https://docs.python.org/3/library/argparse.html
+[12]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.transport.load_transport
 
-[100]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.config.Config
+[100]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpConfig
 [101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Member
 [102]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpTransport

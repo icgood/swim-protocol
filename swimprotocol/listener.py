@@ -2,16 +2,31 @@
 from __future__ import annotations
 
 import asyncio
+from abc import abstractmethod
 from asyncio import Event
-from collections.abc import Awaitable, Callable, Sequence
+from collections.abc import Sequence
 from contextlib import ExitStack
-from typing import TypeVar, Generic, Any, NoReturn
+from typing import TypeVar, Generic, Protocol, Any, NoReturn
 from weakref import WeakKeyDictionary
 
-__all__ = ['Listener']
+__all__ = ['ListenerCallback', 'Listener']
 
 ListenT = TypeVar('ListenT')
-ListenerCallback = Callable[[ListenT], Awaitable[Any]]
+ListenT_contra = TypeVar('ListenT_contra', contravariant=True)
+
+
+class ListenerCallback(Protocol[ListenT_contra]):
+
+    @abstractmethod
+    async def __call__(self, item: ListenT_contra, /) -> Any:
+        """Called asynchronousely with the argument passed to
+        :meth:`~Listener.notify`.
+
+        Args:
+            item: The object sent to the consumers.
+
+        """
+        ...
 
 
 class Listener(Generic[ListenT]):
@@ -36,7 +51,7 @@ class Listener(Generic[ListenT]):
         while True:
             items = await self.poll()
             for item in items:
-                await callback(item)
+                asyncio.create_task(callback(item))
 
     def on_notify(self, callback: ListenerCallback[ListenT]) -> ExitStack:
         """Provides a context manager that causes *callback* to be called when

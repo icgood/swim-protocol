@@ -7,7 +7,7 @@ from typing import Optional
 
 from .status import Status
 
-__all__ = ['Packet', 'Ping', 'PingReq', 'Ack', 'Gossip']
+__all__ = ['Packet', 'Ping', 'PingReq', 'Ack', 'Gossip', 'GossipAck']
 
 
 @dataclass(frozen=True)
@@ -76,7 +76,7 @@ class Gossip(Packet):
     name: str
     clock: int
     status: Status
-    metadata: Optional[Mapping[bytes, bytes]]
+    metadata: Optional[Mapping[str, bytes]]
 
 
 @dataclass(frozen=True)

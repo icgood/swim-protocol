@@ -19,6 +19,7 @@
 -------------------------
 
 .. automodule:: swimprotocol.listener
+   :special-members: __call__
 
 ``swimprotocol.members``
 ------------------------
@@ -29,11 +30,6 @@
 -----------------------
 
 .. automodule:: swimprotocol.packet
-
-``swimprotocol.plugin``
------------------------
-
-.. automodule:: swimprotocol.plugin
 
 ``swimprotocol.shuffle``
 ------------------------

@@ -9,7 +9,7 @@ from functools import total_ordering
 from typing import Final, Optional, Any
 from weakref import WeakKeyDictionary, WeakValueDictionary
 
-from .config import Config
+from .config import BaseConfig
 from .listener import Listener
 from .shuffle import Shuffle, WeakShuffle
 from .status import Status
@@ -25,7 +25,7 @@ class Member:
     #: known value, it is assigned this empty :class:`dict` for
     #: `identity comparisons
     #: <https://docs.python.org/3/reference/expressions.html#is-not>`_.
-    METADATA_UNKNOWN: Mapping[bytes, bytes] = {}
+    METADATA_UNKNOWN: Mapping[str, bytes] = {}
 
     def __init__(self, name: str, local: bool) -> None:
         super().__init__()
@@ -37,11 +37,11 @@ class Member:
             WeakKeyDictionary()
         self._status = Status.OFFLINE
         self._status_time = time.time()
-        self._metadata: frozenset[tuple[bytes, bytes]] = frozenset()
+        self._metadata: frozenset[tuple[str, bytes]] = frozenset()
         self._metadata_dict = self.METADATA_UNKNOWN
         self._pending_clock: Optional[int] = None
         self._pending_status: Optional[Status] = None
-        self._pending_metadata: Optional[frozenset[tuple[bytes, bytes]]] = None
+        self._pending_metadata: Optional[frozenset[tuple[str, bytes]]] = None
 
     def __eq__(self, other: Any) -> bool:
         if isinstance(other, Member):
@@ -57,7 +57,7 @@ class Member:
         return hash(self.name)
 
     def __repr__(self) -> str:
-        return f'Member<{self.name}>'
+        return f'Member<{self.name} {self.status.name}>'
 
     @property
     def source(self) -> tuple[str, bytes]:
@@ -83,7 +83,7 @@ class Member:
         return self._status_time
 
     @property
-    def metadata(self) -> Mapping[bytes, bytes]:
+    def metadata(self) -> Mapping[str, bytes]:
         """The last known :term:`metadata` of the cluster member."""
         return self._metadata_dict
 
@@ -102,7 +102,7 @@ class Member:
         if transition != self._status:
             self._pending_status = transition
 
-    def _set_metadata(self, metadata: Mapping[bytes, bytes]) -> None:
+    def _set_metadata(self, metadata: Mapping[str, bytes]) -> None:
         assert self._pending_metadata is None
         pending_metadata = frozenset(metadata.items())
         if pending_metadata != self._metadata:
@@ -144,7 +144,7 @@ class Members(Set[Member]):
 
     """
 
-    def __init__(self, config: Config) -> None:
+    def __init__(self, config: BaseConfig) -> None:
         super().__init__()
         self.listener: Final = Listener(Member)
         self._next_clock = 1
@@ -168,12 +168,13 @@ class Members(Set[Member]):
         return len(self._members)
 
     def _refresh_statuses(self, member: Member) -> None:
-        member_status = member.status
-        for status in Status:
-            if member_status & status:
-                self._statuses[status].add(member)
-            else:
-                self._statuses[status].discard(member)
+        if not member.local:
+            member_status = member.status
+            for status in Status:
+                if member_status & status:
+                    self._statuses[status].add(member)
+                else:
+                    self._statuses[status].discard(member)
 
     @property
     def local(self) -> Member:
@@ -245,7 +246,7 @@ class Members(Set[Member]):
 
     def _update(self, member: Member, source: Optional[Member],
                 clock: int, status: Optional[Status],
-                metadata: Optional[Mapping[bytes, bytes]]) -> None:
+                metadata: Optional[Mapping[str, bytes]]) -> None:
         next_clock = self._next_clock
         member._set_clock(clock, next_clock)
         if status is not None:
@@ -260,7 +261,7 @@ class Members(Set[Member]):
 
     def update(self, member: Member, *,
                new_status: Optional[Status] = None,
-               new_metadata: Optional[Mapping[bytes, bytes]] = None) -> None:
+               new_metadata: Optional[Mapping[str, bytes]] = None) -> None:
         """Update the cluster member status or metadata.
 
         Args:
@@ -272,7 +273,7 @@ class Members(Set[Member]):
         self._update(member, None, self._next_clock, new_status, new_metadata)
 
     def apply(self, member: Member, source: Member, clock: int, *,
-              status: Status, metadata: Optional[Mapping[bytes, bytes]]) \
+              status: Status, metadata: Optional[Mapping[str, bytes]]) \
             -> None:
         """Apply a disseminated update from *source* to *member*.
 
