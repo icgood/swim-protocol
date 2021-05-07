@@ -1,20 +1,34 @@
 
 from __future__ import annotations
 
-from argparse import Namespace
+import os
+from abc import ABCMeta
+from argparse import ArgumentParser, Namespace
 from collections.abc import Mapping, Sequence
-from typing import Final, Union
+from typing import final, TypeVar, Final, Any, Union
 
 from .sign import Signatures
 
-__all__ = ['Config']
+__all__ = ['ConfigT_co', 'ConfigError', 'BaseConfig']
+
+#: Covariant type variable for :class:`BaseConfig` sub-classes.
+ConfigT_co = TypeVar('ConfigT_co', bound='BaseConfig', covariant=True)
 
 
-class Config:
+class ConfigError(Exception):
+    """Raised when the configuration is insufficient or invalid for running a
+    cluster, along with a human-readable message about what was wrong.
+
+    """
+    pass
+
+
+class BaseConfig(metaclass=ABCMeta):
     """Configure the cluster behavior and characteristics.
+    :class:`~swimprotocol.transport.Transport` implementations should
+    sub-class to add additional configuration.
 
     Args:
-        args: Command-line arguments namespace.
         secret: The shared secret for cluster packet signatures.
         local_name: The unique name of the local cluster member.
         local_metadata: The local cluster member metadata.
@@ -32,12 +46,14 @@ class Config:
         sync_interval: Time between sync attempts to disseminate cluster
             changes.
 
+    Raises:
+        ConfigError: The given configuration was invalid.
+
     """
 
-    def __init__(self, args: Namespace, *,
-                 secret: Union[str, bytes],
+    def __init__(self, *, secret: Union[None, str, bytes],
                  local_name: str,
-                 local_metadata: Mapping[bytes, bytes],
+                 local_metadata: Mapping[str, bytes],
                  peers: Sequence[str],
                  ping_interval: float = 1.0,
                  ping_timeout: float = 0.3,
@@ -46,7 +62,6 @@ class Config:
                  suspect_timeout: float = 5.0,
                  sync_interval: float = 0.5) -> None:
         super().__init__()
-        self.args: Final = args
         self._signatures = Signatures(secret)
         self.local_name: Final = local_name
         self.local_metadata: Final = local_metadata
@@ -57,22 +72,103 @@ class Config:
         self.ping_req_timeout: Final = ping_req_timeout
         self.suspect_timeout: Final = suspect_timeout
         self.sync_interval: Final = sync_interval
+        self._validate()
 
-    @classmethod
-    def from_args(cls, args: Namespace) -> Config:
-        """Build a :class:`Config` from command-line arguments and sensible
-        defaults.
-
-        Args:
-            args: The command-line arguments namespace.
-
-        """
-        return cls(args, secret=args.secret,
-                   local_name=args.local,
-                   local_metadata=dict(args.metadata),
-                   peers=args.peers)
+    def _validate(self) -> None:
+        if not self.local_name:
+            raise ConfigError('This cluster instance needs a local name.')
+        elif not self.peers:
+            raise ConfigError('At least one cluster peer name is required.')
 
     @property
     def signatures(self) -> Signatures:
         """Generates and verifies cluster packet signatures."""
         return self._signatures
+
+    @classmethod
+    def add_arguments(cls, parser: ArgumentParser, *,
+                      prefix: str = '--') -> None:
+        """Implementations (such as the :term:`demo`) may use this method to
+        add command-line based configuration for the transport.
+
+        Note:
+            Arguments added should use *prefix* and explicitly provide a unique
+            name, e.g.::
+
+                parser.add_argument(f'{prefix}arg', dest='swim_arg', ...)
+
+            This prevents collision with other argument names and allows custom
+            *prefix* values without affecting the :class:`~argparse.Namespace`.
+
+        Args:
+            parser: The argument parser.
+            prefix: The prefix for added arguments, which should start with
+                ``--`` and end with ``-``, e.g. ``'--'`` or ``'--foo-'``.
+
+        """
+        group = parser.add_argument_group('swim options')
+        group.add_argument(f'{prefix}metadata', dest='swim_metadata',
+                           nargs=2, metavar=('KEY', 'VAL'),
+                           default=[], action='append',
+                           help='Metadata for this node.')
+        group.add_argument(f'{prefix}secret', dest='swim_secret',
+                           metavar='STRING',
+                           help='The secret string used to verify messages.')
+        group.add_argument(f'{prefix}name', dest='swim_name',
+                           metavar='localname',
+                           help='External name or address for this node.')
+        group.add_argument(f'{prefix}peer', dest='swim_peers',
+                           metavar='peername', action='append', default=[],
+                           help='At least one name or address of '
+                                'a known peer.')
+
+    @classmethod
+    def parse_args(cls, args: Namespace, *, env_prefix: str = 'SWIM') \
+            -> dict[str, Any]:
+        """Parse the given :class:`~argparse.Namespace` into a dictionary of
+        keyword arguments for the :class:`BaseConfig` constructor. Sub-classes
+        should override this method to add additional keyword arguments as
+        needed.
+
+        The :func:`os.getenv` function can also be used, and will take priority
+        over values in *args*:
+
+        * ``SWIM_SECRET``: The *secret* keyword argument.
+        * ``SWIM_NAME``: The *local_name* keyword argument.
+        * ``SWIM_PEERS``: Comma-separated *peers* keyword argument.
+
+        Args:
+            args: The command-line arguments.
+            env_prefix: Prefix for the environment variables.
+
+        """
+        secret = os.getenv(f'{env_prefix}_SECRET', args.swim_secret)
+        local_name = os.getenv(f'{env_prefix}_NAME', args.swim_name)
+        local_metadata = {key: val.encode('utf-8')
+                          for key, val in args.swim_metadata}
+        env_peers = os.getenv(f'{env_prefix}_PEERS')
+        if env_peers is not None:
+            peers = env_peers.split(',')
+        else:
+            peers = args.swim_peers
+        return {'secret': secret,
+                'local_name': local_name,
+                'local_metadata': local_metadata,
+                'peers': peers}
+
+    @final
+    @classmethod
+    def from_args(cls: type[ConfigT_co], args: Namespace,
+                  **overrides: Any) -> ConfigT_co:
+        """Build and return a new cluster config object. This first calls
+        :meth:`.parse_args` and then passes the results as keyword arguments
+        to the constructor.
+
+        Args:
+            args: The command-line arguments.
+            overrides: Keyword arguments to override.
+
+        """
+        kwargs = cls.parse_args(args)
+        kwargs |= overrides
+        return cls(**kwargs)

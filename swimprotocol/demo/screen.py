@@ -43,10 +43,9 @@ class Screen:
             stdscr.addstr(' unknown', curses.A_BOLD)
             return
         for key in sorted(metadata):
-            key_str = self._decode(key)
             val_str = self._decode(metadata[key])
             stdscr.addstr(' ')
-            stdscr.addstr(key_str)
+            stdscr.addstr(key)
             stdscr.addstr('=', curses.A_DIM)
             stdscr.addstr(val_str, curses.color_pair(i+1) | curses.A_BOLD)
 

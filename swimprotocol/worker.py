@@ -9,7 +9,7 @@ from contextlib import suppress
 from typing import final, Protocol, Final, Optional, NoReturn
 from weakref import WeakSet, WeakKeyDictionary
 
-from .config import Config
+from .config import BaseConfig
 from .members import Member, Members
 from .packet import Packet, Ping, PingReq, Ack, Gossip, GossipAck
 from .status import Status
@@ -58,7 +58,7 @@ class Worker:
 
     """
 
-    def __init__(self, config: Config, members: Members, io: IO) -> None:
+    def __init__(self, config: BaseConfig, members: Members, io: IO) -> None:
         super().__init__()
         self.config: Final = config
         self.members: Final = members
@@ -120,7 +120,7 @@ class Worker:
 
     def _build_gossip(self, local: Member, member: Member) -> Gossip:
         if member.metadata is Member.METADATA_UNKNOWN:
-            metadata: Optional[Mapping[bytes, bytes]] = None
+            metadata: Optional[Mapping[str, bytes]] = None
         else:
             metadata = member.metadata
         return Gossip(source=local.source, name=member.name,

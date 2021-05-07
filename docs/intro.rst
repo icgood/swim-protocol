@@ -85,7 +85,7 @@ Glossary
       false positives.
 
    metadata
-      An immutable mapping of key/value :class:`bytes` associated with each
+      An immutable mapping of key/value strings associated with each
       :term:`member`. New mappings may be assigned, and the latest mapping will
       always be disseminated across the cluster.
 
@@ -122,6 +122,12 @@ Glossary
       is always higher than any other observed value, used to determine whether
       :term:`gossip` is new enough to be applied or disseminated.
 
+   demo
+      The included `demo`_ is designed to randomize metadata changes on an
+      interval to see them disseminated across the cluster, as well as watch as
+      :term:`member` statuses change as demo instances are stopped and started.
+
 .. _SWIM: https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf
 .. _Serf: https://www.serf.io/docs/internals/gossip.html
 .. _Lamport timestamp: https://en.wikipedia.org/wiki/Lamport_timestamp
+.. _demo: https://github.com/icgood/swim-protocol#running-the-demo

@@ -1,53 +1,69 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod
-from argparse import ArgumentParser
+from abc import abstractmethod, ABCMeta
 from contextlib import AbstractAsyncContextManager
-from typing import Protocol
+from typing import Generic, TypeVar, Final, ClassVar, Optional
 
-from .config import Config
+from pkg_resources import iter_entry_points, DistributionNotFound
+
+from .config import ConfigT_co, BaseConfig
 from .members import Members
-from .plugin import Plugins
 from .worker import Worker
 
-__all__ = ['Transport', 'transport_plugins']
+__all__ = ['TransportT', 'load_transport', 'Transport']
+
+#: Type variable for :class:`Transport` implementations.
+TransportT = TypeVar('TransportT', bound='Transport[BaseConfig]')
 
 
-class Transport(Protocol):
+def load_transport(name: str = 'udp', *, group: str = __name__) \
+        -> type[Transport[BaseConfig]]:
+    """Load and return the :class:`Transport` implementation by *name*.
+
+    Args:
+        name: The name of the transport entry point.
+        group: The :mod:`pkg_resources` entry point group.
+
+    Raises:
+        DistributionNotFound: A dependency of the transport entry point was not
+            able to be satisfied.
+        KeyError: The given name did not exist in the entry point group.
+
+    """
+    last_exc: Optional[DistributionNotFound] = None
+    for entry_point in iter_entry_points(group, name):
+        try:
+            transport_type: type[Transport[BaseConfig]] = entry_point.load()
+        except DistributionNotFound as exc:
+            last_exc = exc
+        else:
+            return transport_type
+    if last_exc is not None:
+        raise last_exc
+    else:
+        raise KeyError(f'{name!r} entry point not found in {group!r}')
+
+
+class Transport(Generic[ConfigT_co], metaclass=ABCMeta):
     """Interface of the basic functionality needed to act as the
     :term:`transport` layer for the SWIM protocol. The transport layer is
     responsible for sending and receiving :term:`ping`, :term:`ping-req`, and
     :term:`ack` packets for failure detection, and transmitting :term:`gossip`
     for dissemination.
 
+    Args:
+        config: The cluster config object.
+
     """
 
-    @classmethod
-    @abstractmethod
-    def add_arguments(cls, name: str, parser: ArgumentParser) -> None:
-        """Additional configuration needed by the transport may be added to the
-        current argument *parser*.
+    #: The :class:`~swimprotocol.config.BaseConfig` sub-class used by this
+    #: transport.
+    config_type: ClassVar[type[ConfigT_co]]
 
-        Args:
-            name: The name of the transport plugin.
-            parser: The argument parser.
-
-        """
-        ...
-
-    @classmethod
-    @abstractmethod
-    def init(cls, config: Config) -> Transport:
-        """Initializes the :class:`Transport` and returns a new instance
-        given the *config*. Any arguments added by :meth:`.add_arguments` can
-        be accessed on ``config.args``.
-
-        Args:
-            config: The cluster configuration object.
-
-        """
-        ...
+    def __init__(self, config: ConfigT_co) -> None:
+        super().__init__()
+        self.config: Final = config
 
     @abstractmethod
     def enter(self, members: Members) -> AbstractAsyncContextManager[Worker]:
@@ -60,7 +76,3 @@ class Transport(Protocol):
 
         """
         ...
-
-
-#: Manages the loading and access of :class:`Transport` implementations.
-transport_plugins = Plugins(Transport, __name__)
