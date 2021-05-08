@@ -5,7 +5,8 @@ import os
 from abc import ABCMeta
 from argparse import ArgumentParser, Namespace
 from collections.abc import Mapping, Sequence
-from typing import final, TypeVar, Final, Any, Union
+from pathlib import Path
+from typing import final, TypeVar, Final, Any, Union, Optional
 
 from .sign import Signatures
 
@@ -123,16 +124,27 @@ class BaseConfig(metaclass=ABCMeta):
                                 'a known peer.')
 
     @classmethod
-    def _get_secret(cls, args: Namespace, env_prefix: str) -> str:
-        env_secret_file = os.getenv(f'{env_prefix}_SECRET_FILE')
-        if env_secret_file is not None:
-            with open(env_secret_file) as secret_file:
-                return secret_file.read().rstrip('\r\n')
-        env_secret = os.getenv(f'{env_prefix}_SECRET')
-        if env_secret is not None:
-            return env_secret
-        arg_secret: str = args.swim_secret
-        return arg_secret
+    def _get_env(cls, env_prefix: str, env: str) -> Optional[str]:
+        env_file_val = os.getenv(f'{env_prefix}_{env}_FILE')
+        if env_file_val is not None:
+            env_path = Path(env_file_val).expanduser()
+            try:
+                with open(env_path, 'r') as env_file:
+                    return env_file.read().rstrip('\r\n')
+            except OSError:
+                pass
+        env_val = os.getenv(f'{env_prefix}_{env}')
+        if env_val is not None:
+            return env_val
+        return None
+
+    @classmethod
+    def _get_env_list(cls, env_prefix: str, env: str) -> Sequence[str]:
+        env_val = cls._get_env(env_prefix, env)
+        if env_val:
+            return env_val.split(',')
+        else:
+            return []
 
     @classmethod
     def parse_args(cls, args: Namespace, *, env_prefix: str = 'SWIM') \
@@ -142,27 +154,31 @@ class BaseConfig(metaclass=ABCMeta):
         should override this method to add additional keyword arguments as
         needed.
 
-        The :func:`os.getenv` function can also be used, and will take priority
-        over values in *args*:
+        Some keywords will default to environment variables if not given in
+        *args*:
 
-        * ``SWIM_SECRET``: The *secret* keyword argument.
-        * ``SWIM_NAME``: The *local_name* keyword argument.
-        * ``SWIM_PEERS``: Comma-separated *peers* keyword argument.
+        ``SWIM_SECRET``, ``SWIM_SECRET_FILE`` [*]_
+          The *secret* keyword argument.
+
+        ``SWIM_NAME``
+          The *local_name* keyword argument.
+
+        ``SWIM_PEERS``
+          The comma-separated *peers* keyword argument.
+
+        .. [*] The value is read from the given file path.
 
         Args:
             args: The command-line arguments.
             env_prefix: Prefix for the environment variables.
 
         """
-        secret = cls._get_secret(args, env_prefix)
+        secret = args.swim_secret or cls._get_env(env_prefix, 'SECRET')
+        local_name = args.swim_name or cls._get_env(env_prefix, 'NAME')
         local_name = os.getenv(f'{env_prefix}_NAME', args.swim_name)
         local_metadata = {key: val.encode('utf-8')
                           for key, val in args.swim_metadata}
-        env_peers = os.getenv(f'{env_prefix}_PEERS')
-        if env_peers is not None:
-            peers = env_peers.split(',')
-        else:
-            peers = args.swim_peers
+        peers = args.swim_peers or cls._get_env_list(env_prefix, 'PEERS')
         return {'secret': secret,
                 'local_name': local_name,
                 'local_metadata': local_metadata,
