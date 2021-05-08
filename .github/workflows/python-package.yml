@@ -1,4 +1,4 @@
-name: Python package
+name: build
 
 on:
   push:
@@ -35,6 +35,7 @@ jobs:
       run: |
         py.test --cov=swimprotocol
     - name: Report test coverage to Coveralls
+      if: success()
       env:
         GITHUB_TOKEN: ${{ github.token }}
       run: |

@@ -1,4 +1,4 @@
-name: Upload Python Package
+name: publish
 
 on:
   release:
@@ -25,3 +25,30 @@ jobs:
       run: |
         python setup.py sdist bdist_wheel
         twine upload dist/*
+
+  docs:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+    - name: Set up Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.9'
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip setuptools wheel
+        python -m pip install --upgrade -r requirements-dev.txt
+        python -m pip install --upgrade -r docs/requirements.txt
+    - name: Build the Sphinx documentation
+      run: |
+        make -C docs html
+    - name: Deploy to GitHub Pages
+      if: success()
+      uses: crazy-max/ghaction-github-pages@v2
+      with:
+        target_branch: gh-pages
+        build_dir: docs/_build/html/
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
