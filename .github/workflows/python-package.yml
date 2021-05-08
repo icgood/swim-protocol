@@ -27,17 +27,18 @@ jobs:
         python -m pip install --upgrade -r requirements-dev.txt
     - name: Lint with flake8
       run: |
-        flake8 pymap test
+        flake8 swimprotocol test
     - name: Type checking with mypy
       run: |
-        mypy pymap test
+        mypy swimprotocol test
     - name: Test with pytest
       run: |
-        py.test --cov=pymap
+        py.test --cov=swimprotocol
     - name: Report test coverage to Coveralls
-      uses: coverallsapp/github-action@master
-      with:
-        github-token: ${{ github.token }}
+      env:
+        GITHUB_TOKEN: ${{ github.token }}
+      run: |
+        coveralls --service=github
 
   docs:
   
@@ -56,4 +57,4 @@ jobs:
         python -m pip install --upgrade -r docs/requirements.txt
     - name: Build the Sphinx documentation
       run: |
-        make -C doc html
+        make -C docs html
