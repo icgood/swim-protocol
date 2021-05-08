@@ -123,6 +123,18 @@ class BaseConfig(metaclass=ABCMeta):
                                 'a known peer.')
 
     @classmethod
+    def _get_secret(cls, args: Namespace, env_prefix: str) -> str:
+        env_secret_file = os.getenv(f'{env_prefix}_SECRET_FILE')
+        if env_secret_file is not None:
+            with open(env_secret_file) as secret_file:
+                return secret_file.read().rstrip('\r\n')
+        env_secret = os.getenv(f'{env_prefix}_SECRET')
+        if env_secret is not None:
+            return env_secret
+        arg_secret: str = args.swim_secret
+        return arg_secret
+
+    @classmethod
     def parse_args(cls, args: Namespace, *, env_prefix: str = 'SWIM') \
             -> dict[str, Any]:
         """Parse the given :class:`~argparse.Namespace` into a dictionary of
@@ -142,7 +154,7 @@ class BaseConfig(metaclass=ABCMeta):
             env_prefix: Prefix for the environment variables.
 
         """
-        secret = os.getenv(f'{env_prefix}_SECRET', args.swim_secret)
+        secret = cls._get_secret(args, env_prefix)
         local_name = os.getenv(f'{env_prefix}_NAME', args.swim_name)
         local_metadata = {key: val.encode('utf-8')
                           for key, val in args.swim_metadata}
