@@ -175,7 +175,6 @@ class BaseConfig(metaclass=ABCMeta):
         """
         secret = args.swim_secret or cls._get_env(env_prefix, 'SECRET')
         local_name = args.swim_name or cls._get_env(env_prefix, 'NAME')
-        local_name = os.getenv(f'{env_prefix}_NAME', args.swim_name)
         local_metadata = {key: val.encode('utf-8')
                           for key, val in args.swim_metadata}
         peers = args.swim_peers or cls._get_env_list(env_prefix, 'PEERS')
