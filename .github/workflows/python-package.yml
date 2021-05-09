@@ -42,7 +42,7 @@ jobs:
         coveralls --service=github
 
   docs:
-  
+
     runs-on: ubuntu-latest
 
     steps:
