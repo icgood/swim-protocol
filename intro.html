@@ -6,13 +6,14 @@
 <html>
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>SWIM Introduction &#8212; swim-protocol 0.3.1 documentation</title>
-    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
-    <link rel="stylesheet" href="_static/cloud.css" type="text/css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>SWIM Introduction &#8212; swim-protocol 0.3.4 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
     <script src="_static/underscore.js"></script>
     <script src="_static/doctools.js"></script>
@@ -56,7 +57,7 @@
         <li class="right" >
           <a href="index.html" title="swim-protocol Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.1 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
       </ul>
@@ -69,9 +70,9 @@
         <div class="bodywrapper">
           <div class="body" role="main">
             
-  <div class="section" id="swim-introduction">
+  <section id="swim-introduction">
 <h1>SWIM Introduction<a class="headerlink" href="#swim-introduction" title="Permalink to this headline">¶</a></h1>
-<div class="section" id="goals">
+<section id="goals">
 <h2>Goals<a class="headerlink" href="#goals" title="Permalink to this headline">¶</a></h2>
 <p>This project is intended to implement the <a class="reference external" href="https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf">SWIM</a> white paper, with elements
 drawn from <a class="reference external" href="https://www.serf.io/docs/internals/gossip.html">Serf</a> as well. The goals are simple:</p>
@@ -83,7 +84,7 @@ changes.</p></li>
 <a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a>. All members are <em>eventually</em> aware of all other members’
 metadata, as well as any changes.</p></li>
 </ul>
-<div class="section" id="failure-detection">
+<section id="failure-detection">
 <h3>Failure Detection<a class="headerlink" href="#failure-detection" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a> chooses a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> at random and sent a
 <a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a>. If the remote member does not respond with an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> within
@@ -93,8 +94,8 @@ a timeout, at least one other remote <a class="reference internal" href="#term-m
 across every member of the cluster. If ever a <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a> or
 <a class="reference internal" href="#term-offline"><span class="xref std std-term">offline</span></a> member responds with an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> via either a <a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a>
 or a <a class="reference internal" href="#term-ping-req"><span class="xref std std-term">ping-req</span></a>, it is immediately returned to <a class="reference internal" href="#term-online"><span class="xref std std-term">online</span></a> status.</p>
-</div>
-<div class="section" id="dissemination">
+</section>
+<section id="dissemination">
 <h3>Dissemination<a class="headerlink" href="#dissemination" title="Permalink to this headline">¶</a></h3>
 <p>The <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a> chooses a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> at random to send
 <a class="reference internal" href="#term-gossip"><span class="xref std std-term">gossip</span></a>. The last known <a class="reference internal" href="#term-sequence-clock"><span class="xref std std-term">sequence clock</span></a> of the remote member is
@@ -107,9 +108,9 @@ then report a new sequence clock of <em>13</em> (or higher!) and future gossip a
 of the cluster. At rest, where all members have received the most recent gossip
 about all other members, no gossip is sent at all until the next time a
 <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> changes <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> or <a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a>.</p>
-</div>
-</div>
-<div class="section" id="glossary">
+</section>
+</section>
+<section id="glossary">
 <h2>Glossary<a class="headerlink" href="#glossary" title="Permalink to this headline">¶</a></h2>
 <dl class="glossary simple">
 <dt id="term-SWIM">SWIM<a class="headerlink" href="#term-SWIM" title="Permalink to this term">¶</a></dt><dd><p>Scalable Weakly-consistent Infection-style Process Group Membership
@@ -175,8 +176,8 @@ interval to see them disseminated across the cluster, as well as watch as
 <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> statuses change as demo instances are stopped and started.</p>
 </dd>
 </dl>
-</div>
-</div>
+</section>
+</section>
 
 
             <div class="clearer"></div>
@@ -264,7 +265,7 @@ interval to see them disseminated across the cluster, as well as watch as
         <li class="right" >
           <a href="index.html" title="swim-protocol Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.1 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.4 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
       </ul>
@@ -273,7 +274,7 @@ interval to see them disseminated across the cluster, as well as watch as
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 3.5.4.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.0.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
