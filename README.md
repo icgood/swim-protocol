@@ -4,7 +4,7 @@ swim-protocol
 [SWIM protocol][0] implementation for exchanging cluster membership status and
 metadata.
 
-[![Build Status](https://travis-ci.com/icgood/swim-protocol.svg?branch=main)](https://travis-ci.com/icgood/swim-protocol)
+[![build](https://github.com/icgood/swim-protocol/actions/workflows/python-package.yml/badge.svg)](https://github.com/icgood/swim-protocol/actions/workflows/python-package.yml)
 [![Coverage Status](https://coveralls.io/repos/github/icgood/swim-protocol/badge.svg?branch=main)](https://coveralls.io/github/icgood/swim-protocol?branch=main)
 [![PyPI](https://img.shields.io/pypi/v/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
 [![PyPI](https://img.shields.io/pypi/pyversions/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
