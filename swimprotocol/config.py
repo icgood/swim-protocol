@@ -10,7 +10,7 @@ from typing import final, TypeVar, Final, Any, Union, Optional
 
 from .sign import Signatures
 
-__all__ = ['ConfigT_co', 'ConfigError', 'BaseConfig']
+__all__ = ['ConfigT_co', 'ConfigError', 'TransientConfigError', 'BaseConfig']
 
 #: Covariant type variable for :class:`BaseConfig` sub-classes.
 ConfigT_co = TypeVar('ConfigT_co', bound='BaseConfig', covariant=True)
@@ -22,6 +22,24 @@ class ConfigError(Exception):
 
     """
     pass
+
+
+class TransientConfigError(ConfigError):
+    """Raised when a possibly-temporary failure has prevented configuration of
+    the cluster. This exception is often chained with the cause, e.g.
+    :exc:`OSError`. Importantly, this exception indicates that configuration of
+    the cluster may succeed eventually if retried.
+
+    Args:
+        msg: The exception message.
+        wait_hint: A suggested :func:`~asyncio.sleep` time before trying again.
+
+    """
+
+    def __init__(self, msg: Optional[str] = None, *,
+                 wait_hint: float = 60.0) -> None:
+        super().__init__(msg)
+        self.wait_hint: Final = wait_hint
 
 
 class BaseConfig(metaclass=ABCMeta):
@@ -49,6 +67,8 @@ class BaseConfig(metaclass=ABCMeta):
 
     Raises:
         ConfigError: The given configuration was invalid.
+        TransientConfigError: The configuration failed due to a failure that
+            may not be permanent.
 
     """
 

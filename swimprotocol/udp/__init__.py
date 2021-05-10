@@ -5,13 +5,13 @@ import asyncio
 import socket
 from argparse import ArgumentParser, Namespace
 from collections.abc import Sequence, AsyncIterator
-from contextlib import asynccontextmanager, closing
+from contextlib import asynccontextmanager, closing, suppress
 from typing import Final, Any, Optional
 
 from .protocol import SwimProtocol
 from .pack import UdpPack
 from ..address import Address, AddressParser
-from ..config import BaseConfig, ConfigError
+from ..config import BaseConfig, ConfigError, TransientConfigError
 from ..members import Members
 from ..transport import Transport
 from ..worker import Worker
@@ -98,7 +98,13 @@ class UdpConfig(BaseConfig):
         local_addr = address_parser.parse(local_name)
         resolved = cls._resolve_name(local_addr.host)
         local_ip = cls._find_local_ip(local_addr.host, local_addr.port)
-        resolved.discard(local_ip)
+        if local_ip not in resolved:
+            raise TransientConfigError(
+                f'Invalid local IP: {local_ip!r} not in {resolved!r}')
+        resolved.remove(local_ip)
+        if not resolved:
+            raise TransientConfigError(
+                f'Could not find peers: {local_addr.host}')
         resolved_peers = {str(Address(peer_ip, local_addr.port))
                           for peer_ip in resolved}
         kwargs['local_name'] = str(Address(local_ip, local_addr.port))
@@ -106,17 +112,23 @@ class UdpConfig(BaseConfig):
 
     @classmethod
     def _resolve_name(cls, hostname: str) -> set[str]:
-        _, _, ipaddrlist = socket.gethostbyname_ex(hostname)
-        assert ipaddrlist
+        try:
+            _, _, ipaddrlist = socket.gethostbyname_ex(hostname)
+        except OSError as exc:
+            raise TransientConfigError(f'Could not resolve name: {hostname}',
+                                       wait_hint=10.0) from exc
+        if not ipaddrlist:
+            raise TransientConfigError(f'Name resolved empty: {hostname}')
         return set(ipaddrlist)
 
     @classmethod
-    def _find_local_ip(cls, hostname: str, port: int) -> str:
+    def _find_local_ip(cls, hostname: str, port: int) -> Optional[str]:
         sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        sock.connect((hostname, port))
-        with closing(sock):
+        with closing(sock), suppress(OSError):
+            sock.connect((hostname, port))
             sockname: tuple[str, int] = sock.getsockname()
-        return sockname[0]
+            return sockname[0]
+        return None
 
 
 class UdpTransport(Transport[UdpConfig]):

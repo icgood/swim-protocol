@@ -73,6 +73,10 @@ These snippets demonstrate the UDP transport layer directly. For a more generic
 approach that uses [argparse][11] and [load_transport][12], check out the
 [demo][2].
 
+If your application is deployed as a [Docker Service][13], the [UdpConfig][100]
+`discovery=True` keyword argument can be used to discover configuration based
+on the service name. See the [documentation][14] for more comprehensive usage.
+
 ### Checking Members
 
 The [Members][101] object provides a few ways to check on the cluster and its
@@ -156,6 +160,8 @@ hinting to the extent possible and common in the rest of the codebase.
 [10]: https://en.wikipedia.org/wiki/Maximum_transmission_unit
 [11]: https://docs.python.org/3/library/argparse.html
 [12]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.transport.load_transport
+[13]: https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/
+[14]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#docker-services
 
 [100]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpConfig
 [101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Member
