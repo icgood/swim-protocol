@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>swimprotocol &#8212; swim-protocol 0.3.5 documentation</title>
+    <title>swimprotocol &#8212; swim-protocol 0.3.6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -57,7 +57,7 @@
         <li class="right" >
           <a href="intro.html" title="SWIM Introduction"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.5 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.6 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></li> 
       </ul>
@@ -139,6 +139,24 @@ string (e.g. <code class="docutils literal notranslate"><span class="pre">exampl
 cluster, along with a human-readable message about what was wrong.</p>
 </dd></dl>
 
+<dl class="py exception">
+<dt class="sig sig-object py" id="swimprotocol.config.TransientConfigError">
+<em class="property"><span class="pre">exception</span> </em><span class="sig-prename descclassname"><span class="pre">swimprotocol.config.</span></span><span class="sig-name descname"><span class="pre">TransientConfigError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.config.TransientConfigError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.config.ConfigError" title="swimprotocol.config.ConfigError"><code class="xref py py-class docutils literal notranslate"><span class="pre">swimprotocol.config.ConfigError</span></code></a></p>
+<p>Raised when a possibly-temporary failure has prevented configuration of
+the cluster. This exception is often chained with the cause, e.g.
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#OSError" title="(in Python v3.9)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">OSError</span></code></a>. Importantly, this exception indicates that configuration of
+the cluster may succeed eventually if retried.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Optional" title="(in Python v3.9)"><code class="xref py py-data docutils literal notranslate"><span class="pre">Optional</span></code></a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code></a>]) – The exception message.</p></li>
+<li><p><strong>wait_hint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.9)"><code class="xref py py-class docutils literal notranslate"><span class="pre">float</span></code></a>) – A suggested <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.sleep" title="(in Python v3.9)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sleep()</span></code></a> time before trying again.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
 <dl class="py class">
 <dt class="sig sig-object py" id="swimprotocol.config.BaseConfig">
 <em class="property"><span class="pre">class</span> </em><span class="sig-prename descclassname"><span class="pre">swimprotocol.config.</span></span><span class="sig-name descname"><span class="pre">BaseConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_req_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_req_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suspect_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.config.BaseConfig" title="Permalink to this definition">¶</a></dt>
@@ -168,7 +186,11 @@ changes.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Raises</dt>
-<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.config.ConfigError" title="swimprotocol.config.ConfigError"><strong>ConfigError</strong></a> – The given configuration was invalid.</p>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#swimprotocol.config.ConfigError" title="swimprotocol.config.ConfigError"><strong>ConfigError</strong></a> – The given configuration was invalid.</p></li>
+<li><p><a class="reference internal" href="#swimprotocol.config.TransientConfigError" title="swimprotocol.config.TransientConfigError"><strong>TransientConfigError</strong></a> – The configuration failed due to a failure that
+    may not be permanent.</p></li>
+</ul>
 </dd>
 </dl>
 <dl class="py property">
@@ -1193,7 +1215,7 @@ packets. This method calls <a class="reference internal" href="#swimprotocol.wor
         <li class="right" >
           <a href="intro.html" title="SWIM Introduction"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.5 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.6 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></li> 
       </ul>
@@ -1202,7 +1224,7 @@ packets. This method calls <a class="reference internal" href="#swimprotocol.wor
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

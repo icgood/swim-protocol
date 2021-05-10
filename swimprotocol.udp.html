@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>swimprotocol.udp &#8212; swim-protocol 0.3.5 documentation</title>
+    <title>swimprotocol.udp &#8212; swim-protocol 0.3.6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -53,7 +53,7 @@
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.5 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.6 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
@@ -228,6 +228,37 @@ for transmitting and receiving SWIM protocol packets.</p>
 
 </dd></dl>
 
+<section id="docker-services">
+<h2>Docker Services<a class="headerlink" href="#docker-services" title="Permalink to this headline">¶</a></h2>
+<p>If your application is deployed as a <a class="reference external" href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/">Docker Service</a>, the
+<a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a> <code class="docutils literal notranslate"><span class="pre">discovery=True</span></code> keyword argument can be
+used to discover configuration based on the service name. For example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">UdpConfig</span><span class="p">(</span><span class="n">local_name</span><span class="o">=</span><span class="s1">&#39;tasks.my-service:9999&#39;</span><span class="p">,</span> <span class="n">discovery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>Docker provides a <a class="reference external" href="https://docs.docker.com/network/overlay/#container-discovery">tasks</a> DNS lookup that resolves to the IP addresses of all
+replicas of the service. In this example, <code class="docutils literal notranslate"><span class="pre">tasks.my-service</span></code> is resolved to
+these IP addresses. The IP address local to the container is chosen as the
+<a class="reference internal" href="intro.html#term-local-member"><span class="xref std std-term">local member</span></a> and the rest are <a class="reference internal" href="intro.html#term-peer-member"><span class="xref std std-term">peer members</span></a>.</p>
+<p>In practice, this DNS lookup is often not immediately successful when the
+replicas start up. A service may also be scaled down to a single replica, which
+has no need of a cluster. These scenarios will raise a
+<a class="reference internal" href="swimprotocol.html#swimprotocol.config.TransientConfigError" title="swimprotocol.config.TransientConfigError"><code class="xref py py-exc docutils literal notranslate"><span class="pre">TransientConfigError</span></code></a> with a <em>wait_hint</em> value. This
+exception can be caught to continuously retry the cluster configuration until
+successful:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="k">async</span> <span class="k">def</span> <span class="nf">start</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">config</span> <span class="o">=</span> <span class="n">UdpConfig</span><span class="p">(</span><span class="n">local_name</span><span class="o">=</span><span class="s1">&#39;tasks.my-service:9999&#39;</span><span class="p">,</span>
+                               <span class="n">discovery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">TransientConfigError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="n">exc</span><span class="o">.</span><span class="n">wait_hint</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">break</span>
+    <span class="c1"># ...</span>
+</pre></div>
+</div>
+</section>
 <section id="module-swimprotocol.udp.pack">
 <span id="swimprotocol-udp-pack"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.pack</span></code><a class="headerlink" href="#module-swimprotocol.udp.pack" title="Permalink to this headline">¶</a></h2>
 <dl class="py class">
@@ -384,6 +415,7 @@ return it.</p>
     <h3><a href="index.html">Page contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a><ul>
+<li><a class="reference internal" href="#docker-services">Docker Services</a></li>
 <li><a class="reference internal" href="#module-swimprotocol.udp.pack"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.pack</span></code></a></li>
 <li><a class="reference internal" href="#module-swimprotocol.udp.protocol"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.protocol</span></code></a></li>
 </ul>
@@ -448,7 +480,7 @@ return it.</p>
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.5 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.6 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
@@ -457,7 +489,7 @@ return it.</p>
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

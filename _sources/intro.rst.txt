@@ -65,14 +65,20 @@ Glossary
       in the cluster based on their most recently known :term:`status` and
       :term:`metadata`.
 
+   peer member
+      One of the :term:`member` instances that is remote in the cluster. A copy
+      of each peer member's :term:`status` and :term:`metadata` is maintained
+      by the :term:`local member` and updated based on failure detection and
+      dissemination.
+
    status
-      One of three states that a remote :term:`member` can hold, as perceived
-      the :term:`local member`: :term:`online`, :term:`suspect`, or
+      One of three states that a :term:`peer member` can hold, as perceived the
+      :term:`local member`: :term:`online`, :term:`suspect`, or
       :term:`offline`.
 
    online : status
       A :term:`status` meaning recent failure detection attempts have
-      successfully received an :term:`ack` from the remote :term:`member`.
+      successfully received an :term:`ack` from the :term:`peer member`.
 
    suspect : status
       A :term:`status` meaning that a recently-online :term:`member` has not
@@ -100,13 +106,13 @@ Glossary
       `datagrams <https://en.wikipedia.org/wiki/Datagram>`_.
 
    ping : packet
-      A :term:`packet` that requests that a remote :term:`member` reply to the
+      A :term:`packet` that requests that a :term:`peer member` reply to the
       source :term:`member` with an :term:`ack`. This is the most basic attempt
       to detect when members have gone offline.
 
    ping-req : packet
-      A :term:`packet` that requests that a remote :term:`member` send its own
-      :term:`ping` to a second remote :term:`member`. If the recipient receives
+      A :term:`packet` that requests that a :term:`peer member` send its own
+      :term:`ping` to a second :term:`peer member`. If the recipient receives
       an :term:`ack`, it is forwarded back to the source :term:`member`.
 
    ack : packet

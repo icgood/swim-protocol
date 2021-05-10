@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>SWIM Introduction &#8212; swim-protocol 0.3.5 documentation</title>
+    <title>SWIM Introduction &#8212; swim-protocol 0.3.6 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -57,7 +57,7 @@
         <li class="right" >
           <a href="index.html" title="swim-protocol Documentation"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.5 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.6 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
       </ul>
@@ -126,12 +126,17 @@ known by that member, forming a cluster.</p>
 in the cluster based on their most recently known <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> and
 <a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a>.</p>
 </dd>
-<dt id="term-status">status<a class="headerlink" href="#term-status" title="Permalink to this term">¶</a></dt><dd><p>One of three states that a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> can hold, as perceived
-the <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a>: <a class="reference internal" href="#term-online"><span class="xref std std-term">online</span></a>, <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a>, or
+<dt id="term-peer-member">peer member<a class="headerlink" href="#term-peer-member" title="Permalink to this term">¶</a></dt><dd><p>One of the <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> instances that is remote in the cluster. A copy
+of each peer member’s <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> and <a class="reference internal" href="#term-metadata"><span class="xref std std-term">metadata</span></a> is maintained
+by the <a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a> and updated based on failure detection and
+dissemination.</p>
+</dd>
+<dt id="term-status">status<a class="headerlink" href="#term-status" title="Permalink to this term">¶</a></dt><dd><p>One of three states that a <a class="reference internal" href="#term-peer-member"><span class="xref std std-term">peer member</span></a> can hold, as perceived the
+<a class="reference internal" href="#term-local-member"><span class="xref std std-term">local member</span></a>: <a class="reference internal" href="#term-online"><span class="xref std std-term">online</span></a>, <a class="reference internal" href="#term-suspect"><span class="xref std std-term">suspect</span></a>, or
 <a class="reference internal" href="#term-offline"><span class="xref std std-term">offline</span></a>.</p>
 </dd>
 <dt id="term-online">online<a class="headerlink" href="#term-online" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> meaning recent failure detection attempts have
-successfully received an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> from the remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>.</p>
+successfully received an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a> from the <a class="reference internal" href="#term-peer-member"><span class="xref std std-term">peer member</span></a>.</p>
 </dd>
 <dt id="term-suspect">suspect<a class="headerlink" href="#term-suspect" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-status"><span class="xref std std-term">status</span></a> meaning that a recently-online <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> has not
 responded to at least one failure detection attempt.</p>
@@ -153,12 +158,12 @@ sending and receiving <a class="reference internal" href="#term-packet"><span cl
 another. In <a class="reference internal" href="swimprotocol.udp.html#module-swimprotocol.udp" title="swimprotocol.udp"><code class="xref py py-mod docutils literal notranslate"><span class="pre">udp</span></code></a>, these directly correspond to
 <a class="reference external" href="https://en.wikipedia.org/wiki/Datagram">datagrams</a>.</p>
 </dd>
-<dt id="term-ping">ping<a class="headerlink" href="#term-ping" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that requests that a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> reply to the
+<dt id="term-ping">ping<a class="headerlink" href="#term-ping" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that requests that a <a class="reference internal" href="#term-peer-member"><span class="xref std std-term">peer member</span></a> reply to the
 source <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> with an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a>. This is the most basic attempt
 to detect when members have gone offline.</p>
 </dd>
-<dt id="term-ping-req">ping-req<a class="headerlink" href="#term-ping-req" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that requests that a remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a> send its own
-<a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a> to a second remote <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>. If the recipient receives
+<dt id="term-ping-req">ping-req<a class="headerlink" href="#term-ping-req" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> that requests that a <a class="reference internal" href="#term-peer-member"><span class="xref std std-term">peer member</span></a> send its own
+<a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a> to a second <a class="reference internal" href="#term-peer-member"><span class="xref std std-term">peer member</span></a>. If the recipient receives
 an <a class="reference internal" href="#term-ack"><span class="xref std std-term">ack</span></a>, it is forwarded back to the source <a class="reference internal" href="#term-member"><span class="xref std std-term">member</span></a>.</p>
 </dd>
 <dt id="term-ack">ack<a class="headerlink" href="#term-ack" title="Permalink to this term">¶</a></dt><dd><p>A <a class="reference internal" href="#term-packet"><span class="xref std std-term">packet</span></a> sent in response to a <a class="reference internal" href="#term-ping"><span class="xref std std-term">ping</span></a> or <a class="reference internal" href="#term-ping-req"><span class="xref std std-term">ping-req</span></a>
@@ -265,7 +270,7 @@ interval to see them disseminated across the cluster, as well as watch as
         <li class="right" >
           <a href="index.html" title="swim-protocol Documentation"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.5 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.6 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href="">SWIM Introduction</a></li> 
       </ul>
@@ -274,7 +279,7 @@ interval to see them disseminated across the cluster, as well as watch as
 
     <div class="footer" role="contentinfo">
         &#169; Copyright 2021, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.0.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 4.0.1.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
