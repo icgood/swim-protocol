@@ -129,9 +129,9 @@ Glossary
       :term:`gossip` is new enough to be applied or disseminated.
 
    demo
-      The included `demo`_ is designed to randomize metadata changes on an
-      interval to see them disseminated across the cluster, as well as watch as
-      :term:`member` statuses change as demo instances are stopped and started.
+      The included `demo`_ is designed to show typing being disseminated across
+      the cluster, as well as watch as :term:`member` statuses change as demo
+      instances are stopped and started.
 
 .. _SWIM: https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf
 .. _Serf: https://www.serf.io/docs/internals/gossip.html
