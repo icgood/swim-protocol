@@ -34,8 +34,7 @@ def main() -> int:
     group.add_argument('-c', '--curses', action='store_true',
                        help='Enable the curses display.')
     group.add_argument('-i', '--token-interval', metavar='SECONDS',
-                       type=float, default=10.0,
-                       help='Cluster member token update interval.')
+                       type=float, help='Randomize metadata on an interval.')
 
     args = parser.parse_args()
 

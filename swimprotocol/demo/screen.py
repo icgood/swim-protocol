@@ -3,6 +3,7 @@ from __future__ import annotations
 
 import asyncio
 import curses
+import string
 from contextlib import AsyncExitStack
 from curses import wrapper
 from threading import Event, Condition
@@ -12,6 +13,12 @@ from ..members import Member, Members
 from ..status import Status
 
 __all__ = ['run_screen']
+
+
+def _is_printable(ch: int) -> bool:
+    return ch >= 0 and ch < 256 \
+            and ch in string.printable.encode('ascii') \
+            and ch not in set(b'\t\r\n\x0b\x0c')
 
 
 class Screen:
@@ -71,6 +78,11 @@ class Screen:
         available = len(self.members.get_status(Status.AVAILABLE)) + 1
         stdscr.addstr(f'{available}', curses.A_BOLD)
 
+    def _set_typed(self, typed: bytes) -> None:
+        members = self.members
+        new_metadata = dict(members.local.metadata) | {'typed': typed}
+        members.update(members.local, new_metadata=new_metadata)
+
     def main(self, stdscr: Any) -> None:
         curses.cbreak()
         curses.use_default_colors()
@@ -84,12 +96,21 @@ class Screen:
         curses.init_pair(8, curses.COLOR_RED, -1)
         curses.curs_set(0)
         stdscr.clear()
+        stdscr.timeout(0)
+        typed = b''
         while not self.done.is_set():
             stdscr.clear()
             self._render(stdscr)
             stdscr.refresh()
-            with self.ready:
-                self.ready.wait(timeout=1.0)
+            for i in range(20):
+                with self.ready:
+                    if self.ready.wait(timeout=0.05):
+                        break
+                ch = stdscr.getch()
+                if _is_printable(ch):
+                    typed += bytes([ch])
+                    typed = typed[-30:]
+                    self._set_typed(typed)
 
     async def run_thread(self) -> None:
         await asyncio.to_thread(wrapper, self.main)
