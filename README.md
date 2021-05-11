@@ -36,8 +36,8 @@ $ swim-protocol-demo -c --name 127.0.0.1:2003 --peer 127.0.0.1:2001 --metadata n
 $ swim-protocol-demo -c --name 127.0.0.1:2004 --peer 127.0.0.1:2003 --metadata name four
 ```
 
-Every 10 seconds or so, each member will randomize its `token` metadata field,
-which should be disseminated across the cluster with [eventual consistency][6].
+Typing in any window will disseminate what has been typed across the cluster
+with [eventual consistency][6].
 
 ### Getting Started
 

@@ -5,7 +5,7 @@ import asyncio
 import random
 import uuid
 from contextlib import AsyncExitStack
-from typing import NoReturn
+from typing import Optional, NoReturn
 
 from ..members import Members
 
@@ -23,8 +23,10 @@ async def _randomize_local(members: Members, interval: float) -> NoReturn:
         await asyncio.sleep(sleep_sec)
 
 
-def change_metadata(members: Members, interval: float) -> AsyncExitStack:
+def change_metadata(members: Members, interval: Optional[float]) \
+        -> AsyncExitStack:
     exit_stack = AsyncExitStack()
-    task = asyncio.create_task(_randomize_local(members, interval))
-    exit_stack.callback(task.cancel)
+    if interval is not None:
+        task = asyncio.create_task(_randomize_local(members, interval))
+        exit_stack.callback(task.cancel)
     return exit_stack

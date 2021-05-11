@@ -105,7 +105,8 @@ class Member:
     def _set_metadata(self, metadata: Mapping[str, bytes]) -> None:
         assert self._pending_metadata is None
         pending_metadata = frozenset(metadata.items())
-        if pending_metadata != self._metadata:
+        if self._metadata_dict is self.METADATA_UNKNOWN or \
+                pending_metadata != self._metadata:
             self._pending_metadata = pending_metadata
 
     def _save(self, source: Optional[Member], next_clock: int) -> bool:
