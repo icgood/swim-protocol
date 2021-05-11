@@ -39,7 +39,7 @@ $ swim-protocol-demo -c --name 127.0.0.1:2004 --peer 127.0.0.1:2003 --metadata n
 Typing in any window will disseminate what has been typed across the cluster
 with [eventual consistency][6].
 
-![swim-protocol-demo](https://user-images.githubusercontent.com/438413/117894784-16580e80-b28b-11eb-9903-762fff92eaf7.gif)
+![swim-protocol-demo](https://user-images.githubusercontent.com/438413/117895781-13f6b400-b28d-11eb-997d-d8b9dbc455cb.gif)
 
 ### Getting Started
 
