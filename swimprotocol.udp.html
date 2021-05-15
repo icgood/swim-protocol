@@ -8,7 +8,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>swimprotocol.udp &#8212; swim-protocol 0.3.7 documentation</title>
+    <title>swimprotocol.udp &#8212; swim-protocol 0.3.8 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
@@ -53,7 +53,7 @@
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.7 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.8 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
@@ -372,6 +372,36 @@ packets.</p>
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.SwimProtocol.error_received">
+<span class="sig-name descname"><span class="pre">error_received</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.protocol.SwimProtocol.error_received" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when a UDP send or receive operation fails.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.DatagramProtocol.error_received" title="(in Python v3.9)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.DatagramProtocol.error_received()</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.SwimProtocol.connection_lost">
+<span class="sig-name descname"><span class="pre">connection_lost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.protocol.SwimProtocol.connection_lost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the UDP socket is closed.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.BaseProtocol.connection_lost" title="(in Python v3.9)"><code class="xref py py-meth docutils literal notranslate"><span class="pre">asyncio.BaseProtocol.connection_lost()</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type</dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/constants.html#None" title="(in Python v3.9)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">None</span></code></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="swimprotocol.udp.protocol.SwimProtocol.recv">
 <em class="property"><span class="pre">async</span> </em><span class="sig-name descname"><span class="pre">recv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="headerlink" href="#swimprotocol.udp.protocol.SwimProtocol.recv" title="Permalink to this definition">¶</a></dt>
 <dd><p>Wait until a packet has been received by the transport layer and
@@ -480,7 +510,7 @@ return it.</p>
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.3.7 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.3.8 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
