@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import asyncio
+import logging
 from asyncio import BaseTransport, Condition, DatagramProtocol, \
     DatagramTransport
 from collections import deque
@@ -14,6 +15,8 @@ from ..packet import Packet
 from ..worker import IO
 
 __all__ = ['SwimProtocol']
+
+_log = logging.getLogger(__name__)
 
 
 class SwimProtocol(DatagramProtocol, IO):
@@ -59,6 +62,25 @@ class SwimProtocol(DatagramProtocol, IO):
         if packet is None:
             return
         asyncio.create_task(self._push(packet))
+
+    def error_received(self, exc: Exception) -> None:
+        """Called when a UDP send or receive operation fails.
+
+        See Also:
+            :meth:`asyncio.DatagramProtocol.error_received`
+
+        """
+        _log.exception('UDP operation failed')
+
+    def connection_lost(self, exc: Optional[Exception]) -> None:
+        """Called when the UDP socket is closed.
+
+        See Also:
+            :meth:`asyncio.BaseProtocol.connection_lost`
+
+        """
+        _log.error('UDP connection lost: %s', exc)
+        self._transport = None
 
     async def _push(self, packet: Packet) -> None:
         async with self._queue_lock:
