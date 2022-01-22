@@ -99,7 +99,8 @@ class Worker:
         local = self.members.local
         while True:
             packet = await self.io.recv()
-            source = self.members.get(*packet.source)
+            source = self.members.get(packet.source.name,
+                                      packet.source.validity)
             if isinstance(packet, Ping):
                 await self.io.send(source, Ack(source=local.source))
             elif isinstance(packet, PingReq):

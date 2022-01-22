@@ -76,5 +76,4 @@ autodoc_default_options = {'members': True, 'show-inheritance': True}
 
 napoleon_numpy_docstring = False
 
-intersphinx_mapping = {'https://docs.python.org/3/': None,
-                       'https://grpclib.readthedocs.io/en/latest/': None}
+intersphinx_mapping = {'https://docs.python.org/3/': None}

@@ -7,7 +7,21 @@ from typing import Optional
 
 from .status import Status
 
-__all__ = ['Packet', 'Ping', 'PingReq', 'Ack', 'Gossip', 'GossipAck']
+__all__ = ['Source', 'Packet', 'Ping', 'PingReq', 'Ack', 'Gossip', 'GossipAck']
+
+
+@dataclass(frozen=True)
+class Source:
+    """Uniquely identifies the local cluster member that created the packet.
+
+    Args:
+        name: The name of the local cluster member.
+        validity: Random bytestring used to detect non-unique *name* values.
+
+    """
+
+    name: str
+    validity: bytes
 
 
 @dataclass(frozen=True)
@@ -23,7 +37,7 @@ class Packet:
 
     """
 
-    source: tuple[str, bytes]
+    source: Source
 
 
 @dataclass(frozen=True)
@@ -54,7 +68,6 @@ class Ack(Packet):
     that *source* is online.
 
     """
-
     pass
 
 
