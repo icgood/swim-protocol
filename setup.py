@@ -1,4 +1,4 @@
-# Copyright (c) 2021 Ian C. Good
+# Copyright (c) 2022 Ian C. Good
 #
 # Permission is hereby granted, free of charge, to any person obtaining a copy
 # of this software and associated documentation files (the "Software"), to deal
@@ -19,7 +19,7 @@
 # THE SOFTWARE.
 #
 
-from setuptools import setup, find_packages  # type: ignore
+from setuptools import setup, find_packages
 
 with open('README.md') as f:
     readme = f.read()
@@ -28,7 +28,7 @@ with open('LICENSE.md') as f:
     license = f.read()
 
 setup(name='swim-protocol',
-      version='0.3.8',
+      version='0.3.9',
       author='Ian Good',
       author_email='ian@icgood.net',
       description='SWIM protocol implementation for exchanging cluster '
@@ -43,7 +43,8 @@ setup(name='swim-protocol',
           'Intended Audience :: Information Technology',
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python',
-          'Programming Language :: Python :: 3.9'],
+          'Programming Language :: Python :: 3.9',
+          'Programming Language :: Python :: 3.10'],
       python_requires='~=3.9',
       include_package_data=True,
       packages=find_packages(),

@@ -59,7 +59,7 @@ class Transport(Generic[ConfigT_co], metaclass=ABCMeta):
 
     #: The :class:`~swimprotocol.config.BaseConfig` sub-class used by this
     #: transport.
-    config_type: ClassVar[type[ConfigT_co]]
+    config_type: ClassVar[type[BaseConfig]]
 
     def __init__(self, config: ConfigT_co) -> None:
         super().__init__()

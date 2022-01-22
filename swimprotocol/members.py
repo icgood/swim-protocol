@@ -11,6 +11,7 @@ from weakref import WeakKeyDictionary, WeakValueDictionary
 
 from .config import BaseConfig
 from .listener import Listener
+from .packet import Source
 from .shuffle import Shuffle, WeakShuffle
 from .status import Status
 
@@ -60,8 +61,8 @@ class Member:
         return f'Member<{self.name} {self.status.name}>'
 
     @property
-    def source(self) -> tuple[str, bytes]:
-        return self.name, self._validity
+    def source(self) -> Source:
+        return Source(self.name, self._validity)
 
     @property
     def clock(self) -> int:
