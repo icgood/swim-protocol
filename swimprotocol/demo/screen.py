@@ -6,6 +6,7 @@ import curses
 import string
 from contextlib import AsyncExitStack
 from curses import wrapper
+from functools import partial
 from threading import Event, Condition
 from typing import Final, Any
 
@@ -113,14 +114,14 @@ class Screen:
                     self._set_typed(typed)
 
     async def run_thread(self) -> None:
-        await asyncio.to_thread(wrapper, self.main)
+        await asyncio.to_thread(partial(wrapper, self.main))
 
 
 def run_screen(members: Members) -> AsyncExitStack:
     exit_stack = AsyncExitStack()
     screen = Screen(members)
     main_task = asyncio.create_task(screen.run_thread())
-    exit_stack.push_async_callback(asyncio.wait_for, main_task, None)
+    exit_stack.push_async_callback(partial(asyncio.wait_for, main_task, None))
     exit_stack.enter_context(members.listener.on_notify(screen.update))
     exit_stack.callback(screen.cancel)
     return exit_stack
