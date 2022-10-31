@@ -44,7 +44,7 @@ class WeakShuffle(Shuffle[ShuffleT], MutableSet[ShuffleT]):
 
     """
 
-    def __init__(self, /, init: Iterable[ShuffleT] = []) -> None:
+    def __init__(self, /, init: Iterable[ShuffleT] = ()) -> None:
         super().__init__()
         self._weak_vals: WeakKeyDictionary[ShuffleT, ref[ShuffleT]] = \
             WeakKeyDictionary()
@@ -91,7 +91,7 @@ class WeakShuffle(Shuffle[ShuffleT], MutableSet[ShuffleT]):
 
         """
         try:
-            weak_val = random.choice(self._values)
+            weak_val = random.choice(self._values)  # nosec
         except IndexError:
             raise KeyError('choice from an empty set')
         val = weak_val()
