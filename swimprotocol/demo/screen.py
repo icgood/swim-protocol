@@ -103,7 +103,7 @@ class Screen:
             stdscr.clear()
             self._render(stdscr)
             stdscr.refresh()
-            for i in range(20):
+            for _ in range(20):
                 with self.ready:
                     if self.ready.wait(timeout=0.05):
                         break

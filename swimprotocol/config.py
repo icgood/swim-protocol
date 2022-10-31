@@ -2,7 +2,6 @@
 from __future__ import annotations
 
 import os
-from abc import ABCMeta
 from argparse import ArgumentParser, Namespace
 from collections.abc import Mapping, Sequence
 from pathlib import Path
@@ -42,7 +41,7 @@ class TransientConfigError(ConfigError):
         self.wait_hint: Final = wait_hint
 
 
-class BaseConfig(metaclass=ABCMeta):
+class BaseConfig:
     """Configure the cluster behavior and characteristics.
     :class:`~swimprotocol.transport.Transport` implementations should
     sub-class to add additional configuration.

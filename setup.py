@@ -28,7 +28,7 @@ with open('LICENSE.md') as f:
     license = f.read()
 
 setup(name='swim-protocol',
-      version='0.3.9',
+      version='0.3.10',
       author='Ian Good',
       author_email='ian@icgood.net',
       description='SWIM protocol implementation for exchanging cluster '
@@ -44,7 +44,8 @@ setup(name='swim-protocol',
           'License :: OSI Approved :: MIT License',
           'Programming Language :: Python',
           'Programming Language :: Python :: 3.9',
-          'Programming Language :: Python :: 3.10'],
+          'Programming Language :: Python :: 3.10',
+          'Programming Language :: Python :: 3.11'],
       python_requires='~=3.9',
       include_package_data=True,
       packages=find_packages(),

@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-import pickle
+import pickle  # nosec
 import struct
 from typing import Final, Optional
 
@@ -98,7 +98,7 @@ class UdpPack:
         if len(digest) != signatures.digest_size or len(pickled) != data_len:
             return None
         if signatures.verify(pickled, (salt, digest)):
-            packet = pickle.loads(pickled)
+            packet = pickle.loads(pickled)  # nosec
             assert isinstance(packet, Packet)
             return packet
         else:

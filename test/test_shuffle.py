@@ -33,7 +33,7 @@ class TestWeakShuffle(TestCase):
         self.assertEqual(set(vals), set(shuffle))
         for val in vals:
             self.assertIn(val, shuffle)
-        for i in range(100):
+        for _ in range(100):
             self.assertIn(shuffle.choice(), vals)
 
     def test_discard(self) -> None:
@@ -42,12 +42,12 @@ class TestWeakShuffle(TestCase):
         shuffle.discard(vals[1])
         self.assertEqual(2, len(shuffle))
         self.assertEqual(set([vals[0], vals[2]]), set(shuffle))
-        for i in range(100):
+        for _ in range(100):
             self.assertIn(shuffle.choice(), vals)
         shuffle.discard(vals[2])
         self.assertEqual(1, len(shuffle))
         self.assertEqual(set([vals[0]]), set(shuffle))
-        for i in range(100):
+        for _ in range(100):
             self.assertIn(shuffle.choice(), vals)
         shuffle.discard(vals[0])
         self.assertEqual(0, len(shuffle))
@@ -60,12 +60,12 @@ class TestWeakShuffle(TestCase):
         del vals[1]
         self.assertEqual(2, len(shuffle))
         self.assertEqual(set(vals), set(shuffle))
-        for i in range(100):
+        for _ in range(100):
             self.assertIn(shuffle.choice(), vals)
         del vals[1]
         self.assertEqual(1, len(shuffle))
         self.assertEqual(set(vals), set(shuffle))
-        for i in range(100):
+        for _ in range(100):
             self.assertIn(shuffle.choice(), vals)
         del vals
         self.assertEqual(0, len(shuffle))

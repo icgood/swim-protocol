@@ -1,0 +1,22 @@
+[build-system]
+requires = ['setuptools', 'wheel']
+
+[tool.mypy]
+strict = true
+files = ['swimprotocol', 'test']
+
+[tool.bandit]
+skips = ['B101']
+
+[tool.pytest.ini_options]
+testpaths = 'test'
+norecursedirs = 'doc'
+
+[tool.coverage.report]
+omit = ['*/main.py', '*/demo.py']
+exclude_lines = [
+    'pragma: no cover',
+    'NotImplemented',
+    '^\s*...\s*$',
+    'def __repr__',
+]
