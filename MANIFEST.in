@@ -1,2 +1,3 @@
 include README.md LICENSE.md swimprotocol/py.typed
 recursive-include swimprotocol *.pyi
+prune tasks
