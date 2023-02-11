@@ -172,7 +172,7 @@ class Members(Set[Member]):
     def _refresh_statuses(self, member: Member) -> None:
         if not member.local:
             member_status = member.status
-            for status in Status:
+            for status in Status.all_statuses():
                 if member_status & status:
                     self._statuses[status].add(member)
                 else:
@@ -237,7 +237,7 @@ class Members(Set[Member]):
             member = Member(name, False)
             self._non_local.add(member)
             self._members[name] = member
-            for status in Status:
+            for status in Status.all_statuses():
                 if member.status & status:
                     self._statuses[status].add(member)
         if not member.local and validity is not None \

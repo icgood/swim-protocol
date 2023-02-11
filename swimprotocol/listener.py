@@ -3,8 +3,8 @@ from __future__ import annotations
 
 import asyncio
 from abc import abstractmethod
-from asyncio import Event
-from collections.abc import Sequence
+from asyncio import Event, Task
+from collections.abc import MutableSet, Sequence
 from contextlib import ExitStack
 from typing import TypeVar, Generic, Protocol, Any, NoReturn
 from weakref import WeakKeyDictionary
@@ -43,15 +43,19 @@ class Listener(Generic[ListenT]):
     def __init__(self, cls: type[ListenT]) -> None:
         super().__init__()
         self.event = Event()
+        self._running: MutableSet[Task[Any]] = set()
         self._waiting: WeakKeyDictionary[Event, list[ListenT]] = \
             WeakKeyDictionary()
 
     async def _run_callback_poll(self, callback: ListenerCallback[ListenT]) \
             -> NoReturn:
+        running = self._running
         while True:
             items = await self.poll()
             for item in items:
-                asyncio.create_task(callback(item))
+                task = asyncio.create_task(callback(item))
+                running.add(task)
+                task.add_done_callback(running.discard)
 
     def on_notify(self, callback: ListenerCallback[ListenT]) -> ExitStack:
         """Provides a context manager that causes *callback* to be called when

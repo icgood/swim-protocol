@@ -4,7 +4,7 @@ from __future__ import annotations
 import asyncio
 from abc import abstractmethod
 from asyncio import Event, Task, TimeoutError
-from collections.abc import Mapping, Sequence
+from collections.abc import Mapping, MutableSet, Sequence
 from contextlib import suppress
 from typing import final, Protocol, Final, Optional, NoReturn
 from weakref import WeakSet, WeakKeyDictionary
@@ -63,12 +63,18 @@ class Worker:
         self.config: Final = config
         self.members: Final = members
         self.io: Final = io
+        self._running: MutableSet[Task[None]] = set()
         self._waiting: WeakKeyDictionary[Member, WeakSet[Event]] = \
             WeakKeyDictionary()
         self._listening: WeakKeyDictionary[Member, WeakSet[Member]] = \
             WeakKeyDictionary()
         self._suspect: WeakKeyDictionary[Member, Task[None]] = \
             WeakKeyDictionary()
+
+    def _run_task(self, task: Task[None]) -> None:
+        running = self._running
+        running.add(task)
+        task.add_done_callback(running.discard)
 
     def _add_waiting(self, member: Member, event: Event) -> None:
         waiting = self._waiting.get(member)
@@ -181,8 +187,8 @@ class Worker:
                 count, status=Status.AVAILABLE, exclude={target})
             if indirects:
                 await asyncio.wait([
-                    self.io.send(indirect, PingReq(
-                        source=local.source, target=target.name))
+                    asyncio.create_task(self.io.send(indirect, PingReq(
+                        source=local.source, target=target.name)))
                     for indirect in indirects])
                 online = await self._wait(target, self.config.ping_req_timeout)
         new_status = Status.ONLINE if online else Status.SUSPECT
@@ -220,7 +226,7 @@ class Worker:
             targets = self.members.find(1)
             assert targets
             for target in targets:
-                asyncio.create_task(self.check(target))
+                self._run_task(asyncio.create_task(self.check(target)))
             await asyncio.sleep(self.config.ping_interval)
 
     async def run_dissemination(self) -> NoReturn:
@@ -236,7 +242,7 @@ class Worker:
         while True:
             targets = self.members.find(1, status=Status.AVAILABLE)
             for target in targets:
-                asyncio.create_task(self.disseminate(target))
+                self._run_task(asyncio.create_task(self.disseminate(target)))
             await asyncio.sleep(self.config.sync_interval)
 
     @final

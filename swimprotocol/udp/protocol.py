@@ -3,9 +3,10 @@ from __future__ import annotations
 
 import asyncio
 import logging
-from asyncio import BaseTransport, Condition, DatagramProtocol, \
+from asyncio import BaseTransport, Condition, Task, DatagramProtocol, \
     DatagramTransport
 from collections import deque
+from collections.abc import MutableSet
 from typing import cast, Final, Optional
 
 from .pack import UdpPack
@@ -34,6 +35,7 @@ class SwimProtocol(DatagramProtocol, IO):
         self._transport: Optional[DatagramTransport] = None
         self._queue_lock = Condition()
         self._queue: deque[Packet] = deque()
+        self._running: MutableSet[Task[None]] = set()
 
     @property
     def transport(self) -> DatagramTransport:
@@ -61,7 +63,10 @@ class SwimProtocol(DatagramProtocol, IO):
         packet = self.udp_pack.unpack(data)
         if packet is None:
             return
-        asyncio.create_task(self._push(packet))
+        running = self._running
+        task = asyncio.create_task(self._push(packet))
+        running.add(task)
+        task.add_done_callback(running.discard)
 
     def error_received(self, exc: Exception) -> None:
         """Called when a UDP send or receive operation fails.

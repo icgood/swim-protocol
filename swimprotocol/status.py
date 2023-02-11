@@ -1,6 +1,7 @@
 
 from __future__ import annotations
 
+from collections.abc import Collection
 from enum import auto, Flag
 
 __all__ = ['Status']
@@ -58,3 +59,8 @@ class Status(Flag):
             return Status.SUSPECT
         else:
             return to
+
+    @classmethod
+    def all_statuses(cls) -> Collection[Status]:
+        """A collection of all the statuses, including aggregate statuses."""
+        return cls.__members__.values()
