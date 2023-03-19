@@ -92,8 +92,8 @@ class WeakShuffle(Shuffle[ShuffleT], MutableSet[ShuffleT]):
         """
         try:
             weak_val = random.choice(self._values)  # nosec
-        except IndexError:
-            raise KeyError('choice from an empty set')
+        except IndexError as exc:
+            raise KeyError('choice from an empty set') from exc
         val = weak_val()
         assert val is not None
         return val
