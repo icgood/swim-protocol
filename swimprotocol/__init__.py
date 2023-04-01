@@ -1,7 +1,7 @@
 
 from __future__ import annotations
 
-import pkg_resources
+from importlib.metadata import distribution
 
 __all__ = ['__version__']
 
@@ -9,4 +9,4 @@ __all__ = ['__version__']
 #:
 #: See Also:
 #:    `PEP 396 <https://www.python.org/dev/peps/pep-0396/>`_
-__version__: str = pkg_resources.require('swim-protocol')[0].version
+__version__: str = distribution('swim-protocol').version
