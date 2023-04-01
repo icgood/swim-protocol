@@ -9,6 +9,4 @@ pytest-cov
 bandit[toml]
 rope
 
-types-setuptools
-
 -e '.'

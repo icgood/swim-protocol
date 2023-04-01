@@ -1,11 +1,15 @@
 
 from __future__ import annotations
 
+import sys
 from abc import abstractmethod, ABCMeta
 from contextlib import AbstractAsyncContextManager
-from typing import Generic, TypeVar, Final, ClassVar, Optional
+from typing import Generic, TypeVar, Final, ClassVar
 
-from pkg_resources import iter_entry_points, DistributionNotFound
+if sys.version_info >= (3, 10):  # pragma: no cover
+    from importlib.metadata import entry_points
+else:  # pragma: no cover
+    from importlib_metadata import entry_points
 
 from .config import ConfigT_co, BaseConfig
 from .members import Members
@@ -31,18 +35,10 @@ def load_transport(name: str = 'udp', *, group: str = __name__) \
         KeyError: The given name did not exist in the entry point group.
 
     """
-    last_exc: Optional[DistributionNotFound] = None
-    for entry_point in iter_entry_points(group, name):
-        try:
-            transport_type: type[Transport[BaseConfig]] = entry_point.load()
-        except DistributionNotFound as exc:
-            last_exc = exc
-        else:
-            return transport_type
-    if last_exc is not None:
-        raise last_exc
-    else:
-        raise KeyError(f'{name!r} entry point not found in {group!r}')
+    for entry_point in entry_points(group=group, name=name):
+        transport_type: type[Transport[BaseConfig]] = entry_point.load()
+        return transport_type
+    raise KeyError(f'{name!r} entry point not found in {group!r}')
 
 
 class Transport(Generic[ConfigT_co], metaclass=ABCMeta):
