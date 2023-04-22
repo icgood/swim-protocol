@@ -130,11 +130,20 @@ synchronize larger amounts of metadata.
 
 ## Development
 
-First off, I suggest activating a [venv][3]. Then, install the development
-requirements and a local link to the *swim-protocol* package:
+You will need to do some additional setup to develop and test plugins. Install
+[Hatch][3] to use the CLI examples below.
 
+Run all tests and linters:
+
+```console
+$ hatch run check
 ```
-$ pip install -r requirements-dev.txt
+
+Because this project supports several versions of Python, you can use the
+following to run the checks on all versions:
+
+```console
+$ hatch run all:check
 ```
 
 ### Type Hinting
@@ -152,7 +161,7 @@ hinting to the extent possible and common in the rest of the codebase.
 [0]: https://www.cs.cornell.edu/projects/Quicksilver/public_pdfs/SWIM.pdf
 [1]: https://docs.python.org/3/library/asyncio.html
 [2]: https://github.com/icgood/swim-protocol/blob/main/swimprotocol/demo/__init__.py
-[3]: https://docs.python.org/3/library/venv.html
+[3]: https://hatch.pypa.io/latest/install/
 [4]: https://docs.python.org/3/library/typing.html
 [5]: http://mypy-lang.org/
 [6]: https://en.wikipedia.org/wiki/Eventual_consistency

@@ -25,7 +25,7 @@ build-backend = 'hatchling.build'
 
 [project]
 name = 'swim-protocol'
-version = '0.3.11'
+dynamic = ['version']
 authors = [
     { name = 'Ian Good', email = 'ian@icgood.net' },
 ]
@@ -47,20 +47,24 @@ dependencies = [
     'importlib-metadata; python_version < "3.10"',
 ]
 
-[project.optional-dependencies]
-crc32c = ['crc32c ~= 2.2']
-
 [project.urls]
-homepage = 'https://github.com/icgood/swim-protocol/'
+'Homepage' = 'https://github.com/icgood/swim-protocol/'
+'API Documentation' = 'https://icgood.github.io/swim-protocol/'
 
 [project.scripts]
 swim-protocol-demo = 'swimprotocol.demo:main'
+
+[tool.hatch.version]
+path = 'swimprotocol/__about__.py'
 
 [project.entry-points.'swimprotocol.transport']
 udp = 'swimprotocol.udp:UdpTransport'
 
 [tool.hatch.build]
-exclude = ['/tasks', '/doc', '/.github']
+exclude = ['/doc', '/.github']
+
+[tool.hatch.build.targets.wheel]
+packages = ['swimprotocol']
 
 [tool.mypy]
 strict = true
@@ -74,10 +78,43 @@ testpaths = 'test'
 norecursedirs = 'doc'
 
 [tool.coverage.report]
-omit = ['*/main.py', '*/demo.py']
+omit = ['*/__about__.py', '*/main.py', '*/demo.py']
 exclude_lines = [
     'pragma: no cover',
     'NotImplemented',
     '^\s*...\s*$',
     'def __repr__',
 ]
+
+[tool.hatch.envs.default]
+dependencies = [
+    'mypy',
+    'pytest',
+    'pytest-asyncio',
+    'pytest-cov',
+    'flake8',
+    'flake8-annotations',
+    'flake8-bugbear',
+    'bandit[toml]',
+]
+
+[tool.hatch.envs.default.scripts]
+run-pytest = 'py.test --cov-report=term-missing --cov=swimprotocol'
+run-mypy = 'mypy swimprotocol test'
+run-flake8 = 'flake8 swimprotocol test'
+run-bandit = 'bandit -c pyproject.toml -qr swimprotocol'
+check = ['run-pytest', 'run-mypy', 'run-flake8', 'run-bandit']
+
+[[tool.hatch.envs.all.matrix]]
+python = ['3.9', '3.10', '3.11']
+
+[tool.hatch.envs.doc]
+dependencies = [
+    'sphinx',
+    'sphinx-autodoc-typehints',
+    'cloud_sptheme',
+]
+
+[tool.hatch.envs.doc.scripts]
+build = 'make -C doc html'
+browse = ['build', 'open doc/build/html/index.html']
