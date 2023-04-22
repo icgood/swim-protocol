@@ -7,7 +7,7 @@ import secrets
 import uuid
 from typing import Final, Union
 
-from . import __version__
+from .__about__ import __version__
 
 __all__ = ['Signatures']
 
