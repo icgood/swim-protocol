@@ -27,9 +27,3 @@ jobs:
     - name: Run test suites, type checks, and linters
       run: |
         hatch run check
-    - name: Report test coverage to Coveralls
-      if: success()
-      env:
-        GITHUB_TOKEN: ${{ github.token }}
-      run: |
-        coveralls --service=github

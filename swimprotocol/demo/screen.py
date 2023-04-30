@@ -1,6 +1,11 @@
 
 from __future__ import annotations
 
+import sys
+assert sys.platform != 'win32'
+
+# ruff: noqa: E402
+
 import asyncio
 import curses
 import string

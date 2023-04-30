@@ -70,8 +70,13 @@ packages = ['swimprotocol']
 strict = true
 files = ['swimprotocol', 'test']
 
-[tool.bandit]
-skips = ['B101']
+[tool.ruff]
+select = ['ANN', 'B', 'B904', 'E', 'F', 'N', 'S', 'W']
+ignore = ['ANN101', 'ANN102', 'ANN401', 'S101']
+line-length = 79
+
+[tool.ruff.per-file-ignores]
+"test/*" = ['ANN']
 
 [tool.pytest.ini_options]
 testpaths = 'test'
@@ -92,18 +97,14 @@ dependencies = [
     'pytest',
     'pytest-asyncio',
     'pytest-cov',
-    'flake8',
-    'flake8-annotations',
-    'flake8-bugbear',
-    'bandit[toml]',
+    'ruff',
 ]
 
 [tool.hatch.envs.default.scripts]
 run-pytest = 'py.test --cov-report=term-missing --cov=swimprotocol'
 run-mypy = 'mypy swimprotocol test'
-run-flake8 = 'flake8 swimprotocol test'
-run-bandit = 'bandit -c pyproject.toml -qr swimprotocol'
-check = ['run-pytest', 'run-mypy', 'run-flake8', 'run-bandit']
+run-ruff = 'ruff swimprotocol test'
+check = ['run-pytest', 'run-mypy', 'run-ruff']
 
 [[tool.hatch.envs.all.matrix]]
 python = ['3.9', '3.10', '3.11']

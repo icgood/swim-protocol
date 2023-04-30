@@ -7,6 +7,11 @@ member, and should be disseminated to all other members.
 
 from __future__ import annotations
 
+import sys
+assert sys.platform != 'win32'
+
+# ruff: noqa: E402
+
 import asyncio
 import logging
 import signal
