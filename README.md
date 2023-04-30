@@ -7,6 +7,7 @@ metadata.
 [![build](https://github.com/icgood/swim-protocol/actions/workflows/python-check.yml/badge.svg)](https://github.com/icgood/swim-protocol/actions/workflows/python-check.yml)
 [![PyPI](https://img.shields.io/pypi/v/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
 [![PyPI](https://img.shields.io/pypi/pyversions/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
+![platforms](https://img.shields.io/badge/platform-linux%20%7C%20macOS%20%7C%20windows-blueviolet)
 [![PyPI](https://img.shields.io/pypi/l/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
 
 This library is intended to fit into an [asyncio][1] event loop to help

@@ -38,7 +38,7 @@ class UdpPack:
         self.prefix_xor: Final = prefix_xor
 
     def _xor_prefix(self, prefix: bytes) -> bytes:
-        zipped = zip(prefix, self.prefix_xor)
+        zipped = zip(prefix, self.prefix_xor, strict=True)
         return bytes([left ^ right for left, right in zipped])
 
     def pack(self, packet: Packet) -> bytes:
