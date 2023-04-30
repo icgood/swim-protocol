@@ -5,7 +5,6 @@ swim-protocol
 metadata.
 
 [![build](https://github.com/icgood/swim-protocol/actions/workflows/python-check.yml/badge.svg)](https://github.com/icgood/swim-protocol/actions/workflows/python-check.yml)
-[![Coverage Status](https://coveralls.io/repos/github/icgood/swim-protocol/badge.svg?branch=main)](https://coveralls.io/github/icgood/swim-protocol?branch=main)
 [![PyPI](https://img.shields.io/pypi/v/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
 [![PyPI](https://img.shields.io/pypi/pyversions/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)
 [![PyPI](https://img.shields.io/pypi/l/swim-protocol.svg)](https://pypi.python.org/pypi/swim-protocol)

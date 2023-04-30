@@ -98,7 +98,7 @@ class UdpPack:
         if len(digest) != signatures.digest_size or len(pickled) != data_len:
             return None
         if signatures.verify(pickled, (salt, digest)):
-            packet = pickle.loads(pickled)  # nosec
+            packet = pickle.loads(pickled)  # noqa: S301
             assert isinstance(packet, Packet)
             return packet
         else:
