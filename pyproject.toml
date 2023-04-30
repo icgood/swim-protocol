@@ -32,19 +32,15 @@ authors = [
 description = 'SWIM protocol implementation for exchanging cluster membership status and metadata.'
 license = { file = 'LICENSE.md' }
 readme = { file = 'README.md', content-type = 'text/markdown' }
-requires-python = '~=3.9'
+requires-python = '~=3.10'
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
     'Intended Audience :: Information Technology',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3.9',
     'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
-]
-dependencies = [
-    'importlib-metadata; python_version < "3.10"',
 ]
 
 [project.urls]
@@ -71,7 +67,7 @@ strict = true
 files = ['swimprotocol', 'test']
 
 [tool.ruff]
-select = ['ANN', 'B', 'B904', 'E', 'F', 'N', 'S', 'W']
+select = ['ANN', 'B', 'E', 'F', 'N', 'S', 'W']
 ignore = ['ANN101', 'ANN102', 'ANN401', 'S101']
 line-length = 79
 
@@ -107,7 +103,7 @@ run-ruff = 'ruff swimprotocol test'
 check = ['run-pytest', 'run-mypy', 'run-ruff']
 
 [[tool.hatch.envs.all.matrix]]
-python = ['3.9', '3.10', '3.11']
+python = ['3.10', '3.11']
 
 [tool.hatch.envs.doc]
 dependencies = [

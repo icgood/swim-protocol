@@ -1,15 +1,10 @@
 
 from __future__ import annotations
 
-import sys
 from abc import abstractmethod, ABCMeta
 from contextlib import AbstractAsyncContextManager
+from importlib.metadata import entry_points
 from typing import Generic, TypeVar, Final, ClassVar
-
-if sys.version_info >= (3, 10):  # pragma: no cover
-    from importlib.metadata import entry_points
-else:  # pragma: no cover
-    from importlib_metadata import entry_points
 
 from .config import ConfigT_co, BaseConfig
 from .members import Members
