@@ -23,8 +23,8 @@ __all__ = ['run_screen']
 
 def _is_printable(ch: int) -> bool:
     return ch >= 0 and ch < 256 \
-            and ch in string.printable.encode('ascii') \
-            and ch not in set(b'\t\r\n\x0b\x0c')
+        and ch in string.printable.encode('ascii') \
+        and ch not in set(b'\t\r\n\x0b\x0c')
 
 
 class Screen:
@@ -60,16 +60,17 @@ class Screen:
             stdscr.addstr(' ')
             stdscr.addstr(key)
             stdscr.addstr('=', curses.A_DIM)
-            stdscr.addstr(val_str, curses.color_pair(i+1) | curses.A_BOLD)
+            stdscr.addstr(val_str, curses.color_pair(i + 1) | curses.A_BOLD)
 
     def _render(self, stdscr: Any) -> None:
         members = sorted(self.members)
         for i, member in enumerate(members):
             stdscr.move(i, 4)
-            stdscr.addstr(member.name, curses.color_pair(i+1) | curses.A_BOLD)
+            stdscr.addstr(member.name,
+                          curses.color_pair(i + 1) | curses.A_BOLD)
             stdscr.addstr(' is ')
             stdscr.addstr(member.status.name,
-                          curses.color_pair(i+1) | curses.A_BOLD)
+                          curses.color_pair(i + 1) | curses.A_BOLD)
             stdscr.move(i, 30)
             stdscr.addstr(f' {member.clock}', curses.A_BOLD)
             stdscr.move(i, 38)
