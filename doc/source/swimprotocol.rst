@@ -1,6 +1,6 @@
 
 ``swimprotocol``
-====================
+================
 
 .. automodule:: swimprotocol
    :special-members:
