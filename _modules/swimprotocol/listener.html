@@ -1,0 +1,223 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>swimprotocol.listener &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.listener</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swimprotocol.listener</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Task</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">MutableSet</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">ExitStack</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">NoReturn</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">WeakKeyDictionary</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ListenerCallback&#39;</span><span class="p">,</span> <span class="s1">&#39;Listener&#39;</span><span class="p">]</span>
+
+<span class="n">ListenT</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ListenT&#39;</span><span class="p">)</span>
+<span class="n">ListenT_contra</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ListenT_contra&#39;</span><span class="p">,</span> <span class="n">contravariant</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ListenerCallback"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.listener.ListenerCallback">[docs]</a><span class="k">class</span> <span class="nc">ListenerCallback</span><span class="p">(</span><span class="n">Protocol</span><span class="p">[</span><span class="n">ListenT_contra</span><span class="p">]):</span>
+
+<div class="viewcode-block" id="ListenerCallback.__call__"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.listener.ListenerCallback.__call__">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="fm">__call__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">ListenT_contra</span><span class="p">,</span> <span class="o">/</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Called asynchronousely with the argument passed to</span>
+<span class="sd">        :meth:`~Listener.notify`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item: The object sent to the consumers.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div></div>
+
+
+<div class="viewcode-block" id="Listener"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.listener.Listener">[docs]</a><span class="k">class</span> <span class="nc">Listener</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">ListenT</span><span class="p">]):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements basic listener and callback functionality. Producers can</span>
+<span class="sd">    call :meth:`.notify` with an item, and consumers can wait for those items</span>
+<span class="sd">    with :meth:`.poll` or register a callback with :meth:`.on_notify`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        cls: The item type that will be given to :meth:`.notify`, returned by</span>
+<span class="sd">            :meth:`.poll`, and passed to :meth:`.on_notify` callbacks.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ListenT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span> <span class="n">MutableSet</span><span class="p">[</span><span class="n">Task</span><span class="p">[</span><span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">:</span> <span class="n">WeakKeyDictionary</span><span class="p">[</span><span class="n">Event</span><span class="p">,</span> <span class="nb">list</span><span class="p">[</span><span class="n">ListenT</span><span class="p">]]</span> <span class="o">=</span> \
+            <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_callback_poll</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">ListenerCallback</span><span class="p">[</span><span class="n">ListenT</span><span class="p">])</span> \
+            <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="n">running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">items</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">poll</span><span class="p">()</span>
+            <span class="k">for</span> <span class="n">item</span> <span class="ow">in</span> <span class="n">items</span><span class="p">:</span>
+                <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="n">callback</span><span class="p">(</span><span class="n">item</span><span class="p">))</span>
+                <span class="n">running</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+                <span class="n">task</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">running</span><span class="o">.</span><span class="n">discard</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Listener.on_notify"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.listener.Listener.on_notify">[docs]</a>    <span class="k">def</span> <span class="nf">on_notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">callback</span><span class="p">:</span> <span class="n">ListenerCallback</span><span class="p">[</span><span class="n">ListenT</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ExitStack</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Provides a context manager that causes *callback* to be called when</span>
+<span class="sd">        a producer calls :meth:`.notify`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            callback: The callback function, which will be passed the *item*</span>
+<span class="sd">                argument from :meth:`.notify`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">exit_stack</span> <span class="o">=</span> <span class="n">ExitStack</span><span class="p">()</span>
+        <span class="n">task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_callback_poll</span><span class="p">(</span><span class="n">callback</span><span class="p">))</span>
+        <span class="n">exit_stack</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">task</span><span class="o">.</span><span class="n">cancel</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">exit_stack</span></div>
+
+<div class="viewcode-block" id="Listener.poll"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.listener.Listener.poll">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">poll</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">ListenT</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wait until :meth:`.notify` is called and return all *item* objects.</span>
+<span class="sd">        More than one item may be returned if :meth:`.notify` is called more</span>
+<span class="sd">        than once before the :mod:`asyncio` event loop is re-entered.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">[</span><span class="n">event</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="k">await</span> <span class="n">event</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">[</span><span class="n">event</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="Listener.notify"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.listener.Listener.notify">[docs]</a>    <span class="k">def</span> <span class="nf">notify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">item</span><span class="p">:</span> <span class="n">ListenT</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Triggers a notification with *item*, waking any :meth:`.poll` calls</span>
+<span class="sd">        and running any :meth:`.on_notify` callbacks.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            item: The object to be sent to the consumers.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">for</span> <span class="n">event</span><span class="p">,</span> <span class="n">args</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">item</span><span class="p">)</span>
+            <span class="n">event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.listener</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

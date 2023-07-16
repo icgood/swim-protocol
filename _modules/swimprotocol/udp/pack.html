@@ -1,0 +1,235 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>swimprotocol.udp.pack &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
+    <script src="../../../_static/doctools.js"></script>
+    <script src="../../../_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="../../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../udp.html" accesskey="U">swimprotocol.udp</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.udp.pack</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swimprotocol.udp.pack</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">pickle</span>  <span class="c1"># nosec</span>
+<span class="kn">import</span> <span class="nn">struct</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">..packet</span> <span class="kn">import</span> <span class="n">Packet</span>
+<span class="kn">from</span> <span class="nn">..sign</span> <span class="kn">import</span> <span class="n">Signatures</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;UdpPack&#39;</span><span class="p">]</span>
+
+<span class="n">_prefix</span> <span class="o">=</span> <span class="n">struct</span><span class="o">.</span><span class="n">Struct</span><span class="p">(</span><span class="s1">&#39;!BBH&#39;</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="UdpPack"><a class="viewcode-back" href="../../../swimprotocol.udp.html#swimprotocol.udp.pack.UdpPack">[docs]</a><span class="k">class</span> <span class="nc">UdpPack</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Packs and unpacks SWIM protocol :class:`~swimprotocol.packet.Packet`</span>
+<span class="sd">    objects from raw UDP packets. The :mod:`pickle` module is used for</span>
+<span class="sd">    serialization, so :class:`~swimprotocol.sign.Signatures` is used to sign</span>
+<span class="sd">    the payloads.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        signatures: Generates and verifies cluster packet signatures.</span>
+<span class="sd">        pickle_protocol: The :mod:`pickle` protocol version number.</span>
+<span class="sd">        prefix_xor: A 4-byte string used to XOR the packet prefix, as a sanity</span>
+<span class="sd">            check to detect malformed or incomplete UDP packets.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">signatures</span><span class="p">:</span> <span class="n">Signatures</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">pickle_protocol</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">HIGHEST_PROTOCOL</span><span class="p">,</span>
+                 <span class="n">prefix_xor</span><span class="p">:</span> <span class="nb">bytes</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;SWIM&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">prefix_xor</span><span class="p">)</span> <span class="o">!=</span> <span class="n">_prefix</span><span class="o">.</span><span class="n">size</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix_xor</span><span class="si">!r}</span><span class="s1"> must be </span><span class="si">{</span><span class="n">_prefix</span><span class="o">.</span><span class="n">size</span><span class="si">}</span><span class="s1"> bytes&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">signatures</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">pickle_protocol</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">pickle_protocol</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">prefix_xor</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">prefix_xor</span>
+
+    <span class="k">def</span> <span class="nf">_xor_prefix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">prefix</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+        <span class="n">zipped</span> <span class="o">=</span> <span class="nb">zip</span><span class="p">(</span><span class="n">prefix</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">prefix_xor</span><span class="p">,</span> <span class="n">strict</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">bytes</span><span class="p">([</span><span class="n">left</span> <span class="o">^</span> <span class="n">right</span> <span class="k">for</span> <span class="n">left</span><span class="p">,</span> <span class="n">right</span> <span class="ow">in</span> <span class="n">zipped</span><span class="p">])</span>
+
+<div class="viewcode-block" id="UdpPack.pack"><a class="viewcode-back" href="../../../swimprotocol.udp.html#swimprotocol.udp.pack.UdpPack.pack">[docs]</a>    <span class="k">def</span> <span class="nf">pack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packet</span><span class="p">:</span> <span class="n">Packet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Uses :mod:`pickle` to serialize *packet*, generates a digital</span>
+<span class="sd">        signature of the pickled data, and returns a byte-string that can be</span>
+<span class="sd">        sent as a raw UDP packet.</span>
+
+<span class="sd">        The resulting byte-string starts with a 4-byte :mod:`struct` prefix</span>
+<span class="sd">        (XOR&#39;ed with *prefix_xor*) with the `struct format</span>
+<span class="sd">        &lt;https://docs.python.org/3/library/struct.html#format-strings&gt;`_</span>
+<span class="sd">        ``!BBH``. The first byte is the length of the salt, the second byte is</span>
+<span class="sd">        the length of the signature, and the final two bytes are the length of</span>
+<span class="sd">        the pickled payload. After the prefix, the salt, digest, and pickled</span>
+<span class="sd">        payload byte-strings are concatenated.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            packet: The SWIM protocol packet to serialize.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">pickled</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">pickle_protocol</span><span class="p">)</span>
+        <span class="n">salt</span><span class="p">,</span> <span class="n">digest</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span><span class="o">.</span><span class="n">sign</span><span class="p">(</span><span class="n">pickled</span><span class="p">)</span>
+        <span class="n">salt_start</span> <span class="o">=</span> <span class="n">_prefix</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">digest_start</span> <span class="o">=</span> <span class="n">salt_start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">)</span>
+        <span class="n">data_start</span> <span class="o">=</span> <span class="n">digest_start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="n">_prefix</span><span class="o">.</span><span class="n">pack</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">salt</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">digest</span><span class="p">),</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickled</span><span class="p">))</span>
+        <span class="n">packed</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">(</span><span class="n">data_start</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickled</span><span class="p">))</span>
+        <span class="n">packed</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">salt_start</span><span class="p">]</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xor_prefix</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">packed</span><span class="p">[</span><span class="n">salt_start</span><span class="p">:</span><span class="n">digest_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">salt</span>
+        <span class="n">packed</span><span class="p">[</span><span class="n">digest_start</span><span class="p">:</span><span class="n">data_start</span><span class="p">]</span> <span class="o">=</span> <span class="n">digest</span>
+        <span class="n">packed</span><span class="p">[</span><span class="n">data_start</span><span class="p">:]</span> <span class="o">=</span> <span class="n">pickled</span>
+        <span class="k">return</span> <span class="n">packed</span></div>
+
+<div class="viewcode-block" id="UdpPack.unpack"><a class="viewcode-back" href="../../../swimprotocol.udp.html#swimprotocol.udp.pack.UdpPack.unpack">[docs]</a>    <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Packet</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Deserializes a byte-string that was created using :meth:`.pack` into</span>
+<span class="sd">        a SWIM protocol packet. If any assumptions about the serialized data</span>
+<span class="sd">        are not met, including an invalid signature, ``None`` is returned to</span>
+<span class="sd">        indicate that *data* was malformed or incomplete.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: The serialized byte-string of the SWIM protocol packet.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">data_view</span> <span class="o">=</span> <span class="nb">memoryview</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+        <span class="n">salt_start</span> <span class="o">=</span> <span class="n">_prefix</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">prefix</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_xor_prefix</span><span class="p">(</span><span class="n">data_view</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="n">salt_start</span><span class="p">])</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">salt_len</span><span class="p">,</span> <span class="n">digest_len</span><span class="p">,</span> <span class="n">data_len</span> <span class="o">=</span> <span class="n">_prefix</span><span class="o">.</span><span class="n">unpack</span><span class="p">(</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">struct</span><span class="o">.</span><span class="n">error</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="n">digest_start</span> <span class="o">=</span> <span class="n">salt_start</span> <span class="o">+</span> <span class="n">salt_len</span>
+        <span class="n">data_start</span> <span class="o">=</span> <span class="n">digest_start</span> <span class="o">+</span> <span class="n">digest_len</span>
+        <span class="n">data_end</span> <span class="o">=</span> <span class="n">data_start</span> <span class="o">+</span> <span class="n">data_len</span>
+        <span class="n">salt</span> <span class="o">=</span> <span class="n">data_view</span><span class="p">[</span><span class="n">salt_start</span><span class="p">:</span><span class="n">digest_start</span><span class="p">]</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="n">data_view</span><span class="p">[</span><span class="n">digest_start</span><span class="p">:</span><span class="n">data_start</span><span class="p">]</span>
+        <span class="n">pickled</span> <span class="o">=</span> <span class="n">data_view</span><span class="p">[</span><span class="n">data_start</span><span class="p">:</span><span class="n">data_end</span><span class="p">]</span>
+        <span class="n">signatures</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">signatures</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">digest</span><span class="p">)</span> <span class="o">!=</span> <span class="n">signatures</span><span class="o">.</span><span class="n">digest_size</span> <span class="ow">or</span> <span class="nb">len</span><span class="p">(</span><span class="n">pickled</span><span class="p">)</span> <span class="o">!=</span> <span class="n">data_len</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">signatures</span><span class="o">.</span><span class="n">verify</span><span class="p">(</span><span class="n">pickled</span><span class="p">,</span> <span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">digest</span><span class="p">)):</span>
+            <span class="n">packet</span> <span class="o">=</span> <span class="n">pickle</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">pickled</span><span class="p">)</span>  <span class="c1"># noqa: S301</span>
+            <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">Packet</span><span class="p">)</span>
+            <span class="k">return</span> <span class="n">packet</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">None</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../udp.html" >swimprotocol.udp</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.udp.pack</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

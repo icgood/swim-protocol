@@ -1,0 +1,199 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>swimprotocol.sign &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.sign</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swimprotocol.sign</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">hashlib</span>
+<span class="kn">import</span> <span class="nn">hmac</span>
+<span class="kn">import</span> <span class="nn">secrets</span>
+<span class="kn">import</span> <span class="nn">uuid</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">from</span> <span class="nn">.__about__</span> <span class="kn">import</span> <span class="n">__version__</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Signatures&#39;</span><span class="p">]</span>
+
+<span class="n">_SigTuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="Signatures"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures">[docs]</a><span class="k">class</span> <span class="nc">Signatures</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Provides a hash signature for inclusion alongside</span>
+<span class="sd">    :class:`~swimprotocol.packet.Packet` objects when implementing a</span>
+<span class="sd">    :class:`~swimprotocol.transport.Transport` protocol.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        secret: A shared secret among all cluster members.</span>
+<span class="sd">        hash_name: The :mod:`hashlib` hash name to use.</span>
+<span class="sd">        salt_len: The length of the salt to use when hashing.</span>
+<span class="sd">        check_version: True if the :attr:`swimprotocol.__version__` should be</span>
+<span class="sd">            included in the signature and verification.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">hash_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;sha256&#39;</span><span class="p">,</span>
+                 <span class="n">salt_len</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">16</span><span class="p">,</span>
+                 <span class="n">check_version</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">secret</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">secret</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="si">%x</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="n">uuid</span><span class="o">.</span><span class="n">getnode</span><span class="p">()</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">secret</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">secret</span> <span class="o">=</span> <span class="n">secret</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">secret</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">hash_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">salt_len</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">salt_len</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">digest_size</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hash_name</span><span class="p">)</span><span class="o">.</span><span class="n">digest_size</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">__version__</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">check_version</span> <span class="k">else</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
+
+<div class="viewcode-block" id="Signatures.sign"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_SigTuple</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sign the data using a new random salt, returning the salt and the</span>
+<span class="sd">        resulting digest as a tuple.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: The bytes to be signed.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">salt</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
+        <span class="n">salted_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="si">%s%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">digest</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">salted_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">salt</span><span class="p">,</span> <span class="n">digest</span></div>
+
+<div class="viewcode-block" id="Signatures.verify"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="n">_SigTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that a signature is valid for the given salt and data.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            data: The bytes to be verified.</span>
+<span class="sd">            sig: A tuple of the salt used during signing and the resulting</span>
+<span class="sd">                digest.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">salt</span><span class="p">,</span> <span class="n">sig_digest</span> <span class="o">=</span> <span class="n">sig</span>
+        <span class="n">salted_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="si">%s%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="n">digest</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">digest</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">salted_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">hmac</span><span class="o">.</span><span class="n">compare_digest</span><span class="p">(</span><span class="n">sig_digest</span><span class="p">,</span> <span class="n">digest</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.sign</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

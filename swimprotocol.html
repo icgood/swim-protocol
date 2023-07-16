@@ -1,0 +1,1371 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>swimprotocol &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="swimprotocol.udp" href="swimprotocol.udp.html" />
+    <link rel="prev" title="SWIM Introduction" href="intro.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="swimprotocol.udp.html" title="swimprotocol.udp"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="intro.html" title="SWIM Introduction"
+             accesskey="P">previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="module-swimprotocol">
+<span id="swimprotocol"></span><h1><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code><a class="headerlink" href="#module-swimprotocol" title="Permalink to this heading">¶</a></h1>
+<section id="module-swimprotocol.address">
+<span id="swimprotocol-address"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.address</span></code><a class="headerlink" href="#module-swimprotocol.address" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.address.Address">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.address.</span></span><span class="sig-name descname"><span class="pre">Address</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">host</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/address.html#Address"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.address.Address" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages an address for socket connections.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>host</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The address hostname string.</p></li>
+<li><p><strong>port</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The address port number.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.address.Address.get">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">addr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/address.html#Address.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.address.Address.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return an <a class="reference internal" href="#swimprotocol.address.Address" title="swimprotocol.address.Address"><code class="xref py py-class docutils literal notranslate"><span class="pre">Address</span></code></a> from a <code class="docutils literal notranslate"><span class="pre">(host,</span> <span class="pre">port)</span></code> tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>addr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – The address tuple from <a class="reference external" href="https://docs.python.org/3/library/socket.html#module-socket" title="(in Python v3.11)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">socket</span></code></a> functions.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.address.Address" title="swimprotocol.address.Address"><em>Address</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.address.AddressParser">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.address.</span></span><span class="sig-name descname"><span class="pre">AddressParser</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">address_type=&lt;class</span> <span class="pre">'swimprotocol.address.Address'&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_host=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_port=None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/address.html#AddressParser"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.address.AddressParser" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages the defaults to use when parsing an address string.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>address_type</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><em>type</em></a><em>[</em><a class="reference internal" href="#swimprotocol.address.Address" title="swimprotocol.address.Address"><em>Address</em></a><em>]</em>) – Override the <a class="reference internal" href="#swimprotocol.address.Address" title="swimprotocol.address.Address"><code class="xref py py-class docutils literal notranslate"><span class="pre">Address</span></code></a> implementation.</p></li>
+<li><p><strong>default_host</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The default hostname, if missing from the address string
+(e.g. <code class="docutils literal notranslate"><span class="pre">:1234:</span></code>).</p></li>
+<li><p><strong>default_port</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – The default port number, if missing from the address
+string (e.g. <code class="docutils literal notranslate"><span class="pre">example.tld</span></code>).</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.config">
+<span id="swimprotocol-config"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.config</span></code><a class="headerlink" href="#module-swimprotocol.config" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.config.ConfigT_co">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.config.</span></span><span class="sig-name descname"><span class="pre">ConfigT_co</span></span><a class="headerlink" href="#swimprotocol.config.ConfigT_co" title="Permalink to this definition">¶</a></dt>
+<dd><p>Covariant type variable for <a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a> sub-classes.</p>
+<p>alias of TypeVar(‘ConfigT_co’, bound=<a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a>, covariant=True)</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="swimprotocol.config.ConfigError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.config.</span></span><span class="sig-name descname"><span class="pre">ConfigError</span></span><a class="reference internal" href="_modules/swimprotocol/config.html#ConfigError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.config.ConfigError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Exception</span></code></a></p>
+<p>Raised when the configuration is insufficient or invalid for running a
+cluster, along with a human-readable message about what was wrong.</p>
+</dd></dl>
+
+<dl class="py exception">
+<dt class="sig sig-object py" id="swimprotocol.config.TransientConfigError">
+<em class="property"><span class="pre">exception</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.config.</span></span><span class="sig-name descname"><span class="pre">TransientConfigError</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wait_hint</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">60.0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/config.html#TransientConfigError"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.config.TransientConfigError" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.config.ConfigError" title="swimprotocol.config.ConfigError"><code class="xref py py-class docutils literal notranslate"><span class="pre">ConfigError</span></code></a></p>
+<p>Raised when a possibly-temporary failure has prevented configuration of
+the cluster. This exception is often chained with the cause, e.g.
+<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#OSError" title="(in Python v3.11)"><code class="xref py py-exc docutils literal notranslate"><span class="pre">OSError</span></code></a>. Importantly, this exception indicates that configuration of
+the cluster may succeed eventually if retried.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>msg</strong> (<em>Optional</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – The exception message.</p></li>
+<li><p><strong>wait_hint</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – A suggested <a class="reference external" href="https://docs.python.org/3/library/asyncio-task.html#asyncio.sleep" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">sleep()</span></code></a> time before trying again.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.config.BaseConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.config.</span></span><span class="sig-name descname"><span class="pre">BaseConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local_metadata</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">peers</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.3</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_req_count</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ping_req_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.9</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">suspect_timeout</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">5.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sync_interval</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/config.html#BaseConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.config.BaseConfig" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Configure the cluster behavior and characteristics.
+<a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> implementations should
+sub-class to add additional configuration.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>secret</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>]</em>) – The shared secret for cluster packet signatures.</p></li>
+<li><p><strong>local_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The unique name of the local cluster member.</p></li>
+<li><p><strong>local_metadata</strong> (<em>Mapping</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>]</em>) – The local cluster member metadata.</p></li>
+<li><p><strong>peers</strong> (<em>Sequence</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>]</em>) – At least one name of another known node in the cluster.</p></li>
+<li><p><strong>ping_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Time between <a class="reference internal" href="intro.html#term-ping"><span class="xref std std-term">ping</span></a> attempts to random cluster
+members.</p></li>
+<li><p><strong>ping_timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Time to wait for an <a class="reference internal" href="intro.html#term-ack"><span class="xref std std-term">ack</span></a> after sending a
+<a class="reference internal" href="intro.html#term-ping"><span class="xref std std-term">ping</span></a>.</p></li>
+<li><p><strong>ping_req_count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – Number of nodes to send a <a class="reference internal" href="intro.html#term-ping-req"><span class="xref std std-term">ping-req</span></a> when a
+<a class="reference internal" href="intro.html#term-ping"><span class="xref std std-term">ping</span></a> fails.</p></li>
+<li><p><strong>ping_req_timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Time to wait for an <em>ack</em> after sending a
+<a class="reference internal" href="intro.html#term-ping-req"><span class="xref std std-term">ping-req</span></a>.</p></li>
+<li><p><strong>suspect_timeout</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Time to wait after losing connectivity with a cluster
+member before marking it offline.</p></li>
+<li><p><strong>sync_interval</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><em>float</em></a>) – Time between sync attempts to disseminate cluster
+changes.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><a class="reference internal" href="#swimprotocol.config.ConfigError" title="swimprotocol.config.ConfigError"><strong>ConfigError</strong></a> – The given configuration was invalid.</p></li>
+<li><p><a class="reference internal" href="#swimprotocol.config.TransientConfigError" title="swimprotocol.config.TransientConfigError"><strong>TransientConfigError</strong></a> – The configuration failed due to a failure that
+    may not be permanent.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.config.BaseConfig.signatures">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signatures</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#swimprotocol.sign.Signatures" title="swimprotocol.sign.Signatures"><span class="pre">Signatures</span></a></em><a class="headerlink" href="#swimprotocol.config.BaseConfig.signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Generates and verifies cluster packet signatures.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.config.BaseConfig.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/config.html#BaseConfig.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.config.BaseConfig.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dd><p>Implementations (such as the <a class="reference internal" href="intro.html#term-demo"><span class="xref std std-term">demo</span></a>) may use this method to
+add command-line based configuration for the transport.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Arguments added should use <em>prefix</em> and explicitly provide a unique
+name, e.g.:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">arg&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_arg&#39;</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>This prevents collision with other argument names and allows custom
+<em>prefix</em> values without affecting the <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Namespace</span></code></a>.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>parser</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.ArgumentParser" title="(in Python v3.11)"><em>ArgumentParser</em></a>) – The argument parser.</p></li>
+<li><p><strong>prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The prefix for added arguments, which should start with
+<code class="docutils literal notranslate"><span class="pre">--</span></code> and end with <code class="docutils literal notranslate"><span class="pre">-</span></code>, e.g. <code class="docutils literal notranslate"><span class="pre">'--'</span></code> or <code class="docutils literal notranslate"><span class="pre">'--foo-'</span></code>.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.config.BaseConfig.parse_args">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SWIM'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/config.html#BaseConfig.parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.config.BaseConfig.parse_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the given <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Namespace</span></code></a> into a dictionary of
+keyword arguments for the <a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a> constructor. Sub-classes
+should override this method to add additional keyword arguments as
+needed.</p>
+<p>Some keywords will default to environment variables if not given in
+<em>args</em>:</p>
+<dl class="simple">
+<dt><code class="docutils literal notranslate"><span class="pre">SWIM_SECRET</span></code>, <code class="docutils literal notranslate"><span class="pre">SWIM_SECRET_FILE</span></code> <a class="footnote-reference brackets" href="#id2" id="id1" role="doc-noteref"><span class="fn-bracket">[</span>*<span class="fn-bracket">]</span></a></dt><dd><p>The <em>secret</em> keyword argument.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SWIM_NAME</span></code></dt><dd><p>The <em>local_name</em> keyword argument.</p>
+</dd>
+<dt><code class="docutils literal notranslate"><span class="pre">SWIM_PEERS</span></code></dt><dd><p>The comma-separated <em>peers</em> keyword argument.</p>
+</dd>
+</dl>
+<aside class="footnote-list brackets">
+<aside class="footnote brackets" id="id2" role="doc-footnote">
+<span class="label"><span class="fn-bracket">[</span><a role="doc-backlink" href="#id1">*</a><span class="fn-bracket">]</span></span>
+<p>The value is read from the given file path.</p>
+</aside>
+</aside>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.11)"><em>Namespace</em></a>) – The command-line arguments.</p></li>
+<li><p><strong>env_prefix</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – Prefix for the environment variables.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)">dict</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)">str</a>, <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.config.BaseConfig.from_args">
+<em class="property"><span class="pre">final</span><span class="w"> </span><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">overrides</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/config.html#BaseConfig.from_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.config.BaseConfig.from_args" title="Permalink to this definition">¶</a></dt>
+<dd><p>Build and return a new cluster config object. This first calls
+<a class="reference internal" href="#swimprotocol.config.BaseConfig.parse_args" title="swimprotocol.config.BaseConfig.parse_args"><code class="xref py py-meth docutils literal notranslate"><span class="pre">parse_args()</span></code></a> and then passes the results as keyword arguments
+to the constructor.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>args</strong> (<a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.11)"><em>Namespace</em></a>) – The command-line arguments.</p></li>
+<li><p><strong>overrides</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a>) – Keyword arguments to override.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.config.ConfigT_co" title="swimprotocol.config.ConfigT_co"><em>ConfigT_co</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.listener">
+<span id="swimprotocol-listener"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.listener</span></code><a class="headerlink" href="#module-swimprotocol.listener" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.listener.ListenerCallback">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.listener.</span></span><span class="sig-name descname"><span class="pre">ListenerCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#ListenerCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.ListenerCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenT_contra</span></code>]</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.listener.ListenerCallback.__call__">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#ListenerCallback.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.ListenerCallback.__call__" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called asynchronousely with the argument passed to
+<a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>ListenT_contra</em>) – The object sent to the consumers.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.listener.Listener">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.listener.</span></span><span class="sig-name descname"><span class="pre">Listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">cls</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#Listener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.Listener" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenT</span></code>]</p>
+<p>Implements basic listener and callback functionality. Producers can
+call <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a> with an item, and consumers can wait for those items
+with <a class="reference internal" href="#swimprotocol.listener.Listener.poll" title="swimprotocol.listener.Listener.poll"><code class="xref py py-meth docutils literal notranslate"><span class="pre">poll()</span></code></a> or register a callback with <a class="reference internal" href="#swimprotocol.listener.Listener.on_notify" title="swimprotocol.listener.Listener.on_notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">on_notify()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>cls</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><em>type</em></a><em>[</em><em>ListenT</em><em>]</em>) – The item type that will be given to <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>, returned by
+<a class="reference internal" href="#swimprotocol.listener.Listener.poll" title="swimprotocol.listener.Listener.poll"><code class="xref py py-meth docutils literal notranslate"><span class="pre">poll()</span></code></a>, and passed to <a class="reference internal" href="#swimprotocol.listener.Listener.on_notify" title="swimprotocol.listener.Listener.on_notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">on_notify()</span></code></a> callbacks.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.listener.Listener.on_notify">
+<span class="sig-name descname"><span class="pre">on_notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#Listener.on_notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.Listener.on_notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Provides a context manager that causes <em>callback</em> to be called when
+a producer calls <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>callback</strong> (<a class="reference internal" href="#swimprotocol.listener.ListenerCallback" title="swimprotocol.listener.ListenerCallback"><em>ListenerCallback</em></a><em>[</em><em>ListenT</em><em>]</em>) – The callback function, which will be passed the <em>item</em>
+argument from <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.ExitStack" title="(in Python v3.11)"><em>ExitStack</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.listener.Listener.poll">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">poll</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#Listener.poll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.Listener.poll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a> is called and return all <em>item</em> objects.
+More than one item may be returned if <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a> is called more
+than once before the <a class="reference external" href="https://docs.python.org/3/library/asyncio.html#module-asyncio" title="(in Python v3.11)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">asyncio</span></code></a> event loop is re-entered.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Sequence" title="(in Python v3.11)"><em>Sequence</em></a>[<em>ListenT</em>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.listener.Listener.notify">
+<span class="sig-name descname"><span class="pre">notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#Listener.notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.Listener.notify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Triggers a notification with <em>item</em>, waking any <a class="reference internal" href="#swimprotocol.listener.Listener.poll" title="swimprotocol.listener.Listener.poll"><code class="xref py py-meth docutils literal notranslate"><span class="pre">poll()</span></code></a> calls
+and running any <a class="reference internal" href="#swimprotocol.listener.Listener.on_notify" title="swimprotocol.listener.Listener.on_notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">on_notify()</span></code></a> callbacks.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>item</strong> (<em>ListenT</em>) – The object to be sent to the consumers.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.members">
+<span id="swimprotocol-members"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.members</span></code><a class="headerlink" href="#module-swimprotocol.members" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.members.Member">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.members.</span></span><span class="sig-name descname"><span class="pre">Member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">local</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Member" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Represents a <a class="reference internal" href="intro.html#term-member"><span class="xref std std-term">member</span></a> node of the cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – </p></li>
+<li><p><strong>local</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.members.Member.METADATA_UNKNOWN">
+<span class="sig-name descname"><span class="pre">METADATA_UNKNOWN</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.11)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">{}</span></em><a class="headerlink" href="#swimprotocol.members.Member.METADATA_UNKNOWN" title="Permalink to this definition">¶</a></dt>
+<dd><p>Before a non-local cluster member metadata has been initialized with a
+known value, it is assigned this empty <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#dict" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">dict</span></code></a> for
+<a class="reference external" href="https://docs.python.org/3/reference/expressions.html#is-not">identity comparisons</a>.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.members.Member.clock">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">clock</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#swimprotocol.members.Member.clock" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="intro.html#term-sequence-clock"><span class="xref std std-term">sequence clock</span></a> tracking changes distributed across the
+cluster.  This value is always increasing, as changes are made to the
+member status or metadata.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.members.Member.status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><span class="pre">Status</span></a></em><a class="headerlink" href="#swimprotocol.members.Member.status" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last known <a class="reference internal" href="intro.html#term-status"><span class="xref std std-term">status</span></a> of the cluster member.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.members.Member.status_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">status_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#float" title="(in Python v3.11)"><span class="pre">float</span></a></em><a class="headerlink" href="#swimprotocol.members.Member.status_time" title="Permalink to this definition">¶</a></dt>
+<dd><p>The local system time when <a class="reference internal" href="#swimprotocol.members.Member.status" title="swimprotocol.members.Member.status"><code class="xref py py-attr docutils literal notranslate"><span class="pre">status</span></code></a> last changed.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.members.Member.metadata">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">metadata</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.11)"><span class="pre">Mapping</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><span class="pre">bytes</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#swimprotocol.members.Member.metadata" title="Permalink to this definition">¶</a></dt>
+<dd><p>The last known <a class="reference internal" href="intro.html#term-metadata"><span class="xref std std-term">metadata</span></a> of the cluster member.</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.members.Members">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.members.</span></span><span class="sig-name descname"><span class="pre">Members</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Set" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><code class="xref py py-class docutils literal notranslate"><span class="pre">Member</span></code></a>]</p>
+<p>Manages the <a class="reference internal" href="intro.html#term-member"><span class="xref std std-term">members</span></a> of the cluster.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><em>BaseConfig</em></a>) – The cluster config object.</p>
+</dd>
+</dl>
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.local">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">local</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><span class="pre">Member</span></a></em><a class="headerlink" href="#swimprotocol.members.Members.local" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="intro.html#term-local-member"><span class="xref std std-term">local member</span></a> for the process.</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.non_local">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">non_local</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Set" title="(in Python v3.11)"><span class="pre">Set</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><span class="pre">Member</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#swimprotocol.members.Members.non_local" title="Permalink to this definition">¶</a></dt>
+<dd><p>All of the non-local cluster <a class="reference internal" href="intro.html#term-member"><span class="xref std std-term">members</span></a>.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.find">
+<span class="sig-name descname"><span class="pre">find</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">count</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">Status.ALL</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">exclude</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">frozenset({})</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.find"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.find" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return a randomly-chosen subset of non-local cluster members that
+meet the given criteria.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>count</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – At most this many members will be returned.</p></li>
+<li><p><strong>status</strong> (<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a>) – The real or aggregate status of the members.</p></li>
+<li><p><strong>exclude</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Set" title="(in Python v3.11)"><em>Set</em></a><em>[</em><a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a><em>]</em>) – Members that must not be included in the resulting list.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#frozenset" title="(in Python v3.11)">frozenset</a>[<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member">swimprotocol.members.Member</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.get_status">
+<span class="sig-name descname"><span class="pre">get_status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">status</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.get_status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.get_status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return all of the non-local cluster members with the given status.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>status</strong> (<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a>) – A real status like
+<a class="reference internal" href="#swimprotocol.status.Status.ONLINE" title="swimprotocol.status.Status.ONLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ONLINE</span></code></a> or an aggregate
+status like <a class="reference internal" href="#swimprotocol.status.Status.AVAILABLE" title="swimprotocol.status.Status.AVAILABLE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">AVAILABLE</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.shuffle.Shuffle" title="swimprotocol.shuffle.Shuffle"><em>Shuffle</em></a>[<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validity</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.get" title="Permalink to this definition">¶</a></dt>
+<dd><p>Return the cluster member with the given name, creating it if does
+not exist.</p>
+<p>If <em>validity</em> is given and <em>name</em> matches an existing non-local member,
+it is compared to the previous validity value, causing a full
+resynchronize if they are different.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The unique name of the cluster member.</p></li>
+<li><p><strong>validity</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em> | </em><em>None</em>) – Random bytes used to check existing member validity.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.update">
+<span class="sig-name descname"><span class="pre">update</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_status</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">new_metadata</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.update"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.update" title="Permalink to this definition">¶</a></dt>
+<dd><p>Update the cluster member status or metadata.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member to update.</p></li>
+<li><p><strong>new_status</strong> (<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a><em> | </em><em>None</em>) – A new status for the member, if any.</p></li>
+<li><p><strong>new_metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.11)"><em>Mapping</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>] </em><em>| </em><em>None</em>) – New metadata dictionary for the member, if any.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.apply">
+<span class="sig-name descname"><span class="pre">apply</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.apply"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.apply" title="Permalink to this definition">¶</a></dt>
+<dd><p>Apply a disseminated update from <em>source</em> to <em>member</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member to update.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member that disseminated the update.</p></li>
+<li><p><strong>clock</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The sequence clock of the update.</p></li>
+<li><p><strong>status</strong> (<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a>) – The status to apply to <em>member</em>.</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.11)"><em>Mapping</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>] </em><em>| </em><em>None</em>) – The metadata to apply to <em>member</em>, if known.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.get_gossip">
+<span class="sig-name descname"><span class="pre">get_gossip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.get_gossip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.get_gossip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Iterates through cluster members looking for <a class="reference internal" href="intro.html#term-gossip"><span class="xref std std-term">gossip</span></a> that
+should be sent to <em>target</em>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="intro.html#dissemination"><span class="std std-ref">Dissemination</span></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The recipient of the cluster gossip.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Generator" title="(in Python v3.11)"><em>Generator</em></a>[<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>, None, None]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.members.Members.ack_gossip">
+<span class="sig-name descname"><span class="pre">ack_gossip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/members.html#Members.ack_gossip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.members.Members.ack_gossip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Marks the <em>source</em> cluster member as having received updates about
+<em>member</em> up to the given sequence clock. This prevents repeated
+transfer of known gossip.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member that was updated.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member that received the update.</p></li>
+<li><p><strong>clock</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The sequence clock of the update.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.packet">
+<span id="swimprotocol-packet"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.packet</span></code><a class="headerlink" href="#module-swimprotocol.packet" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.Source">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">Source</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">validity</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#Source"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.Source" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Uniquely identifies the local cluster member that created the packet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the local cluster member.</p></li>
+<li><p><strong>validity</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – Random bytestring used to detect non-unique <em>name</em> values.</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.Packet">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">Packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#Packet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.Packet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Base class for a <a class="reference internal" href="intro.html#term-packet"><span class="xref std std-term">packet</span></a> sent between cluster members.</p>
+<p><a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> implementations may use these
+directly, e.g. <a class="reference internal" href="swimprotocol.udp.html#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpPack</span></code></a>, or adapt their
+contents into another protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.packet.Source" title="swimprotocol.packet.Source"><em>Source</em></a>) – The name of the local cluster member that created the packet.</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.Ping">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">Ping</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#Ping"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.Ping" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a></p>
+<p>Packets used for the SWIM protocol <a class="reference internal" href="intro.html#term-ping"><span class="xref std std-term">ping</span></a> operation, which do not
+explicitly contain any other information other than the <em>source</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.packet.Source" title="swimprotocol.packet.Source"><em>Source</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.PingReq">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">PingReq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#PingReq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.PingReq" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a></p>
+<p>Packets used for the SWIM protocol <a class="reference internal" href="intro.html#term-ping-req"><span class="xref std std-term">ping-req</span></a> operation, which
+contain a <em>target</em> member in addition to <em>source</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>target</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the target cluster member.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.packet.Source" title="swimprotocol.packet.Source"><em>Source</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.Ack">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">Ack</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#Ack"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.Ack" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a></p>
+<p>Packets used for the SWIM protocol <a class="reference internal" href="intro.html#term-ack"><span class="xref std std-term">ack</span></a> response, which indicates
+that <em>source</em> is online.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.packet.Source" title="swimprotocol.packet.Source"><em>Source</em></a>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.Gossip">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">Gossip</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">status</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">metadata</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#Gossip"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.Gossip" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a></p>
+<p>Packets used for SWIM protocol <a class="reference internal" href="intro.html#term-gossip"><span class="xref std std-term">gossip</span></a>, which alert other members
+when a cluster member has changed status or metadata. This information is
+intended to travel around the cluster until all members are aware of the
+change.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the cluster member whose state has changed.</p></li>
+<li><p><strong>clock</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The sequence clock value associated with the change.</p></li>
+<li><p><strong>status</strong> (<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a>) – The current perceived status of the cluster member.</p></li>
+<li><p><strong>metadata</strong> (<a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Mapping" title="(in Python v3.11)"><em>Mapping</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>] </em><em>| </em><em>None</em>) – The current metadata associated with the cluster member.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.packet.Source" title="swimprotocol.packet.Source"><em>Source</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.packet.GossipAck">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.packet.</span></span><span class="sig-name descname"><span class="pre">GossipAck</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">source</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">clock</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/packet.html#GossipAck"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.packet.GossipAck" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a></p>
+<p>Packets used to acknowledge receipt of a <a class="reference internal" href="#swimprotocol.packet.Gossip" title="swimprotocol.packet.Gossip"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gossip</span></code></a> packet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the cluster member from the <a class="reference internal" href="#swimprotocol.packet.Gossip" title="swimprotocol.packet.Gossip"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gossip</span></code></a> packet.</p></li>
+<li><p><strong>clock</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The sequence clock from the <a class="reference internal" href="#swimprotocol.packet.Gossip" title="swimprotocol.packet.Gossip"><code class="xref py py-class docutils literal notranslate"><span class="pre">Gossip</span></code></a> packet.</p></li>
+<li><p><strong>source</strong> (<a class="reference internal" href="#swimprotocol.packet.Source" title="swimprotocol.packet.Source"><em>Source</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.shuffle">
+<span id="swimprotocol-shuffle"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.shuffle</span></code><a class="headerlink" href="#module-swimprotocol.shuffle" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.shuffle.Shuffle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.shuffle.</span></span><span class="sig-name descname"><span class="pre">Shuffle</span></span><a class="reference internal" href="_modules/swimprotocol/shuffle.html#Shuffle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.shuffle.Shuffle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Set" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Set</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ShuffleT_co</span></code>]</p>
+<p>A set of objects that can be accessed in a “shuffled” manner, similar to
+a deck of cards. All operations including <a class="reference internal" href="#swimprotocol.shuffle.Shuffle.choice" title="swimprotocol.shuffle.Shuffle.choice"><code class="xref py py-meth docutils literal notranslate"><span class="pre">choice()</span></code></a> are <em>O(1)</em> time
+complexity.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.shuffle.Shuffle.choice">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/shuffle.html#Shuffle.choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.shuffle.Shuffle.choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose an object from the set at random and return it. This object
+is not removed from the set.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/random.html#random.choice" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.choice()</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.11)"><strong>KeyError</strong></a> – The set was empty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ShuffleT_co</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.shuffle.WeakShuffle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.shuffle.</span></span><span class="sig-name descname"><span class="pre">WeakShuffle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">()</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/shuffle.html#WeakShuffle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.shuffle.WeakShuffle" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.shuffle.Shuffle" title="swimprotocol.shuffle.Shuffle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Shuffle</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ShuffleT</span></code>], <a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.MutableSet" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">MutableSet</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ShuffleT</span></code>]</p>
+<p>An implementation of <a class="reference internal" href="#swimprotocol.shuffle.Shuffle" title="swimprotocol.shuffle.Shuffle"><code class="xref py py-class docutils literal notranslate"><span class="pre">Shuffle</span></code></a> that holds only weak references
+to the set elements.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>init</strong> (<em>Iterable</em><em>[</em><em>ShuffleT</em><em>]</em>) – Initial objects to add.</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.shuffle.WeakShuffle.add">
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/shuffle.html#WeakShuffle.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.shuffle.WeakShuffle.add" title="Permalink to this definition">¶</a></dt>
+<dd><p>Add an element.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>ShuffleT</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.shuffle.WeakShuffle.discard">
+<span class="sig-name descname"><span class="pre">discard</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">val</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/shuffle.html#WeakShuffle.discard"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.shuffle.WeakShuffle.discard" title="Permalink to this definition">¶</a></dt>
+<dd><p>Remove an element.  Do not raise an exception if absent.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>val</strong> (<em>ShuffleT</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.shuffle.WeakShuffle.choice">
+<span class="sig-name descname"><span class="pre">choice</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/shuffle.html#WeakShuffle.choice"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.shuffle.WeakShuffle.choice" title="Permalink to this definition">¶</a></dt>
+<dd><p>Choose an object from the set at random and return it. This object
+is not removed from the set.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference external" href="https://docs.python.org/3/library/random.html#random.choice" title="(in Python v3.11)"><code class="xref py py-func docutils literal notranslate"><span class="pre">random.choice()</span></code></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Raises<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.11)"><strong>KeyError</strong></a> – The set was empty.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>ShuffleT</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.sign">
+<span id="swimprotocol-sign"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.sign</span></code><a class="headerlink" href="#module-swimprotocol.sign" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.sign.Signatures">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.sign.</span></span><span class="sig-name descname"><span class="pre">Signatures</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">secret</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">hash_name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'sha256'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">salt_len</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">16</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">check_version</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/sign.html#Signatures"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.sign.Signatures" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Provides a hash signature for inclusion alongside
+<a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a> objects when implementing a
+<a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> protocol.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>secret</strong> (<em>Union</em><em>[</em><em>None</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>]</em>) – A shared secret among all cluster members.</p></li>
+<li><p><strong>hash_name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The <a class="reference external" href="https://docs.python.org/3/library/hashlib.html#module-hashlib" title="(in Python v3.11)"><code class="xref py py-mod docutils literal notranslate"><span class="pre">hashlib</span></code></a> hash name to use.</p></li>
+<li><p><strong>salt_len</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a>) – The length of the salt to use when hashing.</p></li>
+<li><p><strong>check_version</strong> (<a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)"><em>bool</em></a>) – True if the <code class="xref py py-attr docutils literal notranslate"><span class="pre">swimprotocol.__version__</span></code> should be
+included in the signature and verification.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.sign.Signatures.sign">
+<span class="sig-name descname"><span class="pre">sign</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/sign.html#Signatures.sign"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.sign.Signatures.sign" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sign the data using a new random salt, returning the salt and the
+resulting digest as a tuple.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The bytes to be signed.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)">tuple</a>[<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)">bytes</a>, <a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)">bytes</a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.sign.Signatures.verify">
+<span class="sig-name descname"><span class="pre">verify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sig</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/sign.html#Signatures.verify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.sign.Signatures.verify" title="Permalink to this definition">¶</a></dt>
+<dd><p>Verify that a signature is valid for the given salt and data.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The bytes to be verified.</p></li>
+<li><p><strong>sig</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a><em>]</em>) – A tuple of the salt used during signing and the resulting
+digest.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#bool" title="(in Python v3.11)">bool</a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.status">
+<span id="swimprotocol-status"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.status</span></code><a class="headerlink" href="#module-swimprotocol.status" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.status.Status">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.status.</span></span><span class="sig-name descname"><span class="pre">Status</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">names</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">module</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">qualname</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">start</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">boundary</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/status.html#Status"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.status.Status" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/enum.html#enum.Flag" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Flag</span></code></a></p>
+<p>Possible cluster member <a class="reference internal" href="intro.html#term-status"><span class="xref std std-term">status</span></a> values, as well as aggregate
+values that can be used with bitwise operations but must not be assigned.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.ONLINE">
+<span class="sig-name descname"><span class="pre">ONLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#swimprotocol.status.Status.ONLINE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The member is responding as expected.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.OFFLINE">
+<span class="sig-name descname"><span class="pre">OFFLINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#swimprotocol.status.Status.OFFLINE" title="Permalink to this definition">¶</a></dt>
+<dd><p>The member has stopped responding for long enough to avoid false
+positives.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.SUSPECT">
+<span class="sig-name descname"><span class="pre">SUSPECT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#swimprotocol.status.Status.SUSPECT" title="Permalink to this definition">¶</a></dt>
+<dd><p>The member has failed to respond, but is not yet declared fully offline.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.AVAILABLE">
+<span class="sig-name descname"><span class="pre">AVAILABLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#swimprotocol.status.Status.AVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate status for statuses that are considered responding,
+<a class="reference internal" href="#swimprotocol.status.Status.ONLINE" title="swimprotocol.status.Status.ONLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ONLINE</span></code></a> and <a class="reference internal" href="#swimprotocol.status.Status.SUSPECT" title="swimprotocol.status.Status.SUSPECT"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SUSPECT</span></code></a>, for use with bitwise operations.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.UNAVAILABLE">
+<span class="sig-name descname"><span class="pre">UNAVAILABLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#swimprotocol.status.Status.UNAVAILABLE" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate status for statuses that are not considered responding,
+<a class="reference internal" href="#swimprotocol.status.Status.OFFLINE" title="swimprotocol.status.Status.OFFLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">OFFLINE</span></code></a> and <a class="reference internal" href="#swimprotocol.status.Status.SUSPECT" title="swimprotocol.status.Status.SUSPECT"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SUSPECT</span></code></a>, for use with bitwise operations.</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.ALL">
+<span class="sig-name descname"><span class="pre">ALL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#swimprotocol.status.Status.ALL" title="Permalink to this definition">¶</a></dt>
+<dd><p>Aggregate status for all statuses, for use with bitwise operations.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.transition">
+<span class="sig-name descname"><span class="pre">transition</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">to</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/status.html#Status.transition"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.status.Status.transition" title="Permalink to this definition">¶</a></dt>
+<dd><p>Prevents impossible status transitions, returning a new status to
+be used instead of <em>to</em>.</p>
+<ul class="simple">
+<li><p><a class="reference internal" href="#swimprotocol.status.Status.OFFLINE" title="swimprotocol.status.Status.OFFLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">OFFLINE</span></code></a> to <a class="reference internal" href="#swimprotocol.status.Status.SUSPECT" title="swimprotocol.status.Status.SUSPECT"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SUSPECT</span></code></a>, which should
+remain on <a class="reference internal" href="#swimprotocol.status.Status.OFFLINE" title="swimprotocol.status.Status.OFFLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">OFFLINE</span></code></a>.</p></li>
+<li><p><a class="reference internal" href="#swimprotocol.status.Status.ONLINE" title="swimprotocol.status.Status.ONLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">ONLINE</span></code></a> to <a class="reference internal" href="#swimprotocol.status.Status.OFFLINE" title="swimprotocol.status.Status.OFFLINE"><code class="xref py py-attr docutils literal notranslate"><span class="pre">OFFLINE</span></code></a>, which should first
+go to <a class="reference internal" href="#swimprotocol.status.Status.SUSPECT" title="swimprotocol.status.Status.SUSPECT"><code class="xref py py-attr docutils literal notranslate"><span class="pre">SUSPECT</span></code></a>.</p></li>
+</ul>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>to</strong> (<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a>) – The desired transition status.</p>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#ValueError" title="(in Python v3.11)"><strong>ValueError</strong></a> – <em>to</em> was an aggregate status, which cannot be
+    transitioned to directly.</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.status.Status.all_statuses">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">all_statuses</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/status.html#Status.all_statuses"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.status.Status.all_statuses" title="Permalink to this definition">¶</a></dt>
+<dd><p>A collection of all the statuses, including aggregate statuses.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.Collection" title="(in Python v3.11)"><em>Collection</em></a>[<a class="reference internal" href="#swimprotocol.status.Status" title="swimprotocol.status.Status"><em>Status</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.transport">
+<span id="swimprotocol-transport"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.transport</span></code><a class="headerlink" href="#module-swimprotocol.transport" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.transport.TransportT">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.transport.</span></span><span class="sig-name descname"><span class="pre">TransportT</span></span><a class="headerlink" href="#swimprotocol.transport.TransportT" title="Permalink to this definition">¶</a></dt>
+<dd><p>Type variable for <a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> implementations.</p>
+<p>alias of TypeVar(‘TransportT’, bound=<code class="xref py py-class docutils literal notranslate"><span class="pre">Transport[BaseConfig]</span></code>)</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="swimprotocol.transport.load_transport">
+<span class="sig-prename descclassname"><span class="pre">swimprotocol.transport.</span></span><span class="sig-name descname"><span class="pre">load_transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'udp'</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">group</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'swimprotocol.transport'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/transport.html#load_transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.transport.load_transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Load and return the <a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> implementation by <em>name</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The name of the transport entry point.</p></li>
+<li><p><strong>group</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a>) – The <code class="xref py py-mod docutils literal notranslate"><span class="pre">pkg_resources</span></code> entry point group.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Raises<span class="colon">:</span></dt>
+<dd class="field-even"><ul class="simple">
+<li><p><strong>DistributionNotFound</strong> – A dependency of the transport entry point was not
+    able to be satisfied.</p></li>
+<li><p><a class="reference external" href="https://docs.python.org/3/library/exceptions.html#KeyError" title="(in Python v3.11)"><strong>KeyError</strong></a> – The given name did not exist in the entry point group.</p></li>
+</ul>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)">type</a>[<a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport">swimprotocol.transport.Transport</a>[<a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig">swimprotocol.config.BaseConfig</a>]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.transport.Transport">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.transport.</span></span><span class="sig-name descname"><span class="pre">Transport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/transport.html#Transport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.transport.Transport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<a class="reference internal" href="#swimprotocol.config.ConfigT_co" title="swimprotocol.config.ConfigT_co"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ConfigT_co</span></code></a>]</p>
+<p>Interface of the basic functionality needed to act as the
+<a class="reference internal" href="intro.html#term-transport"><span class="xref std std-term">transport</span></a> layer for the SWIM protocol. The transport layer is
+responsible for sending and receiving <a class="reference internal" href="intro.html#term-ping"><span class="xref std std-term">ping</span></a>, <a class="reference internal" href="intro.html#term-ping-req"><span class="xref std std-term">ping-req</span></a>, and
+<a class="reference internal" href="intro.html#term-ack"><span class="xref std std-term">ack</span></a> packets for failure detection, and transmitting <a class="reference internal" href="intro.html#term-gossip"><span class="xref std std-term">gossip</span></a>
+for dissemination.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>config</strong> (<a class="reference internal" href="#swimprotocol.config.ConfigT_co" title="swimprotocol.config.ConfigT_co"><em>ConfigT_co</em></a>) – The cluster config object.</p>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.transport.Transport.config_type">
+<span class="sig-name descname"><span class="pre">config_type</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.ClassVar" title="(in Python v3.11)"><span class="pre">ClassVar</span></a><span class="p"><span class="pre">[</span></span><a class="reference external" href="https://docs.python.org/3/library/functions.html#type" title="(in Python v3.11)"><span class="pre">type</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><span class="pre">swimprotocol.config.BaseConfig</span></a><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#swimprotocol.transport.Transport.config_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>The <a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a> sub-class used by this
+transport.</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.transport.Transport.enter">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">enter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">members</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/transport.html#Transport.enter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.transport.Transport.enter" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns an async context manager that, when entered, provides a
+<a class="reference internal" href="#swimprotocol.worker.Worker" title="swimprotocol.worker.Worker"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worker</span></code></a> instance that uses the transport
+for transmitting and receiving SWIM protocol packets.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>members</strong> (<a class="reference internal" href="#swimprotocol.members.Members" title="swimprotocol.members.Members"><em>Members</em></a>) – Tracks the state of the cluster members.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/contextlib.html#contextlib.AbstractAsyncContextManager" title="(in Python v3.11)"><em>AbstractAsyncContextManager</em></a>[<a class="reference internal" href="#swimprotocol.worker.Worker" title="swimprotocol.worker.Worker"><em>Worker</em></a>]</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.worker">
+<span id="swimprotocol-worker"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.worker</span></code><a class="headerlink" href="#module-swimprotocol.worker" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.worker.IO">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.worker.</span></span><span class="sig-name descname"><span class="pre">IO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#IO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.IO" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a></p>
+<p>Basic <a class="reference internal" href="intro.html#term-packet"><span class="xref std std-term">packet</span></a> send and receive interface that must be provided by
+<a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> implementations.</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.IO.recv">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">recv</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#IO.recv"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.IO.recv" title="Permalink to this definition">¶</a></dt>
+<dd><p>Wait until a packet has been received by the transport layer and
+return it.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.IO.send">
+<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">send</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">packet</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#IO.send"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.IO.send" title="Permalink to this definition">¶</a></dt>
+<dd><p>Send the given <em>packet</em> to another cluster <em>member</em>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>member</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The recipient cluster member.</p></li>
+<li><p><strong>packet</strong> (<a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a>) – The SWIM protocol packet to send.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.worker.Worker">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.worker.</span></span><span class="sig-name descname"><span class="pre">Worker</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">members</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">io</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#Worker"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.Worker" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/functions.html#object" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></a></p>
+<p>Manages the failure detection and dissemination components of the SWIM
+protocol.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="intro.html#failure-detection"><span class="std std-ref">Failure Detection</span></a>, <a class="reference internal" href="intro.html#dissemination"><span class="std std-ref">Dissemination</span></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><em>BaseConfig</em></a>) – The cluster configuration object.</p></li>
+<li><p><strong>members</strong> (<a class="reference internal" href="#swimprotocol.members.Members" title="swimprotocol.members.Members"><em>Members</em></a>) – Tracks the state of the cluster members.</p></li>
+<li><p><strong>io</strong> (<a class="reference internal" href="#swimprotocol.worker.IO" title="swimprotocol.worker.IO"><em>IO</em></a>) – Provided by the <a class="reference internal" href="#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> to send
+and receive <a class="reference internal" href="#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><code class="xref py py-class docutils literal notranslate"><span class="pre">Packet</span></code></a> objects.</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.Worker.check">
+<em class="property"><span class="pre">final</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">check</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#Worker.check"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.Worker.check" title="Permalink to this definition">¶</a></dt>
+<dd><p>Attempts to determine if <em>target</em> is responding, setting it to
+<a class="reference internal" href="intro.html#term-suspect"><span class="xref std std-term">suspect</span></a> if it does not respond with an <a class="reference internal" href="intro.html#term-ack"><span class="xref std std-term">ack</span></a>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="intro.html#failure-detection"><span class="std std-ref">Failure Detection</span></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member to check.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.Worker.disseminate">
+<em class="property"><span class="pre">final</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">disseminate</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">target</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#Worker.disseminate"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.Worker.disseminate" title="Permalink to this definition">¶</a></dt>
+<dd><p>Sends any <a class="reference internal" href="intro.html#term-gossip"><span class="xref std std-term">gossip</span></a> that might be needed by <em>target</em>.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><a class="reference internal" href="intro.html#dissemination"><span class="std std-ref">Dissemination</span></a></p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>target</strong> (<a class="reference internal" href="#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a>) – The cluster member to disseminate to updates to.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.Worker.run_failure_detection">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_failure_detection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#Worker.run_failure_detection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.Worker.run_failure_detection" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indefinitely send failure detection packets to other cluster
+members.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Override this method to control when and how <a class="reference internal" href="#swimprotocol.worker.Worker.check" title="swimprotocol.worker.Worker.check"><code class="xref py py-meth docutils literal notranslate"><span class="pre">check()</span></code></a> is
+called. By default, one random cluster member is chosen every
+<code class="xref py py-class docutils literal notranslate"><span class="pre">ping_interval</span></code> seconds.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.11)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.Worker.run_dissemination">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run_dissemination</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#Worker.run_dissemination"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.Worker.run_dissemination" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indefinitely send dissemination packets to other cluster members.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Override this method to control when and how <a class="reference internal" href="#swimprotocol.worker.Worker.disseminate" title="swimprotocol.worker.Worker.disseminate"><code class="xref py py-meth docutils literal notranslate"><span class="pre">disseminate()</span></code></a> is
+called. By default, one random cluster member is chosen every
+<code class="xref py py-class docutils literal notranslate"><span class="pre">sync_interval</span></code> seconds.</p>
+</div>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.11)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.worker.Worker.run">
+<em class="property"><span class="pre">final</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/worker.html#Worker.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.worker.Worker.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>Indefinitely handle received SWIM protocol packets and, at
+configurable intervals, send failure detection and dissemination
+packets. This method calls <a class="reference internal" href="#swimprotocol.worker.Worker.run_failure_detection" title="swimprotocol.worker.Worker.run_failure_detection"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_failure_detection()</span></code></a> and
+<a class="reference internal" href="#swimprotocol.worker.Worker.run_dissemination" title="swimprotocol.worker.Worker.run_dissemination"><code class="xref py py-meth docutils literal notranslate"><span class="pre">run_dissemination()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.11)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="index.html">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a><ul>
+<li><a class="reference internal" href="#module-swimprotocol.address"><code class="docutils literal notranslate"><span class="pre">swimprotocol.address</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.address.Address"><code class="docutils literal notranslate"><span class="pre">Address</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.address.Address.get"><code class="docutils literal notranslate"><span class="pre">Address.get()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.address.AddressParser"><code class="docutils literal notranslate"><span class="pre">AddressParser</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.config"><code class="docutils literal notranslate"><span class="pre">swimprotocol.config</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.config.ConfigT_co"><code class="docutils literal notranslate"><span class="pre">ConfigT_co</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.config.ConfigError"><code class="docutils literal notranslate"><span class="pre">ConfigError</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.config.TransientConfigError"><code class="docutils literal notranslate"><span class="pre">TransientConfigError</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.config.BaseConfig"><code class="docutils literal notranslate"><span class="pre">BaseConfig</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.config.BaseConfig.signatures"><code class="docutils literal notranslate"><span class="pre">BaseConfig.signatures</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.config.BaseConfig.add_arguments"><code class="docutils literal notranslate"><span class="pre">BaseConfig.add_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.config.BaseConfig.parse_args"><code class="docutils literal notranslate"><span class="pre">BaseConfig.parse_args()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.config.BaseConfig.from_args"><code class="docutils literal notranslate"><span class="pre">BaseConfig.from_args()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.listener"><code class="docutils literal notranslate"><span class="pre">swimprotocol.listener</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.listener.ListenerCallback"><code class="docutils literal notranslate"><span class="pre">ListenerCallback</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.listener.ListenerCallback.__call__"><code class="docutils literal notranslate"><span class="pre">ListenerCallback.__call__()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.listener.Listener"><code class="docutils literal notranslate"><span class="pre">Listener</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.listener.Listener.on_notify"><code class="docutils literal notranslate"><span class="pre">Listener.on_notify()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.listener.Listener.poll"><code class="docutils literal notranslate"><span class="pre">Listener.poll()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.listener.Listener.notify"><code class="docutils literal notranslate"><span class="pre">Listener.notify()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.members"><code class="docutils literal notranslate"><span class="pre">swimprotocol.members</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.members.Member"><code class="docutils literal notranslate"><span class="pre">Member</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.members.Member.METADATA_UNKNOWN"><code class="docutils literal notranslate"><span class="pre">Member.METADATA_UNKNOWN</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Member.clock"><code class="docutils literal notranslate"><span class="pre">Member.clock</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Member.status"><code class="docutils literal notranslate"><span class="pre">Member.status</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Member.status_time"><code class="docutils literal notranslate"><span class="pre">Member.status_time</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Member.metadata"><code class="docutils literal notranslate"><span class="pre">Member.metadata</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.members.Members"><code class="docutils literal notranslate"><span class="pre">Members</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.members.Members.local"><code class="docutils literal notranslate"><span class="pre">Members.local</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.non_local"><code class="docutils literal notranslate"><span class="pre">Members.non_local</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.find"><code class="docutils literal notranslate"><span class="pre">Members.find()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.get_status"><code class="docutils literal notranslate"><span class="pre">Members.get_status()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.get"><code class="docutils literal notranslate"><span class="pre">Members.get()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.update"><code class="docutils literal notranslate"><span class="pre">Members.update()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.apply"><code class="docutils literal notranslate"><span class="pre">Members.apply()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.get_gossip"><code class="docutils literal notranslate"><span class="pre">Members.get_gossip()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.members.Members.ack_gossip"><code class="docutils literal notranslate"><span class="pre">Members.ack_gossip()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.packet"><code class="docutils literal notranslate"><span class="pre">swimprotocol.packet</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.packet.Source"><code class="docutils literal notranslate"><span class="pre">Source</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.packet.Packet"><code class="docutils literal notranslate"><span class="pre">Packet</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.packet.Ping"><code class="docutils literal notranslate"><span class="pre">Ping</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.packet.PingReq"><code class="docutils literal notranslate"><span class="pre">PingReq</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.packet.Ack"><code class="docutils literal notranslate"><span class="pre">Ack</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.packet.Gossip"><code class="docutils literal notranslate"><span class="pre">Gossip</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.packet.GossipAck"><code class="docutils literal notranslate"><span class="pre">GossipAck</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.shuffle"><code class="docutils literal notranslate"><span class="pre">swimprotocol.shuffle</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.shuffle.Shuffle"><code class="docutils literal notranslate"><span class="pre">Shuffle</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.shuffle.Shuffle.choice"><code class="docutils literal notranslate"><span class="pre">Shuffle.choice()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.shuffle.WeakShuffle"><code class="docutils literal notranslate"><span class="pre">WeakShuffle</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.shuffle.WeakShuffle.add"><code class="docutils literal notranslate"><span class="pre">WeakShuffle.add()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.shuffle.WeakShuffle.discard"><code class="docutils literal notranslate"><span class="pre">WeakShuffle.discard()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.shuffle.WeakShuffle.choice"><code class="docutils literal notranslate"><span class="pre">WeakShuffle.choice()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.sign"><code class="docutils literal notranslate"><span class="pre">swimprotocol.sign</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.sign.Signatures"><code class="docutils literal notranslate"><span class="pre">Signatures</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.sign.Signatures.sign"><code class="docutils literal notranslate"><span class="pre">Signatures.sign()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.sign.Signatures.verify"><code class="docutils literal notranslate"><span class="pre">Signatures.verify()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.status"><code class="docutils literal notranslate"><span class="pre">swimprotocol.status</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.status.Status"><code class="docutils literal notranslate"><span class="pre">Status</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.status.Status.ONLINE"><code class="docutils literal notranslate"><span class="pre">Status.ONLINE</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.OFFLINE"><code class="docutils literal notranslate"><span class="pre">Status.OFFLINE</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.SUSPECT"><code class="docutils literal notranslate"><span class="pre">Status.SUSPECT</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.AVAILABLE"><code class="docutils literal notranslate"><span class="pre">Status.AVAILABLE</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.UNAVAILABLE"><code class="docutils literal notranslate"><span class="pre">Status.UNAVAILABLE</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.ALL"><code class="docutils literal notranslate"><span class="pre">Status.ALL</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.transition"><code class="docutils literal notranslate"><span class="pre">Status.transition()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.status.Status.all_statuses"><code class="docutils literal notranslate"><span class="pre">Status.all_statuses()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.transport"><code class="docutils literal notranslate"><span class="pre">swimprotocol.transport</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.transport.TransportT"><code class="docutils literal notranslate"><span class="pre">TransportT</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.transport.load_transport"><code class="docutils literal notranslate"><span class="pre">load_transport()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.transport.Transport"><code class="docutils literal notranslate"><span class="pre">Transport</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.transport.Transport.config_type"><code class="docutils literal notranslate"><span class="pre">Transport.config_type</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.transport.Transport.enter"><code class="docutils literal notranslate"><span class="pre">Transport.enter()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.worker"><code class="docutils literal notranslate"><span class="pre">swimprotocol.worker</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.worker.IO"><code class="docutils literal notranslate"><span class="pre">IO</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.worker.IO.recv"><code class="docutils literal notranslate"><span class="pre">IO.recv()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.worker.IO.send"><code class="docutils literal notranslate"><span class="pre">IO.send()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.worker.Worker"><code class="docutils literal notranslate"><span class="pre">Worker</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.worker.Worker.check"><code class="docutils literal notranslate"><span class="pre">Worker.check()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.worker.Worker.disseminate"><code class="docutils literal notranslate"><span class="pre">Worker.disseminate()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.worker.Worker.run_failure_detection"><code class="docutils literal notranslate"><span class="pre">Worker.run_failure_detection()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.worker.Worker.run_dissemination"><code class="docutils literal notranslate"><span class="pre">Worker.run_dissemination()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.worker.Worker.run"><code class="docutils literal notranslate"><span class="pre">Worker.run()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxprev">
+    <h4>Previous page</h4>
+    <p class="topless"><a href="intro.html"
+                          title="Previous page">&larr; SWIM Introduction</a></p>
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="swimprotocol.udp.html"
+                          title="Next page">&rarr; <code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/swimprotocol.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="swimprotocol.udp.html" title="swimprotocol.udp"
+             >next</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="intro.html" title="SWIM Introduction"
+             >previous</a> &nbsp; &nbsp;</li>
+    <li><a href="index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

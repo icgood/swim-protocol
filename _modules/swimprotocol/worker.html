@@ -1,0 +1,388 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>swimprotocol.worker &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.worker</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swimprotocol.worker</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">asyncio</span>
+<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span>
+<span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">Event</span><span class="p">,</span> <span class="n">Task</span><span class="p">,</span> <span class="ne">TimeoutError</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">MutableSet</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">final</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">NoReturn</span>
+<span class="kn">from</span> <span class="nn">weakref</span> <span class="kn">import</span> <span class="n">WeakSet</span><span class="p">,</span> <span class="n">WeakKeyDictionary</span>
+
+<span class="kn">from</span> <span class="nn">.config</span> <span class="kn">import</span> <span class="n">BaseConfig</span>
+<span class="kn">from</span> <span class="nn">.members</span> <span class="kn">import</span> <span class="n">Member</span><span class="p">,</span> <span class="n">Members</span>
+<span class="kn">from</span> <span class="nn">.packet</span> <span class="kn">import</span> <span class="n">Packet</span><span class="p">,</span> <span class="n">Ping</span><span class="p">,</span> <span class="n">PingReq</span><span class="p">,</span> <span class="n">Ack</span><span class="p">,</span> <span class="n">Gossip</span><span class="p">,</span> <span class="n">GossipAck</span>
+<span class="kn">from</span> <span class="nn">.status</span> <span class="kn">import</span> <span class="n">Status</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;IO&#39;</span><span class="p">,</span> <span class="s1">&#39;Worker&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="IO"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.IO">[docs]</a><span class="k">class</span> <span class="nc">IO</span><span class="p">(</span><span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Basic :term:`packet` send and receive interface that must be provided by</span>
+<span class="sd">    :class:`~swimprotocol.transport.Transport` implementations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="IO.recv"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.IO.recv">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">recv</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Packet</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Wait until a packet has been received by the transport layer and</span>
+<span class="sd">        return it.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div>
+
+<div class="viewcode-block" id="IO.send"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.IO.send">[docs]</a>    <span class="nd">@abstractmethod</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">packet</span><span class="p">:</span> <span class="n">Packet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Send the given *packet* to another cluster *member*.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            member: The recipient cluster member.</span>
+<span class="sd">            packet: The SWIM protocol packet to send.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="o">...</span></div></div>
+
+
+<div class="viewcode-block" id="Worker"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.Worker">[docs]</a><span class="k">class</span> <span class="nc">Worker</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Manages the failure detection and dissemination components of the SWIM</span>
+<span class="sd">    protocol.</span>
+
+<span class="sd">    See Also:</span>
+<span class="sd">        :ref:`Failure Detection`, :ref:`Dissemination`</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        config: The cluster configuration object.</span>
+<span class="sd">        members: Tracks the state of the cluster members.</span>
+<span class="sd">        io: Provided by the :class:`~swimprotocol.transport.Transport` to send</span>
+<span class="sd">            and receive :class:`~swimprotocol.packet.Packet` objects.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">BaseConfig</span><span class="p">,</span> <span class="n">members</span><span class="p">:</span> <span class="n">Members</span><span class="p">,</span> <span class="n">io</span><span class="p">:</span> <span class="n">IO</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">config</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">members</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">io</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_running</span><span class="p">:</span> <span class="n">MutableSet</span><span class="p">[</span><span class="n">Task</span><span class="p">[</span><span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">:</span> <span class="n">WeakKeyDictionary</span><span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">WeakSet</span><span class="p">[</span><span class="n">Event</span><span class="p">]]</span> <span class="o">=</span> \
+            <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_listening</span><span class="p">:</span> <span class="n">WeakKeyDictionary</span><span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">WeakSet</span><span class="p">[</span><span class="n">Member</span><span class="p">]]</span> <span class="o">=</span> \
+            <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_suspect</span><span class="p">:</span> <span class="n">WeakKeyDictionary</span><span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">Task</span><span class="p">[</span><span class="kc">None</span><span class="p">]]</span> <span class="o">=</span> \
+            <span class="n">WeakKeyDictionary</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_run_task</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">task</span><span class="p">:</span> <span class="n">Task</span><span class="p">[</span><span class="kc">None</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">running</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_running</span>
+        <span class="n">running</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">task</span><span class="p">)</span>
+        <span class="n">task</span><span class="o">.</span><span class="n">add_done_callback</span><span class="p">(</span><span class="n">running</span><span class="o">.</span><span class="n">discard</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_waiting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">event</span><span class="p">:</span> <span class="n">Event</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">waiting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">waiting</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="p">[</span><span class="n">member</span><span class="p">]</span> <span class="o">=</span> <span class="n">waiting</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+        <span class="n">waiting</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">event</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_add_listening</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">listening</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_listening</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">listening</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_listening</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">listening</span> <span class="o">=</span> <span class="n">WeakSet</span><span class="p">()</span>
+        <span class="n">listening</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_notify_waiting</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">waiting</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_waiting</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">waiting</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">event</span> <span class="ow">in</span> <span class="n">waiting</span><span class="p">:</span>
+                <span class="n">event</span><span class="o">.</span><span class="n">set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_get_listening</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Member</span><span class="p">]:</span>
+        <span class="n">listening</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_listening</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">listening</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">listening</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">local</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">packet</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">recv</span><span class="p">()</span>
+            <span class="n">source</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">packet</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                                      <span class="n">packet</span><span class="o">.</span><span class="n">source</span><span class="o">.</span><span class="n">validity</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">Ping</span><span class="p">):</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">Ack</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">source</span><span class="p">))</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">PingReq</span><span class="p">):</span>
+                <span class="n">target</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">packet</span><span class="o">.</span><span class="n">target</span><span class="p">)</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Ping</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">source</span><span class="p">))</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_add_listening</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">Ack</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_notify_waiting</span><span class="p">(</span><span class="n">source</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_get_listening</span><span class="p">(</span><span class="n">source</span><span class="p">):</span>
+                    <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">packet</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">Gossip</span><span class="p">):</span>
+                <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">packet</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="n">ack</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_apply_gossip</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">packet</span><span class="p">)</span>
+                <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">source</span><span class="p">,</span> <span class="n">ack</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">packet</span><span class="p">,</span> <span class="n">GossipAck</span><span class="p">):</span>
+                <span class="n">member</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">packet</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">ack_gossip</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">packet</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_build_gossip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Gossip</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">member</span><span class="o">.</span><span class="n">metadata</span> <span class="ow">is</span> <span class="n">Member</span><span class="o">.</span><span class="n">METADATA_UNKNOWN</span><span class="p">:</span>
+            <span class="n">metadata</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">metadata</span> <span class="o">=</span> <span class="n">member</span><span class="o">.</span><span class="n">metadata</span>
+        <span class="k">return</span> <span class="n">Gossip</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                      <span class="n">clock</span><span class="o">=</span><span class="n">member</span><span class="o">.</span><span class="n">clock</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">member</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                      <span class="n">metadata</span><span class="o">=</span><span class="n">metadata</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_apply_gossip</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">local</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">source</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span>
+                      <span class="n">gossip</span><span class="p">:</span> <span class="n">Gossip</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">GossipAck</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">gossip</span><span class="o">.</span><span class="n">status</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">source</span><span class="p">,</span> <span class="n">gossip</span><span class="o">.</span><span class="n">clock</span><span class="p">,</span>
+                           <span class="n">status</span><span class="o">=</span><span class="n">gossip</span><span class="o">.</span><span class="n">status</span><span class="p">,</span>
+                           <span class="n">metadata</span><span class="o">=</span><span class="n">gossip</span><span class="o">.</span><span class="n">metadata</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">GossipAck</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="n">gossip</span><span class="o">.</span><span class="n">name</span><span class="p">,</span>
+                         <span class="n">clock</span><span class="o">=</span><span class="n">gossip</span><span class="o">.</span><span class="n">clock</span><span class="p">)</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="nb">float</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="n">event</span> <span class="o">=</span> <span class="n">Event</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_add_waiting</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">event</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">TimeoutError</span><span class="p">):</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait_for</span><span class="p">(</span><span class="n">event</span><span class="o">.</span><span class="n">wait</span><span class="p">(),</span> <span class="n">timeout</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">event</span><span class="o">.</span><span class="n">is_set</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_handle_status</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">status</span><span class="p">:</span> <span class="n">Status</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">status</span> <span class="o">==</span> <span class="n">Status</span><span class="o">.</span><span class="n">SUSPECT</span><span class="p">:</span>
+            <span class="n">suspect_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suspect</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">target</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">suspect_task</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_suspect</span><span class="p">[</span><span class="n">target</span><span class="p">]</span> <span class="o">=</span> <span class="n">suspect_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_suspect_wait</span><span class="p">(</span><span class="n">target</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">suspect_task</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_suspect</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">suspect_task</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">suspect_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">()</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_suspect_wait</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">suspect_timeout</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">new_status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">OFFLINE</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_suspect</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+
+<div class="viewcode-block" id="Worker.check"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.Worker.check">[docs]</a>    <span class="nd">@final</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">check</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Attempts to determine if *target* is responding, setting it to</span>
+<span class="sd">        :term:`suspect` if it does not respond with an :term:`ack`.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :ref:`Failure Detection`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target: The cluster member to check.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">local</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">Ping</span><span class="p">(</span><span class="n">source</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">source</span><span class="p">))</span>
+        <span class="n">online</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ping_timeout</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">online</span><span class="p">:</span>
+            <span class="n">count</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ping_req_count</span>
+            <span class="n">indirects</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">find</span><span class="p">(</span>
+                <span class="n">count</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">AVAILABLE</span><span class="p">,</span> <span class="n">exclude</span><span class="o">=</span><span class="p">{</span><span class="n">target</span><span class="p">})</span>
+            <span class="k">if</span> <span class="n">indirects</span><span class="p">:</span>
+                <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">wait</span><span class="p">([</span>
+                    <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">indirect</span><span class="p">,</span> <span class="n">PingReq</span><span class="p">(</span>
+                        <span class="n">source</span><span class="o">=</span><span class="n">local</span><span class="o">.</span><span class="n">source</span><span class="p">,</span> <span class="n">target</span><span class="o">=</span><span class="n">target</span><span class="o">.</span><span class="n">name</span><span class="p">)))</span>
+                    <span class="k">for</span> <span class="n">indirect</span> <span class="ow">in</span> <span class="n">indirects</span><span class="p">])</span>
+                <span class="n">online</span> <span class="o">=</span> <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">_wait</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ping_req_timeout</span><span class="p">)</span>
+        <span class="n">new_status</span> <span class="o">=</span> <span class="n">Status</span><span class="o">.</span><span class="n">ONLINE</span> <span class="k">if</span> <span class="n">online</span> <span class="k">else</span> <span class="n">Status</span><span class="o">.</span><span class="n">SUSPECT</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_handle_status</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">new_status</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">new_status</span><span class="o">=</span><span class="n">new_status</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Worker.disseminate"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.Worker.disseminate">[docs]</a>    <span class="nd">@final</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">disseminate</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">target</span><span class="p">:</span> <span class="n">Member</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Sends any :term:`gossip` that might be needed by *target*.</span>
+
+<span class="sd">        See Also:</span>
+<span class="sd">            :ref:`Dissemination`</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            target: The cluster member to disseminate to updates to.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">local</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">local</span>
+        <span class="k">for</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">get_gossip</span><span class="p">(</span><span class="n">target</span><span class="p">):</span>
+            <span class="n">packet</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_build_gossip</span><span class="p">(</span><span class="n">local</span><span class="p">,</span> <span class="n">member</span><span class="p">)</span>
+            <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">io</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="n">target</span><span class="p">,</span> <span class="n">packet</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Worker.run_failure_detection"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.Worker.run_failure_detection">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">run_failure_detection</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indefinitely send failure detection packets to other cluster</span>
+<span class="sd">        members.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">           Override this method to control when and how :meth:`.check` is</span>
+<span class="sd">           called. By default, one random cluster member is chosen every</span>
+<span class="sd">           :class:`ping_interval &lt;swimprotocol.config.Config&gt;` seconds.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>
+            <span class="k">assert</span> <span class="n">targets</span>
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_run_task</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">check</span><span class="p">(</span><span class="n">target</span><span class="p">)))</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">ping_interval</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Worker.run_dissemination"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.Worker.run_dissemination">[docs]</a>    <span class="k">async</span> <span class="k">def</span> <span class="nf">run_dissemination</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indefinitely send dissemination packets to other cluster members.</span>
+
+<span class="sd">        .. note::</span>
+
+<span class="sd">           Override this method to control when and how :meth:`.disseminate` is</span>
+<span class="sd">           called. By default, one random cluster member is chosen every</span>
+<span class="sd">           :class:`sync_interval &lt;swimprotocol.config.Config&gt;` seconds.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">targets</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">members</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">status</span><span class="o">=</span><span class="n">Status</span><span class="o">.</span><span class="n">AVAILABLE</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">target</span> <span class="ow">in</span> <span class="n">targets</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_run_task</span><span class="p">(</span><span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">disseminate</span><span class="p">(</span><span class="n">target</span><span class="p">)))</span>
+            <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">sleep</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">sync_interval</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Worker.run"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.worker.Worker.run">[docs]</a>    <span class="nd">@final</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">run</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NoReturn</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Indefinitely handle received SWIM protocol packets and, at</span>
+<span class="sd">        configurable intervals, send failure detection and dissemination</span>
+<span class="sd">        packets. This method calls :meth:`.run_failure_detection` and</span>
+<span class="sd">        :meth:`.run_dissemination`.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">await</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">gather</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_run_handler</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_failure_detection</span><span class="p">(),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">run_dissemination</span><span class="p">())</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">()</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.worker</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

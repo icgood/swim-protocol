@@ -1,0 +1,348 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>swimprotocol.config &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.config</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swimprotocol.config</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">Namespace</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">pathlib</span> <span class="kn">import</span> <span class="n">Path</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">final</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">.sign</span> <span class="kn">import</span> <span class="n">Signatures</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;ConfigT_co&#39;</span><span class="p">,</span> <span class="s1">&#39;ConfigError&#39;</span><span class="p">,</span> <span class="s1">&#39;TransientConfigError&#39;</span><span class="p">,</span> <span class="s1">&#39;BaseConfig&#39;</span><span class="p">]</span>
+
+<span class="c1">#: Covariant type variable for :class:`BaseConfig` sub-classes.</span>
+<span class="n">ConfigT_co</span> <span class="o">=</span> <span class="n">TypeVar</span><span class="p">(</span><span class="s1">&#39;ConfigT_co&#39;</span><span class="p">,</span> <span class="n">bound</span><span class="o">=</span><span class="s1">&#39;BaseConfig&#39;</span><span class="p">,</span> <span class="n">covariant</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="ConfigError"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.ConfigError">[docs]</a><span class="k">class</span> <span class="nc">ConfigError</span><span class="p">(</span><span class="ne">Exception</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when the configuration is insufficient or invalid for running a</span>
+<span class="sd">    cluster, along with a human-readable message about what was wrong.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="TransientConfigError"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.TransientConfigError">[docs]</a><span class="k">class</span> <span class="nc">TransientConfigError</span><span class="p">(</span><span class="n">ConfigError</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Raised when a possibly-temporary failure has prevented configuration of</span>
+<span class="sd">    the cluster. This exception is often chained with the cause, e.g.</span>
+<span class="sd">    :exc:`OSError`. Importantly, this exception indicates that configuration of</span>
+<span class="sd">    the cluster may succeed eventually if retried.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        msg: The exception message.</span>
+<span class="sd">        wait_hint: A suggested :func:`~asyncio.sleep` time before trying again.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                 <span class="n">wait_hint</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">60.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">wait_hint</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">wait_hint</span></div>
+
+
+<div class="viewcode-block" id="BaseConfig"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.BaseConfig">[docs]</a><span class="k">class</span> <span class="nc">BaseConfig</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Configure the cluster behavior and characteristics.</span>
+<span class="sd">    :class:`~swimprotocol.transport.Transport` implementations should</span>
+<span class="sd">    sub-class to add additional configuration.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        secret: The shared secret for cluster packet signatures.</span>
+<span class="sd">        local_name: The unique name of the local cluster member.</span>
+<span class="sd">        local_metadata: The local cluster member metadata.</span>
+<span class="sd">        peers: At least one name of another known node in the cluster.</span>
+<span class="sd">        ping_interval: Time between :term:`ping` attempts to random cluster</span>
+<span class="sd">            members.</span>
+<span class="sd">        ping_timeout: Time to wait for an :term:`ack` after sending a</span>
+<span class="sd">            :term:`ping`.</span>
+<span class="sd">        ping_req_count: Number of nodes to send a :term:`ping-req` when a</span>
+<span class="sd">            :term:`ping` fails.</span>
+<span class="sd">        ping_req_timeout: Time to wait for an *ack* after sending a</span>
+<span class="sd">            :term:`ping-req`.</span>
+<span class="sd">        suspect_timeout: Time to wait after losing connectivity with a cluster</span>
+<span class="sd">            member before marking it offline.</span>
+<span class="sd">        sync_interval: Time between sync attempts to disseminate cluster</span>
+<span class="sd">            changes.</span>
+
+<span class="sd">    Raises:</span>
+<span class="sd">        ConfigError: The given configuration was invalid.</span>
+<span class="sd">        TransientConfigError: The configuration failed due to a failure that</span>
+<span class="sd">            may not be permanent.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+                 <span class="n">local_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+                 <span class="n">local_metadata</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
+                 <span class="n">peers</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">ping_interval</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
+                 <span class="n">ping_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
+                 <span class="n">ping_req_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
+                 <span class="n">ping_req_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.9</span><span class="p">,</span>
+                 <span class="n">suspect_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">5.0</span><span class="p">,</span>
+                 <span class="n">sync_interval</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span> <span class="o">=</span> <span class="n">Signatures</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_name</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">local_name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_metadata</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">local_metadata</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">peers</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">peers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ping_interval</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ping_timeout</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ping_req_count</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_req_count</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ping_req_timeout</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_req_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">suspect_timeout</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">suspect_timeout</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sync_interval</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">sync_interval</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_validate</span><span class="p">()</span>
+
+    <span class="k">def</span> <span class="nf">_validate</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">local_name</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;This cluster instance needs a local name.&#39;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">peers</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;At least one cluster peer name is required.&#39;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">signatures</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signatures</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Generates and verifies cluster packet signatures.&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span>
+
+<div class="viewcode-block" id="BaseConfig.add_arguments"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.BaseConfig.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                      <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Implementations (such as the :term:`demo`) may use this method to</span>
+<span class="sd">        add command-line based configuration for the transport.</span>
+
+<span class="sd">        Note:</span>
+<span class="sd">            Arguments added should use *prefix* and explicitly provide a unique</span>
+<span class="sd">            name, e.g.::</span>
+
+<span class="sd">                parser.add_argument(f&#39;{prefix}arg&#39;, dest=&#39;swim_arg&#39;, ...)</span>
+
+<span class="sd">            This prevents collision with other argument names and allows custom</span>
+<span class="sd">            *prefix* values without affecting the :class:`~argparse.Namespace`.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            parser: The argument parser.</span>
+<span class="sd">            prefix: The prefix for added arguments, which should start with</span>
+<span class="sd">                ``--`` and end with ``-``, e.g. ``&#39;--&#39;`` or ``&#39;--foo-&#39;``.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;swim options&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">metadata&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_metadata&#39;</span><span class="p">,</span>
+                           <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;KEY&#39;</span><span class="p">,</span> <span class="s1">&#39;VAL&#39;</span><span class="p">),</span>
+                           <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Metadata for this node.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">secret&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_secret&#39;</span><span class="p">,</span>
+                           <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;STRING&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The secret string used to verify messages.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">name&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_name&#39;</span><span class="p">,</span>
+                           <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;localname&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;External name or address for this node.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">peer&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_peers&#39;</span><span class="p">,</span>
+                           <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;peername&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="p">[],</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;At least one name or address of &#39;</span>
+                                <span class="s1">&#39;a known peer.&#39;</span><span class="p">)</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_env</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">env_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">env_file_val</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">env_prefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s1">_FILE&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">env_file_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">env_path</span> <span class="o">=</span> <span class="n">Path</span><span class="p">(</span><span class="n">env_file_val</span><span class="p">)</span><span class="o">.</span><span class="n">expanduser</span><span class="p">()</span>
+            <span class="k">try</span><span class="p">:</span>
+                <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">env_path</span><span class="p">,</span> <span class="s1">&#39;r&#39;</span><span class="p">)</span> <span class="k">as</span> <span class="n">env_file</span><span class="p">:</span>
+                    <span class="k">return</span> <span class="n">env_file</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">rstrip</span><span class="p">(</span><span class="s1">&#39;</span><span class="se">\r\n</span><span class="s1">&#39;</span><span class="p">)</span>
+            <span class="k">except</span> <span class="ne">OSError</span><span class="p">:</span>
+                <span class="k">pass</span>
+        <span class="n">env_val</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">getenv</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">env_prefix</span><span class="si">}</span><span class="s1">_</span><span class="si">{</span><span class="n">env</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">env_val</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">env_val</span>
+        <span class="k">return</span> <span class="kc">None</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_get_env_list</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">env_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">env</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">env_val</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="n">env</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">env_val</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">env_val</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s1">&#39;,&#39;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="p">[]</span>
+
+<div class="viewcode-block" id="BaseConfig.parse_args"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.BaseConfig.parse_args">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">env_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;SWIM&#39;</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Parse the given :class:`~argparse.Namespace` into a dictionary of</span>
+<span class="sd">        keyword arguments for the :class:`BaseConfig` constructor. Sub-classes</span>
+<span class="sd">        should override this method to add additional keyword arguments as</span>
+<span class="sd">        needed.</span>
+
+<span class="sd">        Some keywords will default to environment variables if not given in</span>
+<span class="sd">        *args*:</span>
+
+<span class="sd">        ``SWIM_SECRET``, ``SWIM_SECRET_FILE`` [*]_</span>
+<span class="sd">          The *secret* keyword argument.</span>
+
+<span class="sd">        ``SWIM_NAME``</span>
+<span class="sd">          The *local_name* keyword argument.</span>
+
+<span class="sd">        ``SWIM_PEERS``</span>
+<span class="sd">          The comma-separated *peers* keyword argument.</span>
+
+<span class="sd">        .. [*] The value is read from the given file path.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: The command-line arguments.</span>
+<span class="sd">            env_prefix: Prefix for the environment variables.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">secret</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_secret</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="s1">&#39;SECRET&#39;</span><span class="p">)</span>
+        <span class="n">local_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_name</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="s1">&#39;NAME&#39;</span><span class="p">)</span>
+        <span class="n">local_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
+                          <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_metadata</span><span class="p">}</span>
+        <span class="n">peers</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_peers</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env_list</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="s1">&#39;PEERS&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="n">secret</span><span class="p">,</span>
+                <span class="s1">&#39;local_name&#39;</span><span class="p">:</span> <span class="n">local_name</span><span class="p">,</span>
+                <span class="s1">&#39;local_metadata&#39;</span><span class="p">:</span> <span class="n">local_metadata</span><span class="p">,</span>
+                <span class="s1">&#39;peers&#39;</span><span class="p">:</span> <span class="n">peers</span><span class="p">}</span></div>
+
+<div class="viewcode-block" id="BaseConfig.from_args"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.BaseConfig.from_args">[docs]</a>    <span class="nd">@final</span>
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">from_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">:</span> <span class="nb">type</span><span class="p">[</span><span class="n">ConfigT_co</span><span class="p">],</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span>
+                  <span class="o">**</span><span class="n">overrides</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ConfigT_co</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Build and return a new cluster config object. This first calls</span>
+<span class="sd">        :meth:`.parse_args` and then passes the results as keyword arguments</span>
+<span class="sd">        to the constructor.</span>
+
+<span class="sd">        Args:</span>
+<span class="sd">            args: The command-line arguments.</span>
+<span class="sd">            overrides: Keyword arguments to override.</span>
+
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">kwargs</span> <span class="o">|=</span> <span class="n">overrides</span>
+        <span class="k">return</span> <span class="bp">cls</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.config</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>

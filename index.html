@@ -1,0 +1,200 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
+
+    <title>swim-protocol Documentation &#8212; swim-protocol 0.4.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" type="text/css" href="_static/cloud.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+
+    
+    
+     
+        <script src="_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="SWIM Introduction" href="intro.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="intro.html" title="SWIM Introduction"
+             accesskey="N">next</a> &nbsp; &nbsp;</li>
+    <li><a href="#">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swim-protocol</span></code> Documentation</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <section id="swim-protocol-documentation">
+<h1><code class="docutils literal notranslate"><span class="pre">swim-protocol</span></code> Documentation<a class="headerlink" href="#swim-protocol-documentation" title="Permalink to this heading">¶</a></h1>
+<section id="table-of-contents">
+<h2>Table of Contents<a class="headerlink" href="#table-of-contents" title="Permalink to this heading">¶</a></h2>
+<div class="toctree-wrapper compound">
+<p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="intro.html">SWIM Introduction</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#goals">Goals</a></li>
+<li class="toctree-l2"><a class="reference internal" href="intro.html#glossary">Glossary</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="swimprotocol.html"><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.address"><code class="docutils literal notranslate"><span class="pre">swimprotocol.address</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.config"><code class="docutils literal notranslate"><span class="pre">swimprotocol.config</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.listener"><code class="docutils literal notranslate"><span class="pre">swimprotocol.listener</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.members"><code class="docutils literal notranslate"><span class="pre">swimprotocol.members</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.packet"><code class="docutils literal notranslate"><span class="pre">swimprotocol.packet</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.shuffle"><code class="docutils literal notranslate"><span class="pre">swimprotocol.shuffle</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.sign"><code class="docutils literal notranslate"><span class="pre">swimprotocol.sign</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.status"><code class="docutils literal notranslate"><span class="pre">swimprotocol.status</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.transport"><code class="docutils literal notranslate"><span class="pre">swimprotocol.transport</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.html#module-swimprotocol.worker"><code class="docutils literal notranslate"><span class="pre">swimprotocol.worker</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="swimprotocol.udp.html"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a><ul>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.udp.html#swimprotocol.udp.UdpConfig"><code class="docutils literal notranslate"><span class="pre">UdpConfig</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.udp.html#swimprotocol.udp.UdpTransport"><code class="docutils literal notranslate"><span class="pre">UdpTransport</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.udp.html#docker-services">Docker Services</a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.udp.html#module-swimprotocol.udp.pack"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.pack</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="swimprotocol.udp.html#module-swimprotocol.udp.protocol"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.protocol</span></code></a></li>
+</ul>
+</li>
+</ul>
+</div>
+</section>
+<section id="indices-and-tables">
+<h2>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this heading">¶</a></h2>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
+</section>
+</section>
+
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper"><div class="sphinx-toc sphinxlocaltoc">
+    <h3><a href="#">Page contents</a></h3>
+    <ul>
+<li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">swim-protocol</span></code> Documentation</a><ul>
+<li><a class="reference internal" href="#table-of-contents">Table of Contents</a></li>
+<li><a class="reference internal" href="#indices-and-tables">Indices and tables</a></li>
+</ul>
+</li>
+</ul>
+
+  </div>
+  <div class="sphinxnext">
+    <h4>Next page</h4>
+    <p class="topless"><a href="intro.html"
+                          title="Next page">&rarr; SWIM Introduction</a></p>
+  </div>
+  <div role="note" aria-label="source link">
+    <h3>This Page</h3>
+    <ul class="this-page-menu">
+      <li><a href="_sources/index.rst.txt"
+            rel="nofollow">Show Source</a></li>
+    </ul>
+   </div>
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+        <li class="right" >
+          <a href="intro.html" title="SWIM Introduction"
+             >next</a> &nbsp; &nbsp;</li>
+    <li><a href="#">swim-protocol 0.4.0 documentation</a> &#187;</li>
+
+        <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swim-protocol</span></code> Documentation</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+        &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
