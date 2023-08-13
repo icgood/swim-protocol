@@ -47,7 +47,8 @@ class BaseConfig:
     sub-class to add additional configuration.
 
     Args:
-        secret: The shared secret for cluster packet signatures.
+        secret: The shared secret for cluster packet signing, see
+            :class:`Signatures`.
         local_name: The unique name of the local cluster member.
         peers: At least one name of another known node in the cluster.
         local_metadata: The initial local cluster member metadata.

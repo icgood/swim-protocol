@@ -101,17 +101,21 @@ the event loop:
 from contextlib import AsyncExitStack
 from swimprotocol.members import Members
 from swimprotocol.udp import UdpTransport
+from swimprotocol.worker import Worker
 
 transport = UdpTransport(config)
 members = Members(config)
-async with AsyncExitStack() as stack:
-    worker = await stack.enter_async_context(transport.enter(members))
-    await worker.run()  # or schedule as a task
+worker = Worker(config, members)
+
+async def run() -> None:
+    async with AsyncExitStack() as stack:
+        worker = await stack.enter_async_context(transport.enter(worker))
+        await worker.run()  # or schedule as a task
 ```
 
 These snippets demonstrate the UDP transport layer directly. For a more generic
 approach that uses [argparse][11] and [load_transport][12], check out the
-[demo][2].
+[demo][2] or the [sync tool][15].
 
 If your application is deployed as a [Docker Service][13], the [UdpConfig][100]
 `discovery=True` keyword argument can be used to discover configuration based
@@ -211,6 +215,7 @@ hinting to the extent possible and common in the rest of the codebase.
 [12]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.transport.load_transport
 [13]: https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/
 [14]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#docker-services
+[15]: https://github.com/icgood/swim-protocol/blob/main/swimprotocol/sync.py
 
 [100]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpConfig
 [101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Member

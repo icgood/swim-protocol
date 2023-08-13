@@ -30,6 +30,11 @@ class Signatures:
     :class:`~swimprotocol.packet.Packet` objects when implementing a
     :class:`~swimprotocol.transport.Transport` protocol.
 
+    Note:
+        Passing ``secret=None`` uses :func:`uuid.getnode` as the secret, which
+        effectively allows you to experiment locally but will not suffice for
+        connections over a network.
+
     Args:
         secret: A shared secret among all cluster members.
         hash_name: The :mod:`hashlib` hash name to use.
