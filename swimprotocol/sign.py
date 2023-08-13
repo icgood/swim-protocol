@@ -5,13 +5,24 @@ import hashlib
 import hmac
 import secrets
 import uuid
-from typing import Final, Union
+from typing import Final, NamedTuple, Union
 
 from .__about__ import __version__
 
-__all__ = ['Signatures']
+__all__ = ['Signature', 'Signatures']
 
-_SigTuple = tuple[bytes, bytes]
+
+class Signature(NamedTuple):
+    """A salted digest, including the salt value.
+
+    Args:
+        salt: Salt used to sign *digest*.
+        digest: The salted digest.
+
+    """
+
+    salt: bytes
+    digest: bytes
 
 
 class Signatures:
@@ -43,7 +54,7 @@ class Signatures:
         self.digest_size: Final = hashlib.new(hash_name).digest_size
         self.version = __version__.encode('ascii') if check_version else b''
 
-    def sign(self, data: bytes) -> _SigTuple:
+    def sign(self, data: bytes) -> Signature:
         """Sign the data using a new random salt, returning the salt and the
         resulting digest as a tuple.
 
@@ -54,9 +65,9 @@ class Signatures:
         salt = secrets.token_bytes(16)
         salted_data = b'%s%s%s' % (self.version, salt, data)
         digest = hmac.digest(self.secret, salted_data, self.hash_name)
-        return salt, digest
+        return Signature(salt, digest)
 
-    def verify(self, data: bytes, sig: _SigTuple) -> bool:
+    def verify(self, data: bytes, sig: tuple[bytes, bytes]) -> bool:
         """Verify that a signature is valid for the given salt and data.
 
         Args:

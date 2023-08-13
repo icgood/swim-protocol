@@ -34,6 +34,13 @@ class Status(Flag):
     #: Aggregate status for all statuses, for use with bitwise operations.
     ALL = AVAILABLE | UNAVAILABLE
 
+    @property
+    def name(self) -> str:
+        """The name of the status, e.g. ``'ONLINE'``."""
+        name = super().name
+        assert name is not None
+        return name
+
     def transition(self, to: Status) -> Status:
         """Prevents impossible status transitions, returning a new status to
         be used instead of *to*.

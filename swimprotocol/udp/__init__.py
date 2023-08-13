@@ -4,19 +4,22 @@ from __future__ import annotations
 import asyncio
 import socket
 from argparse import ArgumentParser, Namespace
+from asyncio import Queue, Protocol, DatagramTransport, DatagramProtocol
 from collections.abc import Sequence, AsyncIterator
-from contextlib import asynccontextmanager, closing, suppress
+from concurrent.futures import ThreadPoolExecutor
+from contextlib import asynccontextmanager, closing, suppress, AsyncExitStack
 from typing import Final, Any, Optional
 
-from .protocol import SwimProtocol
 from .pack import UdpPack
 from ..address import Address, AddressParser
 from ..config import BaseConfig, ConfigError, TransientConfigError
-from ..members import Members
+from ..members import Member
+from ..packet import Packet
+from ..tasks import Subtasks
 from ..transport import Transport
 from ..worker import Worker
 
-__all__ = ['UdpConfig', 'UdpTransport']
+__all__ = ['UdpConfig', 'UdpTransport', 'UdpProtocol', 'TcpProtocol']
 
 
 class UdpConfig(BaseConfig):
@@ -176,15 +179,51 @@ class UdpTransport(Transport[UdpConfig]):
         return bind_port or self._local_address.port
 
     @asynccontextmanager
-    async def enter(self, members: Members) -> AsyncIterator[Worker]:
+    async def enter(self, worker: Worker) -> AsyncIterator[None]:
         loop = asyncio.get_running_loop()
-        transport, protocol = await loop.create_datagram_endpoint(
-            lambda: SwimProtocol(self.address_parser, self.udp_pack),
-            reuse_port=True, local_addr=(self.bind_host, self.bind_port))
-        assert isinstance(protocol, SwimProtocol)
-        worker = Worker(self.config, members, protocol)
-        with closing(transport):
-            yield worker
+        async with AsyncExitStack() as exit_stack:
+            thread_pool = exit_stack.enter_context(ThreadPoolExecutor())
+            tcp_server = await loop.create_server(
+                lambda: TcpProtocol(thread_pool, self.udp_pack,
+                                    worker.recv_queue),
+                self.bind_host, self.bind_port, reuse_port=True)
+            udp_transport, _ = await loop.create_datagram_endpoint(
+                lambda: UdpProtocol(thread_pool, self.udp_pack,
+                                    worker.recv_queue),
+                reuse_port=True, local_addr=(self.bind_host, self.bind_port))
+            send_task = asyncio.create_task(
+                self.run_send(thread_pool, worker.send_queue, udp_transport))
+            exit_stack.enter_context(closing(udp_transport))
+            await exit_stack.enter_async_context(tcp_server)
+            exit_stack.callback(send_task.cancel)
+            yield
+
+    async def run_send(self, thread_pool: ThreadPoolExecutor,
+                       send_queue: Queue[tuple[Member, Packet]],
+                       udp_transport: DatagramTransport) -> None:
+        while True:
+            member, packet = await send_queue.get()
+            asyncio.create_task(self._run_send(thread_pool, udp_transport,
+                                               member, packet))
+
+    async def _run_send(self, thread_pool: ThreadPoolExecutor,
+                        udp_transport: DatagramTransport,
+                        member: Member, packet: Packet) -> None:
+        loop = asyncio.get_running_loop()
+        packet_data = await loop.run_in_executor(
+            thread_pool, self.udp_pack.pack, packet)
+        address = self.address_parser.parse(member.name)
+        if len(packet_data) <= 1500:
+            udp_transport.sendto(packet_data, (address.host, address.port))
+        else:
+            asyncio.create_task(self._tcp_send(packet_data, address))
+
+    async def _tcp_send(self, packet_data: bytes, address: Address) -> None:
+        loop = asyncio.get_running_loop()
+        tcp_transport, _ = await loop.create_connection(
+            Protocol, address.host, address.port)
+        with closing(tcp_transport):
+            tcp_transport.write(packet_data)
 
     @classmethod
     def add_arguments(cls, name: str, parser: ArgumentParser, *,
@@ -199,3 +238,59 @@ class UdpTransport(Transport[UdpConfig]):
         group.add_argument(f'{prefix}-port', metavar='NUM', type=int,
                            dest='swim_udp_port',
                            help='The default port number.')
+
+
+class _BaseProtocol(Subtasks):
+
+    def __init__(self, thread_pool: ThreadPoolExecutor, udp_pack: UdpPack,
+                 recv_queue: Queue[Packet]) -> None:
+        super().__init__()
+        self.thread_pool: Final = thread_pool
+        self.udp_pack: Final = udp_pack
+        self.recv_queue: Final = recv_queue
+
+    async def _handle_packet(self, data: bytes) -> None:
+        loop = asyncio.get_running_loop()
+        packet = await loop.run_in_executor(
+            self.thread_pool, self.udp_pack.unpack, data)
+        if packet is None:
+            return
+        await self.recv_queue.put(packet)
+
+
+class UdpProtocol(_BaseProtocol, DatagramProtocol):
+    """Implements :class:`~asyncio.DatagramProtocol` to receive SWIM protocol
+    packets by UDP.
+
+    Args:
+        thread_pool: A thread pool for CPU-heavy operations.
+
+    """
+
+    def datagram_received(self, data: bytes, addr: tuple[str, int]) -> None:
+        self.run_subtask(self._handle_packet(data))
+
+
+class TcpProtocol(_BaseProtocol, Protocol):
+    """Implements :class:`~asyncio.Protocol` to receive SWIM protocol packets
+    by TCP.
+
+    Args:
+        thread_pool: A thread pool for CPU-heavy operations.
+
+    """
+
+    def __init__(self, thread_pool: ThreadPoolExecutor, udp_pack: UdpPack,
+                 recv_queue: Queue[Packet]) -> None:
+        super().__init__(thread_pool, udp_pack, recv_queue)
+        self._buf = bytearray()
+
+    def data_received(self, data: bytes) -> None:
+        self._buf += data
+
+    def connection_lost(self, exc: Optional[Exception]) -> None:
+        data = self._buf
+        self._buf = bytearray()
+        if exc is not None:
+            return
+        self.run_subtask(self._handle_packet(data))

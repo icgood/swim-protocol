@@ -23,6 +23,44 @@ synchronize a distributed group of processes.
 $ pip install swim-protocol
 ```
 
+### File Sync Tool
+
+A basic tool for reporting cluster membership and synchronizing metadata as
+files is provided:
+
+```console
+$ swim-protocol-sync --name 127.0.0.1:2001 --peer 127.0.0.1:2002 ~/node1
+$ swim-protocol-sync --name 127.0.0.1:2002 --peer 127.0.0.1:2001 ~/node2
+```
+
+While running, the state of the cluster and the metadata of each member are
+visible on the filesystem.
+
+```console
+$ tree -a ~/node1
+node1
+├── .available
+│   └── 127.0.0.1:2002 -> ../127.0.0.1:2002
+├── .local -> 127.0.0.1:2001
+├── .offline
+├── .online
+│   └── 127.0.0.1:2002 -> ../127.0.0.1:2002
+├── .suspect
+├── .unavailable
+├── 127.0.0.1:2001
+│   └── file-one.txt
+└── 127.0.0.1:2002
+    └── file-two.txt
+```
+
+To change the metadata of the local cluster member, edit the files and issue a
+SIGHUP to the process:
+
+```console
+$ vim ~/node1/.local/file-one.txt
+$ pkill -HUP -f swim-protocol-sync
+```
+
 #### Running the Demo
 
 There is a [demo][2] application included as a reference implementation. Try it
@@ -30,10 +68,10 @@ out by running the following, each from a new terminal window, and use _Ctrl-C_
 to exit:
 
 ```console
-$ swim-protocol-demo -c --name 127.0.0.1:2001 --peer 127.0.0.1:2003 --metadata name one
-$ swim-protocol-demo -c --name 127.0.0.1:2002 --peer 127.0.0.1:2001 --metadata name two
-$ swim-protocol-demo -c --name 127.0.0.1:2003 --peer 127.0.0.1:2001 --metadata name three
-$ swim-protocol-demo -c --name 127.0.0.1:2004 --peer 127.0.0.1:2003 --metadata name four
+$ swim-protocol-demo --name 127.0.0.1:2001 --peer 127.0.0.1:2003
+$ swim-protocol-demo --name 127.0.0.1:2002 --peer 127.0.0.1:2001
+$ swim-protocol-demo --name 127.0.0.1:2003 --peer 127.0.0.1:2001
+$ swim-protocol-demo --name 127.0.0.1:2004 --peer 127.0.0.1:2003
 ```
 
 Typing in any window will disseminate what has been typed across the cluster

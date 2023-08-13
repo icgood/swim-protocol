@@ -2,9 +2,11 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
-from typing import Final, Optional
+from typing import Callable, Final, Optional, TypeAlias
 
 __all__ = ['Address', 'AddressParser']
+
+_AddressType: TypeAlias = Callable[[str, int], 'Address']
 
 
 @dataclass(frozen=True, order=True)
@@ -46,7 +48,7 @@ class AddressParser:
 
     """
 
-    def __init__(self, address_type: type[Address] = Address, *,
+    def __init__(self, address_type: _AddressType = Address, *,
                  default_host: Optional[str] = None,
                  default_port: Optional[int] = None) -> None:
         super().__init__()
