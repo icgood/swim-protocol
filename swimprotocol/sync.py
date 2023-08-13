@@ -15,8 +15,8 @@ import os.path
 import signal
 import sys
 from argparse import Namespace, ArgumentParser
-from asyncio import CancelledError
-from contextlib import suppress, AsyncExitStack
+from asyncio import Event
+from contextlib import AsyncExitStack
 from functools import partial
 from pathlib import Path
 from tempfile import NamedTemporaryFile
@@ -62,22 +62,23 @@ async def run(transport_type: type[Transport[BaseConfig]],
               args: Namespace, base_path: Path) -> int:
     loop = asyncio.get_running_loop()
     config = transport_type.config_type.from_args(args)
-    transport = transport_type(config)
     members = Members(config)
     worker = Worker(config, members)
+    transport = transport_type(config, worker)
     read_local = partial(_read_local, base_path, members)
     write_member = partial(_write_member, base_path)
     read_local()
+    if sys.platform != 'win32':
+        loop.add_signal_handler(signal.SIGHUP, read_local)
+    done = Event()
+    loop.add_signal_handler(signal.SIGINT, done.set)
+    loop.add_signal_handler(signal.SIGTERM, done.set)
     async with AsyncExitStack() as stack:
-        stack.enter_context(suppress(CancelledError))
-        await stack.enter_async_context(transport.enter(worker))
-        stack.enter_context(members.listener.on_notify(write_member))
-        task = asyncio.create_task(worker.run())
-        if sys.platform != 'win32':
-            loop.add_signal_handler(signal.SIGHUP, read_local)
-        loop.add_signal_handler(signal.SIGINT, task.cancel)
-        loop.add_signal_handler(signal.SIGTERM, task.cancel)
-        await task
+        await stack.enter_async_context(transport)
+        await stack.enter_async_context(worker)
+        await stack.enter_async_context(
+            members.listener.on_notify(write_member))
+        await done.wait()
     _cleanup(base_path, members)
     return 0
 
