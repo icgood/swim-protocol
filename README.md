@@ -88,7 +88,8 @@ from swimprotocol.udp import UdpConfig
 
 config = UdpConfig(local_name='127.0.0.1:2001',
                    local_metadata={'name': b'one'},
-                   peers=['127.0.0.1:2002'])
+                   peers=['127.0.0.1:2002'],
+                   secret='my secret')
 ```
 
 All other config arguments have default values, which are tuned somewhat
