@@ -49,8 +49,8 @@ class BaseConfig:
     Args:
         secret: The shared secret for cluster packet signatures.
         local_name: The unique name of the local cluster member.
-        local_metadata: The local cluster member metadata.
         peers: At least one name of another known node in the cluster.
+        local_metadata: The initial local cluster member metadata.
         ping_interval: Time between :term:`ping` attempts to random cluster
             members.
         ping_timeout: Time to wait for an :term:`ack` after sending a
@@ -71,10 +71,12 @@ class BaseConfig:
 
     """
 
+    _empty: dict[str, bytes] = {}
+
     def __init__(self, *, secret: Union[None, str, bytes],
                  local_name: str,
-                 local_metadata: Mapping[str, bytes],
                  peers: Sequence[str],
+                 local_metadata: Mapping[str, bytes] = _empty,
                  ping_interval: float = 1.0,
                  ping_timeout: float = 0.3,
                  ping_req_count: int = 1,
@@ -84,8 +86,8 @@ class BaseConfig:
         super().__init__()
         self._signatures = Signatures(secret)
         self.local_name: Final = local_name
-        self.local_metadata: Final = local_metadata
         self.peers: Final = peers
+        self.local_metadata: Final = local_metadata
         self.ping_interval: Final = ping_interval
         self.ping_timeout: Final = ping_timeout
         self.ping_req_count: Final = ping_req_count
@@ -127,10 +129,6 @@ class BaseConfig:
 
         """
         group = parser.add_argument_group('swim options')
-        group.add_argument(f'{prefix}metadata', dest='swim_metadata',
-                           nargs=2, metavar=('KEY', 'VAL'),
-                           default=[], action='append',
-                           help='Metadata for this node.')
         group.add_argument(f'{prefix}secret', dest='swim_secret',
                            metavar='STRING',
                            help='The secret string used to verify messages.')
@@ -194,12 +192,9 @@ class BaseConfig:
         """
         secret = args.swim_secret or cls._get_env(env_prefix, 'SECRET')
         local_name = args.swim_name or cls._get_env(env_prefix, 'NAME')
-        local_metadata = {key: val.encode('utf-8')
-                          for key, val in args.swim_metadata}
         peers = args.swim_peers or cls._get_env_list(env_prefix, 'PEERS')
         return {'secret': secret,
                 'local_name': local_name,
-                'local_metadata': local_metadata,
                 'peers': peers}
 
     @final

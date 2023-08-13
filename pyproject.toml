@@ -48,7 +48,24 @@ classifiers = [
 'API Documentation' = 'https://icgood.github.io/swim-protocol/'
 
 [project.scripts]
+swim-protocol-sync = 'swimprotocol.sync:main'
 swim-protocol-demo = 'swimprotocol.demo:main'
+
+[project.optional-dependencies]
+dev = [
+    'mypy',
+    'pytest',
+    'pytest-asyncio',
+    'pytest-cov',
+    'ruff',
+    'pycodestyle',
+    'autopep8',
+]
+doc = [
+    'sphinx',
+    'sphinx-autodoc-typehints',
+    'cloud_sptheme',
+]
 
 [tool.hatch.version]
 path = 'swimprotocol/__about__.py'
@@ -92,15 +109,7 @@ exclude_lines = [
 ]
 
 [tool.hatch.envs.default]
-dependencies = [
-    'mypy',
-    'pytest',
-    'pytest-asyncio',
-    'pytest-cov',
-    'ruff',
-    'pycodestyle',
-    'autopep8',
-]
+features = ['dev']
 
 [tool.hatch.envs.default.scripts]
 run-pytest = 'py.test --cov-report=term-missing --cov=swimprotocol'
@@ -113,11 +122,7 @@ check = ['run-pytest', 'run-autopep8', 'run-mypy', 'run-ruff']
 python = ['3.10', '3.11']
 
 [tool.hatch.envs.doc]
-dependencies = [
-    'sphinx',
-    'sphinx-autodoc-typehints',
-    'cloud_sptheme',
-]
+features = ['doc']
 
 [tool.hatch.envs.doc.scripts]
 build = 'make -C doc html'

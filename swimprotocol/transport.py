@@ -7,7 +7,6 @@ from importlib.metadata import entry_points
 from typing import Generic, TypeVar, Final, ClassVar
 
 from .config import ConfigT_co, BaseConfig
-from .members import Members
 from .worker import Worker
 
 __all__ = ['TransportT', 'load_transport', 'Transport']
@@ -22,7 +21,7 @@ def load_transport(name: str = 'udp', *, group: str = __name__) \
 
     Args:
         name: The name of the transport entry point.
-        group: The :mod:`pkg_resources` entry point group.
+        group: The entry point group.
 
     Raises:
         DistributionNotFound: A dependency of the transport entry point was not
@@ -57,7 +56,7 @@ class Transport(Generic[ConfigT_co], metaclass=ABCMeta):
         self.config: Final = config
 
     @abstractmethod
-    def enter(self, members: Members) -> AbstractAsyncContextManager[Worker]:
+    def enter(self, worker: Worker) -> AbstractAsyncContextManager[None]:
         """Returns an async context manager that, when entered, provides a
         :class:`~swimprotocol.worker.Worker` instance that uses the transport
         for transmitting and receiving SWIM protocol packets.

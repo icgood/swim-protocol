@@ -5,6 +5,7 @@ import random
 import time
 from collections import defaultdict
 from collections.abc import Generator, Iterator, Mapping, Set
+from dataclasses import dataclass
 from functools import total_ordering
 from typing import Final, Optional, Any
 from weakref import WeakKeyDictionary, WeakValueDictionary
@@ -15,7 +16,28 @@ from .packet import Source
 from .shuffle import Shuffle, WeakShuffle
 from .status import Status
 
-__all__ = ['Member', 'Members']
+__all__ = ['MemberSnapshot', 'Member', 'Members']
+
+
+@dataclass(frozen=True)
+class MemberSnapshot:
+    """Represents a :term:`member` at a previous moment in time.
+
+    Args:
+        name: The member name.
+        clock: The :attr:`~Member.clock` when the snapshot was taken.
+        status: The :attr:`~Member.status` when the snapshot was taken.
+        status_time: The :attr:`~Member.status_time` when the snapshot was
+            taken.
+        metadata: The :attr:`~Member.metadata` when the snapshot was taken.
+
+    """
+
+    name: str
+    clock: int
+    status: Status
+    status_time: float
+    metadata: Mapping[str, bytes]
 
 
 @total_ordering
@@ -40,6 +62,7 @@ class Member:
         self._status_time = time.time()
         self._metadata: frozenset[tuple[str, bytes]] = frozenset()
         self._metadata_dict = self.METADATA_UNKNOWN
+        self._previous = self._snapshot()
         self._pending_clock: Optional[int] = None
         self._pending_status: Optional[Status] = None
         self._pending_metadata: Optional[frozenset[tuple[str, bytes]]] = None
@@ -88,6 +111,18 @@ class Member:
         """The last known :term:`metadata` of the cluster member."""
         return self._metadata_dict
 
+    @property
+    def previous(self) -> MemberSnapshot:
+        """A snapshot of the member before the most recent change."""
+        return self._previous
+
+    def _snapshot(self) -> MemberSnapshot:
+        return MemberSnapshot(name=self.name,
+                              clock=self.clock,
+                              status=self.status,
+                              status_time=self.status_time,
+                              metadata=self.metadata)
+
     def _needs_gossip(self, member: Member) -> bool:
         known_clock = self._known_clocks.get(member, -1)
         return member.clock > known_clock
@@ -113,6 +148,7 @@ class Member:
     def _save(self, source: Optional[Member], next_clock: int) -> bool:
         updated = False
         ignore_update = self.local and source is not None
+        previous = self._snapshot()
         pending_clock = self._pending_clock
         pending_status = self._pending_status
         pending_metadata = self._pending_metadata
@@ -135,6 +171,8 @@ class Member:
                 self._metadata_dict = dict(pending_metadata)
         if updated and pending_clock is not None:
             self._clock = pending_clock
+        if updated:
+            self._previous = previous
         return updated
 
 
@@ -148,7 +186,7 @@ class Members(Set[Member]):
 
     def __init__(self, config: BaseConfig) -> None:
         super().__init__()
-        self.listener: Final = Listener(Member)
+        self.listener: Listener[Member] = Listener()
         self._next_clock = 1
         self._local = Member(config.local_name, True)
         self._non_local: set[Member] = set()

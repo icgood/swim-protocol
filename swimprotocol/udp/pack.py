@@ -10,14 +10,14 @@ from ..sign import Signatures
 
 __all__ = ['UdpPack']
 
-_prefix = struct.Struct('!BBH')
+_prefix = struct.Struct('!BBI')
 
 
 class UdpPack:
     """Packs and unpacks SWIM protocol :class:`~swimprotocol.packet.Packet`
-    objects from raw UDP packets. The :mod:`pickle` module is used for
-    serialization, so :class:`~swimprotocol.sign.Signatures` is used to sign
-    the payloads.
+    objects from raw UDP packets or TCP connections. The :mod:`pickle` module
+    is used for serialization, so :class:`~swimprotocol.sign.Signatures` is
+    used to sign the payloads.
 
     Args:
         signatures: Generates and verifies cluster packet signatures.
@@ -29,7 +29,7 @@ class UdpPack:
 
     def __init__(self, signatures: Signatures, *,
                  pickle_protocol: int = pickle.HIGHEST_PROTOCOL,
-                 prefix_xor: bytes = b'SWIM') -> None:
+                 prefix_xor: bytes = b'SWIM?!') -> None:
         super().__init__()
         if len(prefix_xor) != _prefix.size:
             raise ValueError(f'{prefix_xor!r} must be {_prefix.size} bytes')
