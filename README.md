@@ -229,6 +229,6 @@ hinting to the extent possible and common in the rest of the codebase.
 [15]: https://github.com/icgood/swim-protocol/blob/main/swimprotocol/sync.py
 
 [100]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpConfig
-[101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Member
+[101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Members
 [102]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpTransport
 [103]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.transport.load_transport
