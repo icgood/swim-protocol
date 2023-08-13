@@ -48,6 +48,7 @@ class UdpConfig(BaseConfig):
                  default_host: Optional[str] = None,
                  default_port: Optional[int] = None,
                  discovery: bool = False,
+                 mtu_size: int = 1500,
                  **kwargs: Any) -> None:
         address_parser = AddressParser(
             default_host=default_host,
@@ -58,6 +59,7 @@ class UdpConfig(BaseConfig):
         self.bind_host: Final = bind_host
         self.bind_port: Final = bind_port
         self.address_parser: Final = address_parser
+        self.mtu_size: Final = mtu_size
 
     @classmethod
     def add_arguments(cls, parser: ArgumentParser, *,
@@ -213,7 +215,7 @@ class UdpTransport(Transport[UdpConfig]):
         packet_data = await loop.run_in_executor(
             thread_pool, self.udp_pack.pack, packet)
         address = self.address_parser.parse(member.name)
-        if len(packet_data) <= 1500:
+        if len(packet_data) <= self.config.mtu_size:
             udp_transport.sendto(packet_data, (address.host, address.port))
         else:
             asyncio.create_task(self._tcp_send(packet_data, address))
@@ -224,20 +226,6 @@ class UdpTransport(Transport[UdpConfig]):
             Protocol, address.host, address.port)
         with closing(tcp_transport):
             tcp_transport.write(packet_data)
-
-    @classmethod
-    def add_arguments(cls, name: str, parser: ArgumentParser, *,
-                      prefix: str = '--udp') -> None:
-        group = parser.add_argument_group(f'{name} options')
-        group.add_argument(f'{prefix}-bind', metavar='INTERFACE',
-                           dest='swim_udp_bind',
-                           help='The bind IP address.')
-        group.add_argument(f'{prefix}-host', metavar='NAME',
-                           dest='swim_udp_host',
-                           help='The default remote hostname.')
-        group.add_argument(f'{prefix}-port', metavar='NUM', type=int,
-                           dest='swim_udp_port',
-                           help='The default port number.')
 
 
 class _BaseProtocol(Subtasks):
