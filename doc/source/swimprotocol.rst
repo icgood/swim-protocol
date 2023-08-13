@@ -46,6 +46,11 @@
 
 .. automodule:: swimprotocol.status
 
+``swimprotocol.tasks``
+-------------------------
+
+.. automodule:: swimprotocol.tasks
+
 ``swimprotocol.transport``
 --------------------------
 

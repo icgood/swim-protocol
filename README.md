@@ -100,22 +100,28 @@ the event loop:
 
 ```python
 from contextlib import AsyncExitStack
-from swimprotocol.members import Members
+from swimprotocol.members import Member, Members
 from swimprotocol.udp import UdpTransport
 from swimprotocol.worker import Worker
 
-transport = UdpTransport(config)
 members = Members(config)
 worker = Worker(config, members)
+transport = UdpTransport(config, worker)
 
 async def run() -> None:
     async with AsyncExitStack() as stack:
-        worker = await stack.enter_async_context(transport.enter(worker))
-        await worker.run()  # or schedule as a task
+        await stack.enter_async_context(transport)
+        await stack.enter_async_context(worker)
+        await stack.enter_async_context(
+            members.listener.on_notify(on_member_change))
+        await ...  # run your application
+
+async def on_member_change(member: Member) -> None:
+    ...  # handle a change in member status or metadata
 ```
 
 These snippets demonstrate the UDP transport layer directly. For a more generic
-approach that uses [argparse][11] and [load_transport][12], check out the
+approach that uses [argparse][11] and [load_transport][103], check out the
 [demo][2] or the [sync tool][15].
 
 If your application is deployed as a [Docker Service][13], the [UdpConfig][100]
@@ -160,16 +166,20 @@ Any UDP packets received that are malformed or have an invalid signature are
 loss.
 
 The signatures rely on a [shared secret][8] between all cluster members, given
-as the `secret=b'...'` argument to the [Config][100] constructor. If
+as the `secret=b'...'` argument to the [UdpConfig][100] constructor. If
 `secret=None` is used, it defaults to [`uuid.getnode()`][9] but this is **not
 secure** for production setups unless all sockets are bound to a local loopback
 interface.
 
 The cluster member metadata is **not** encrypted during transmission, so only
 private networks should be used if metadata includes any secret data, or that
-secret data should be encrypted separately by the application. Also be aware
-that low [MTU][10] sizes on public networks may affect the ability to
-synchronize larger amounts of metadata.
+secret data should be encrypted separately by the application.
+
+If member [metadata][12] is larger than can be transmitted in a single UDP
+packet (hard-coded at 1500 bytes due to [MTU][10] sizes on public networks), a
+TCP connection is used instead. There is no additional protocol for TCP; the
+connection is opened, the oversized packet is transmitted, and then the
+connection is closed without waiting for a response.
 
 ## Development
 
@@ -213,7 +223,7 @@ hinting to the extent possible and common in the rest of the codebase.
 [9]: https://docs.python.org/3/library/uuid.html#uuid.getnode
 [10]: https://en.wikipedia.org/wiki/Maximum_transmission_unit
 [11]: https://docs.python.org/3/library/argparse.html
-[12]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.transport.load_transport
+[12]: https://icgood.github.io/swim-protocol/intro.html#term-metadata
 [13]: https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/
 [14]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#docker-services
 [15]: https://github.com/icgood/swim-protocol/blob/main/swimprotocol/sync.py
@@ -221,3 +231,4 @@ hinting to the extent possible and common in the rest of the codebase.
 [100]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpConfig
 [101]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.members.Member
 [102]: https://icgood.github.io/swim-protocol/swimprotocol.udp.html#swimprotocol.udp.UdpTransport
+[103]: https://icgood.github.io/swim-protocol/swimprotocol.html#swimprotocol.transport.load_transport

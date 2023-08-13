@@ -12,12 +12,12 @@ from .config import BaseConfig
 from .members import Member, Members
 from .packet import Packet, Ping, PingReq, Ack, Gossip, GossipAck
 from .status import Status
-from .tasks import Subtasks
+from .tasks import DaemonTask, TaskOwner
 
 __all__ = ['Worker']
 
 
-class Worker(Subtasks):
+class Worker(DaemonTask, TaskOwner):
     """Manages the failure detection and dissemination components of the SWIM
     protocol.
 

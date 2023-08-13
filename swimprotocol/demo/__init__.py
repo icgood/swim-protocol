@@ -16,8 +16,8 @@ import asyncio
 import logging
 import signal
 from argparse import Namespace, ArgumentParser
-from asyncio import CancelledError
-from contextlib import suppress, AsyncExitStack
+from asyncio import Event
+from contextlib import AsyncExitStack
 
 from .changes import change_metadata
 from .screen import run_screen
@@ -54,17 +54,18 @@ async def run(transport_type: type[Transport[BaseConfig]],
               args: Namespace) -> int:
     loop = asyncio.get_running_loop()
     config = transport_type.config_type.from_args(args)
-    transport = transport_type(config)
     members = Members(config)
     worker = Worker(config, members)
+    transport = transport_type(config, worker)
+    done = Event()
+    loop.add_signal_handler(signal.SIGINT, done.set)
+    loop.add_signal_handler(signal.SIGTERM, done.set)
     async with AsyncExitStack() as stack:
-        stack.enter_context(suppress(CancelledError))
-        await stack.enter_async_context(transport.enter(worker))
+        # stack.enter_context(suppress(CancelledError))
+        await stack.enter_async_context(transport)
+        await stack.enter_async_context(worker)
         await stack.enter_async_context(run_screen(members))
         await stack.enter_async_context(change_metadata(
             members, args.token_interval))
-        task = asyncio.create_task(worker.run())
-        loop.add_signal_handler(signal.SIGINT, task.cancel)
-        loop.add_signal_handler(signal.SIGTERM, task.cancel)
-        await task
+        await done.wait()
     return 0

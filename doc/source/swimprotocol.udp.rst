@@ -4,12 +4,17 @@
 
 .. automodule:: swimprotocol.udp
 
+``swimprotocol.udp.config``
+---------------------------
+
+.. automodule:: swimprotocol.udp.config
+
 Docker Services
 ---------------
 
 If your application is deployed as a `Docker Service`_, the
-:class:`~swimprotocol.udp.UdpConfig` ``discovery=True`` keyword argument can be
-used to discover configuration based on the service name. For example::
+:class:`~swimprotocol.udp.config.UdpConfig` ``discovery=True`` keyword argument
+can be used to discover configuration based on the service name. For example::
 
     config = UdpConfig(local_name='tasks.my-service:9999', discovery=True, ...)
 
@@ -43,3 +48,13 @@ successful::
 -------------------------
 
 .. automodule:: swimprotocol.udp.pack
+
+``swimprotocol.udp.protocol``
+-----------------------------
+
+.. automodule:: swimprotocol.udp.protocol
+
+``swimprotocol.udp.send``
+-------------------------
+
+.. automodule:: swimprotocol.udp.send

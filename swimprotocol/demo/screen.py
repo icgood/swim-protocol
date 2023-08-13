@@ -9,7 +9,8 @@ assert sys.platform != 'win32'
 import asyncio
 import curses
 import string
-from contextlib import AsyncExitStack
+from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager, AsyncExitStack
 from curses import wrapper
 from functools import partial
 from threading import Event, Condition
@@ -123,11 +124,13 @@ class Screen:
         await asyncio.to_thread(partial(wrapper, self.main))
 
 
-def run_screen(members: Members) -> AsyncExitStack:
-    exit_stack = AsyncExitStack()
-    screen = Screen(members)
-    main_task = asyncio.create_task(screen.run_thread())
-    exit_stack.push_async_callback(partial(asyncio.wait_for, main_task, None))
-    exit_stack.enter_context(members.listener.on_notify(screen.update))
-    exit_stack.callback(screen.cancel)
-    return exit_stack
+@asynccontextmanager
+async def run_screen(members: Members) -> AsyncIterator[None]:
+    async with AsyncExitStack() as stack:
+        screen = Screen(members)
+        main_task = asyncio.create_task(screen.run_thread())
+        stack.push_async_callback(partial(asyncio.wait_for, main_task, None))
+        await stack.enter_async_context(
+            members.listener.on_notify(screen.update))
+        stack.callback(screen.cancel)
+        yield

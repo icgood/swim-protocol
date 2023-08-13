@@ -1,17 +1,15 @@
 
 from __future__ import annotations
 
-import asyncio
 from abc import abstractmethod
 from asyncio import Event
 from collections.abc import Sequence
-from contextlib import ExitStack
 from typing import TypeVar, Generic, Protocol, Any, NoReturn
 from weakref import WeakKeyDictionary
 
-from .tasks import Subtasks
+from .tasks import DaemonTask, TaskOwner
 
-__all__ = ['ListenerCallback', 'Listener']
+__all__ = ['ListenerCallback', 'CallbackPoll', 'Listener']
 
 ListenT = TypeVar('ListenT')
 ListenT_contra = TypeVar('ListenT_contra', contravariant=True)
@@ -31,7 +29,27 @@ class ListenerCallback(Protocol[ListenT_contra]):
         ...
 
 
-class Listener(Generic[ListenT], Subtasks):
+class CallbackPoll(Generic[ListenT], DaemonTask, TaskOwner):
+    """Listens for items and running the callback.
+
+    """
+
+    def __init__(self, listener: Listener[ListenT],
+                 callback: ListenerCallback[ListenT]) -> None:
+        super().__init__()
+        self._listener = listener
+        self._callback = callback
+
+    async def run(self) -> NoReturn:
+        listener = self._listener
+        callback = self._callback
+        while True:
+            items = await listener.poll()
+            for item in items:
+                self.run_subtask(callback(item))
+
+
+class Listener(Generic[ListenT]):
     """Implements basic listener and callback functionality. Producers can
     call :meth:`.notify` with an item, and consumers can wait for those items
     with :meth:`.poll` or register a callback with :meth:`.on_notify`.
@@ -44,14 +62,8 @@ class Listener(Generic[ListenT], Subtasks):
         self._waiting: WeakKeyDictionary[Event, list[ListenT]] = \
             WeakKeyDictionary()
 
-    async def _run_callback_poll(self, callback: ListenerCallback[ListenT]) \
-            -> NoReturn:
-        while True:
-            items = await self.poll()
-            for item in items:
-                self.run_subtask(callback(item))
-
-    def on_notify(self, callback: ListenerCallback[ListenT]) -> ExitStack:
+    def on_notify(self, callback: ListenerCallback[ListenT]) \
+            -> CallbackPoll[ListenT]:
         """Provides a context manager that causes *callback* to be called when
         a producer calls :meth:`.notify`.
 
@@ -60,10 +72,7 @@ class Listener(Generic[ListenT], Subtasks):
                 argument from :meth:`.notify`.
 
         """
-        exit_stack = ExitStack()
-        task = asyncio.create_task(self._run_callback_poll(callback))
-        exit_stack.callback(task.cancel)
-        return exit_stack
+        return CallbackPoll(self, callback)
 
     async def poll(self) -> Sequence[ListenT]:
         """Wait until :meth:`.notify` is called and return all *item* objects.
