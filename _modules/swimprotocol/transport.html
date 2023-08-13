@@ -6,12 +6,12 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>swimprotocol.transport &#8212; swim-protocol 0.5.0 documentation</title>
+    <title>swimprotocol.transport &#8212; swim-protocol 0.6.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="../../_static/cloud.css?v=98ea126a" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=add265a1"></script>
     <script src="../../_static/doctools.js?v=888ff710"></script>
     <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
 
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.transport</a></li> 
@@ -64,7 +64,6 @@
 <span></span>
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">abc</span> <span class="kn">import</span> <span class="n">abstractmethod</span><span class="p">,</span> <span class="n">ABCMeta</span>
 <span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">AbstractAsyncContextManager</span>
 <span class="kn">from</span> <span class="nn">importlib.metadata</span> <span class="kn">import</span> <span class="n">entry_points</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Final</span><span class="p">,</span> <span class="n">ClassVar</span>
@@ -98,12 +97,13 @@
     <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">!r}</span><span class="s1"> entry point not found in </span><span class="si">{</span><span class="n">group</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="Transport"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.transport.Transport">[docs]</a><span class="k">class</span> <span class="nc">Transport</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">ConfigT_co</span><span class="p">],</span> <span class="n">metaclass</span><span class="o">=</span><span class="n">ABCMeta</span><span class="p">):</span>
+<div class="viewcode-block" id="Transport"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.transport.Transport">[docs]</a><span class="k">class</span> <span class="nc">Transport</span><span class="p">(</span><span class="n">Generic</span><span class="p">[</span><span class="n">ConfigT_co</span><span class="p">],</span> <span class="n">AbstractAsyncContextManager</span><span class="p">[</span><span class="kc">None</span><span class="p">]):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Interface of the basic functionality needed to act as the</span>
 <span class="sd">    :term:`transport` layer for the SWIM protocol. The transport layer is</span>
 <span class="sd">    responsible for sending and receiving :term:`ping`, :term:`ping-req`, and</span>
 <span class="sd">    :term:`ack` packets for failure detection, and transmitting :term:`gossip`</span>
-<span class="sd">    for dissemination.</span>
+<span class="sd">    for dissemination. The transport must be entered with ``async with`` to be</span>
+<span class="sd">    activated.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        config: The cluster config object.</span>
@@ -114,21 +114,10 @@
     <span class="c1">#: transport.</span>
     <span class="n">config_type</span><span class="p">:</span> <span class="n">ClassVar</span><span class="p">[</span><span class="nb">type</span><span class="p">[</span><span class="n">BaseConfig</span><span class="p">]]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigT_co</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">config</span><span class="p">:</span> <span class="n">ConfigT_co</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">Worker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">config</span>
-
-<div class="viewcode-block" id="Transport.enter"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.transport.Transport.enter">[docs]</a>    <span class="nd">@abstractmethod</span>
-    <span class="k">def</span> <span class="nf">enter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">Worker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AbstractAsyncContextManager</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Returns an async context manager that, when entered, provides a</span>
-<span class="sd">        :class:`~swimprotocol.worker.Worker` instance that uses the transport</span>
-<span class="sd">        for transmitting and receiving SWIM protocol packets.</span>
-
-<span class="sd">        Args:</span>
-<span class="sd">            members: Tracks the state of the cluster members.</span>
-
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="o">...</span></div></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">worker</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">worker</span></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -179,7 +168,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.transport</a></li> 

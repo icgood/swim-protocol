@@ -7,12 +7,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>swimprotocol.udp &#8212; swim-protocol 0.5.0 documentation</title>
+    <title>swimprotocol.udp &#8212; swim-protocol 0.6.0 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=98ea126a" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=3fadbb4a"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=add265a1"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=4825356b"></script>
 
@@ -51,7 +51,7 @@
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>
@@ -67,8 +67,56 @@
   <section id="module-swimprotocol.udp">
 <span id="swimprotocol-udp"></span><h1><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code><a class="headerlink" href="#module-swimprotocol.udp" title="Permalink to this heading">¶</a></h1>
 <dl class="py class">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpConfig">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></span><span class="sig-name descname"><span class="pre">UdpConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discovery</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mtu_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1500</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpConfig" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></span><span class="sig-name descname"><span class="pre">UdpTransport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">worker</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpTransport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpTransport" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a>[<a class="reference internal" href="#swimprotocol.udp.config.UdpConfig" title="swimprotocol.udp.config.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a>]</p>
+<p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> using UDP, without
+<a class="reference external" href="https://en.wikipedia.org/wiki/Broadcast_address">broadcast</a>.</p>
+<p>This transport assumes that the name of each cluster member is in
+<code class="docutils literal notranslate"><span class="pre">host:port</span></code> format, and that any cluster member can receive UDP packets
+from any other cluster member.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Final" title="(in Python v3.11)"><em>Final</em></a>) – The cluster configuration object.</p></li>
+<li><p><strong>worker</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Final" title="(in Python v3.11)"><em>Final</em></a>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.config_type">
+<span class="sig-name descname"><span class="pre">config_type</span></span><a class="headerlink" href="#swimprotocol.udp.UdpTransport.config_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>alias of <a class="reference internal" href="#swimprotocol.udp.config.UdpConfig" title="swimprotocol.udp.config.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a></p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.bind_host">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bind_host</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#swimprotocol.udp.UdpTransport.bind_host" title="Permalink to this definition">¶</a></dt>
+<dd><p>The local bind address used to open the UDP socket to receive
+packets.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.loop.create_datagram_endpoint()</span></code></p>
+</div>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.bind_port">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bind_port</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#swimprotocol.udp.UdpTransport.bind_port" title="Permalink to this definition">¶</a></dt>
+<dd><p>The local bind port used to open the UDP socket to receive packets.</p>
+<div class="admonition seealso">
+<p class="admonition-title">See also</p>
+<p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.loop.create_datagram_endpoint()</span></code></p>
+</div>
+</dd></dl>
+
+</dd></dl>
+
+<section id="module-swimprotocol.udp.config">
+<span id="swimprotocol-udp-config"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.config</span></code><a class="headerlink" href="#module-swimprotocol.udp.config" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.udp.config.UdpConfig">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.config.</span></span><span class="sig-name descname"><span class="pre">UdpConfig</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_host</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_port</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">discovery</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">mtu_size</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1500</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/config.html#UdpConfig"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.config.UdpConfig" title="Permalink to this definition">¶</a></dt>
 <dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a></p>
 <p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.config.BaseConfig" title="swimprotocol.config.BaseConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code></a>, adding additional
 configuration required for <a class="reference internal" href="#swimprotocol.udp.UdpTransport" title="swimprotocol.udp.UdpTransport"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpTransport</span></code></a>.</p>
@@ -93,8 +141,8 @@ by attempting to <a class="reference external" href="https://docs.python.org/3/l
 </dd>
 </dl>
 <dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpConfig.add_arguments">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpConfig.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpConfig.add_arguments" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="swimprotocol.udp.config.UdpConfig.add_arguments">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">add_arguments</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">parser</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'--'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/config.html#UdpConfig.add_arguments"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.config.UdpConfig.add_arguments" title="Permalink to this definition">¶</a></dt>
 <dd><p>Implementations (such as the <a class="reference internal" href="intro.html#term-demo"><span class="xref std std-term">demo</span></a>) may use this method to
 add command-line based configuration for the transport.</p>
 <div class="admonition note">
@@ -122,8 +170,8 @@ name, e.g.:</p>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpConfig.parse_args">
-<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SWIM'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpConfig.parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpConfig.parse_args" title="Permalink to this definition">¶</a></dt>
+<dt class="sig sig-object py" id="swimprotocol.udp.config.UdpConfig.parse_args">
+<em class="property"><span class="pre">classmethod</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">parse_args</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">env_prefix</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'SWIM'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/config.html#UdpConfig.parse_args"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.config.UdpConfig.parse_args" title="Permalink to this definition">¶</a></dt>
 <dd><p>Parse the given <a class="reference external" href="https://docs.python.org/3/library/argparse.html#argparse.Namespace" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Namespace</span></code></a> into a dictionary of
 keyword arguments for the <code class="xref py py-class docutils literal notranslate"><span class="pre">BaseConfig</span></code> constructor. Sub-classes
 should override this method to add additional keyword arguments as
@@ -159,156 +207,12 @@ needed.</p>
 
 </dd></dl>
 
-<dl class="py class">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></span><span class="sig-name descname"><span class="pre">UdpTransport</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpTransport"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpTransport" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a>[<a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a>]</p>
-<p>Implements <a class="reference internal" href="swimprotocol.html#swimprotocol.transport.Transport" title="swimprotocol.transport.Transport"><code class="xref py py-class docutils literal notranslate"><span class="pre">Transport</span></code></a> using UDP, without
-<a class="reference external" href="https://en.wikipedia.org/wiki/Broadcast_address">broadcast</a>.</p>
-<p>This transport assumes that the name of each cluster member is in
-<code class="docutils literal notranslate"><span class="pre">host:port</span></code> format, and that any cluster member can receive UDP packets
-from any other cluster member.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>config</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Final" title="(in Python v3.11)"><em>Final</em></a>) – The cluster configuration object.</p>
-</dd>
-</dl>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.config_type">
-<span class="sig-name descname"><span class="pre">config_type</span></span><a class="headerlink" href="#swimprotocol.udp.UdpTransport.config_type" title="Permalink to this definition">¶</a></dt>
-<dd><p>alias of <a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a></p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.bind_host">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bind_host</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><span class="pre">str</span></a></em><a class="headerlink" href="#swimprotocol.udp.UdpTransport.bind_host" title="Permalink to this definition">¶</a></dt>
-<dd><p>The local bind address used to open the UDP socket to receive
-packets.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.loop.create_datagram_endpoint()</span></code></p>
-</div>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.bind_port">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bind_port</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><span class="pre">int</span></a></em><a class="headerlink" href="#swimprotocol.udp.UdpTransport.bind_port" title="Permalink to this definition">¶</a></dt>
-<dd><p>The local bind port used to open the UDP socket to receive packets.</p>
-<div class="admonition seealso">
-<p class="admonition-title">See also</p>
-<p><code class="xref py py-func docutils literal notranslate"><span class="pre">asyncio.loop.create_datagram_endpoint()</span></code></p>
-</div>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpTransport.enter">
-<span class="sig-name descname"><span class="pre">enter</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">worker</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpTransport.enter"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpTransport.enter" title="Permalink to this definition">¶</a></dt>
-<dd><p>Returns an async context manager that, when entered, provides a
-<a class="reference internal" href="swimprotocol.html#swimprotocol.worker.Worker" title="swimprotocol.worker.Worker"><code class="xref py py-class docutils literal notranslate"><span class="pre">Worker</span></code></a> instance that uses the transport
-for transmitting and receiving SWIM protocol packets.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>members</strong> – Tracks the state of the cluster members.</p></li>
-<li><p><strong>worker</strong> (<a class="reference internal" href="swimprotocol.html#swimprotocol.worker.Worker" title="swimprotocol.worker.Worker"><em>Worker</em></a>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/collections.abc.html#collections.abc.AsyncIterator" title="(in Python v3.11)"><em>AsyncIterator</em></a>[None]</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpProtocol">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></span><span class="sig-name descname"><span class="pre">UdpProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recv_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_BaseProtocol</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DatagramProtocol</span></code></p>
-<p>Implements <a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.DatagramProtocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatagramProtocol</span></code></a> to receive SWIM protocol
-packets by UDP.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>thread_pool</strong> (<em>ThreadPoolExecutor</em>) – A thread pool for CPU-heavy operations.</p></li>
-<li><p><strong>udp_pack</strong> (<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><em>UdpPack</em></a>) – </p></li>
-<li><p><strong>recv_queue</strong> (<em>Queue</em><em>[</em><a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a><em>]</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.udp.UdpProtocol.datagram_received">
-<span class="sig-name descname"><span class="pre">datagram_received</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#UdpProtocol.datagram_received"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.UdpProtocol.datagram_received" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called when some datagram is received.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – </p></li>
-<li><p><strong>addr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="swimprotocol.udp.TcpProtocol">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.</span></span><span class="sig-name descname"><span class="pre">TcpProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recv_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#TcpProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.TcpProtocol" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">_BaseProtocol</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
-<p>Implements <a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.Protocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a> to receive SWIM protocol packets
-by TCP.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>thread_pool</strong> (<em>ThreadPoolExecutor</em>) – A thread pool for CPU-heavy operations.</p></li>
-<li><p><strong>udp_pack</strong> (<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><em>UdpPack</em></a>) – </p></li>
-<li><p><strong>recv_queue</strong> (<em>Queue</em><em>[</em><a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a><em>]</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-<dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.udp.TcpProtocol.data_received">
-<span class="sig-name descname"><span class="pre">data_received</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#TcpProtocol.data_received"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.TcpProtocol.data_received" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called when some data is received.</p>
-<p>The argument is a bytes object.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.udp.TcpProtocol.connection_lost">
-<span class="sig-name descname"><span class="pre">connection_lost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp.html#TcpProtocol.connection_lost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.TcpProtocol.connection_lost" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called when the connection is lost or closed.</p>
-<p>The argument is an exception object or None (the latter
-meaning a regular EOF is received or the connection was
-aborted or closed).</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em> | </em><em>None</em>) – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>None</p>
-</dd>
-</dl>
-</dd></dl>
-
-</dd></dl>
-
+</section>
 <section id="docker-services">
 <h2>Docker Services<a class="headerlink" href="#docker-services" title="Permalink to this heading">¶</a></h2>
 <p>If your application is deployed as a <a class="reference external" href="https://docs.docker.com/engine/swarm/how-swarm-mode-works/services/">Docker Service</a>, the
-<a class="reference internal" href="#swimprotocol.udp.UdpConfig" title="swimprotocol.udp.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a> <code class="docutils literal notranslate"><span class="pre">discovery=True</span></code> keyword argument can be
-used to discover configuration based on the service name. For example:</p>
+<a class="reference internal" href="#swimprotocol.udp.config.UdpConfig" title="swimprotocol.udp.config.UdpConfig"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpConfig</span></code></a> <code class="docutils literal notranslate"><span class="pre">discovery=True</span></code> keyword argument
+can be used to discover configuration based on the service name. For example:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">config</span> <span class="o">=</span> <span class="n">UdpConfig</span><span class="p">(</span><span class="n">local_name</span><span class="o">=</span><span class="s1">&#39;tasks.my-service:9999&#39;</span><span class="p">,</span> <span class="n">discovery</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">...</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -397,6 +301,162 @@ indicate that <em>data</em> was malformed or incomplete.</p>
 </dd></dl>
 
 </section>
+<section id="module-swimprotocol.udp.protocol">
+<span id="swimprotocol-udp-protocol"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.protocol</span></code><a class="headerlink" href="#module-swimprotocol.udp.protocol" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.BaseProtocol">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.protocol.</span></span><span class="sig-name descname"><span class="pre">BaseProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recv_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#BaseProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.BaseProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.tasks.TaskOwner" title="swimprotocol.tasks.TaskOwner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaskOwner</span></code></a></p>
+<p>Base class of <a class="reference internal" href="#swimprotocol.udp.protocol.UdpProtocol" title="swimprotocol.udp.protocol.UdpProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpProtocol</span></code></a> and <a class="reference internal" href="#swimprotocol.udp.protocol.TcpProtocol" title="swimprotocol.udp.protocol.TcpProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">TcpProtocol</span></code></a>. Each will
+call <a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol.handle_packet" title="swimprotocol.udp.protocol.BaseProtocol.handle_packet"><code class="xref py py-meth docutils literal notranslate"><span class="pre">handle_packet()</span></code></a> upon receipt of a full packet.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thread_pool</strong> (<em>ThreadPoolExecutor</em>) – A thread pool for CPU-heavy operations.</p></li>
+<li><p><strong>udp_pack</strong> (<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><em>UdpPack</em></a>) – </p></li>
+<li><p><strong>recv_queue</strong> (<em>Queue</em><em>[</em><a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.BaseProtocol.handle_packet">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handle_packet</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#BaseProtocol.handle_packet"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.BaseProtocol.handle_packet" title="Permalink to this definition">¶</a></dt>
+<dd><p>Parse the <em>data</em> into a packet and push it onto the worker
+<a class="reference internal" href="swimprotocol.html#swimprotocol.worker.Worker.recv_queue" title="swimprotocol.worker.Worker.recv_queue"><code class="xref py py-attr docutils literal notranslate"><span class="pre">recv_queue</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – The bytes representing a packet to be parsed by
+<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><code class="xref py py-class docutils literal notranslate"><span class="pre">UdpPack</span></code></a>.</p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.UdpProtocol">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.protocol.</span></span><span class="sig-name descname"><span class="pre">UdpProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recv_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#UdpProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.UdpProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol" title="swimprotocol.udp.protocol.BaseProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProtocol</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">DatagramProtocol</span></code></p>
+<p>Implements <a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.DatagramProtocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">DatagramProtocol</span></code></a> to receive SWIM protocol
+packets by UDP.</p>
+<p>Each packet received is passed directly to <a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol.handle_packet" title="swimprotocol.udp.protocol.BaseProtocol.handle_packet"><code class="xref py py-meth docutils literal notranslate"><span class="pre">handle_packet()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thread_pool</strong> (<em>ThreadPoolExecutor</em>) – </p></li>
+<li><p><strong>udp_pack</strong> (<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><em>UdpPack</em></a>) – </p></li>
+<li><p><strong>recv_queue</strong> (<em>Queue</em><em>[</em><a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.UdpProtocol.datagram_received">
+<span class="sig-name descname"><span class="pre">datagram_received</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">addr</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#UdpProtocol.datagram_received"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.UdpProtocol.datagram_received" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when some datagram is received.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – </p></li>
+<li><p><strong>addr</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#str" title="(in Python v3.11)"><em>str</em></a><em>, </em><a class="reference external" href="https://docs.python.org/3/library/functions.html#int" title="(in Python v3.11)"><em>int</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.TcpProtocol">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.protocol.</span></span><span class="sig-name descname"><span class="pre">TcpProtocol</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">thread_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">recv_queue</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#TcpProtocol"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.TcpProtocol" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol" title="swimprotocol.udp.protocol.BaseProtocol"><code class="xref py py-class docutils literal notranslate"><span class="pre">BaseProtocol</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></p>
+<p>Implements <a class="reference external" href="https://docs.python.org/3/library/asyncio-protocol.html#asyncio.Protocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a> to receive SWIM protocol packets
+by TCP.</p>
+<p>All data received is accumulated until the connection is closed, with the
+result treated as a complete packet and sent to <a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol.handle_packet" title="swimprotocol.udp.protocol.BaseProtocol.handle_packet"><code class="xref py py-meth docutils literal notranslate"><span class="pre">handle_packet()</span></code></a>.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>thread_pool</strong> (<em>ThreadPoolExecutor</em>) – </p></li>
+<li><p><strong>udp_pack</strong> (<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><em>UdpPack</em></a>) – </p></li>
+<li><p><strong>recv_queue</strong> (<em>Queue</em><em>[</em><a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a><em>]</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.TcpProtocol.data_received">
+<span class="sig-name descname"><span class="pre">data_received</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#TcpProtocol.data_received"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.TcpProtocol.data_received" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when some data is received.</p>
+<p>The argument is a bytes object.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>data</strong> (<a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#bytes" title="(in Python v3.11)"><em>bytes</em></a>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.protocol.TcpProtocol.connection_lost">
+<span class="sig-name descname"><span class="pre">connection_lost</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">exc</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/protocol.html#TcpProtocol.connection_lost"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.protocol.TcpProtocol.connection_lost" title="Permalink to this definition">¶</a></dt>
+<dd><p>Called when the connection is lost or closed.</p>
+<p>The argument is an exception object or None (the latter
+meaning a regular EOF is received or the connection was
+aborted or closed).</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>exc</strong> (<a class="reference external" href="https://docs.python.org/3/library/exceptions.html#Exception" title="(in Python v3.11)"><em>Exception</em></a><em> | </em><em>None</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+<section id="module-swimprotocol.udp.send">
+<span id="swimprotocol-udp-send"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.send</span></code><a class="headerlink" href="#module-swimprotocol.udp.send" title="Permalink to this heading">¶</a></h2>
+<dl class="py class">
+<dt class="sig sig-object py" id="swimprotocol.udp.send.UdpSend">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.udp.send.</span></span><span class="sig-name descname"><span class="pre">UdpSend</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">config</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_pack</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">thread_pool</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">send_queue</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">udp_transport</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/send.html#UdpSend"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.send.UdpSend" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference internal" href="swimprotocol.html#swimprotocol.tasks.DaemonTask" title="swimprotocol.tasks.DaemonTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">DaemonTask</span></code></a></p>
+<p>Daemon task that waits for packets on <em>send_queue</em> and sends them using
+either by UDP or – for oversized packets – establishing a TCP connection.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>config</strong> (<a class="reference internal" href="#swimprotocol.udp.config.UdpConfig" title="swimprotocol.udp.config.UdpConfig"><em>UdpConfig</em></a>) – </p></li>
+<li><p><strong>udp_pack</strong> (<a class="reference internal" href="#swimprotocol.udp.pack.UdpPack" title="swimprotocol.udp.pack.UdpPack"><em>UdpPack</em></a>) – </p></li>
+<li><p><strong>thread_pool</strong> (<em>ThreadPoolExecutor</em>) – </p></li>
+<li><p><strong>send_queue</strong> (<em>Queue</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/stdtypes.html#tuple" title="(in Python v3.11)"><em>tuple</em></a><em>[</em><a class="reference internal" href="swimprotocol.html#swimprotocol.members.Member" title="swimprotocol.members.Member"><em>Member</em></a><em>, </em><a class="reference internal" href="swimprotocol.html#swimprotocol.packet.Packet" title="swimprotocol.packet.Packet"><em>Packet</em></a><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>udp_transport</strong> (<em>DatagramTransport</em>) – </p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="swimprotocol.udp.send.UdpSend.run">
+<em class="property"><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/udp/send.html#UdpSend.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.udp.send.UdpSend.run" title="Permalink to this definition">¶</a></dt>
+<dd><p>The method to run while the context is entered. The task is
+cancelled when the context exits.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.NoReturn" title="(in Python v3.11)"><em>NoReturn</em></a></p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+</section>
 </section>
 
 
@@ -409,25 +469,18 @@ indicate that <em>data</em> was malformed or incomplete.</p>
     <h3><a href="index.html">Page contents</a></h3>
     <ul>
 <li><a class="reference internal" href="#"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a><ul>
-<li><a class="reference internal" href="#swimprotocol.udp.UdpConfig"><code class="docutils literal notranslate"><span class="pre">UdpConfig</span></code></a><ul>
-<li><a class="reference internal" href="#swimprotocol.udp.UdpConfig.add_arguments"><code class="docutils literal notranslate"><span class="pre">UdpConfig.add_arguments()</span></code></a></li>
-<li><a class="reference internal" href="#swimprotocol.udp.UdpConfig.parse_args"><code class="docutils literal notranslate"><span class="pre">UdpConfig.parse_args()</span></code></a></li>
-</ul>
-</li>
 <li><a class="reference internal" href="#swimprotocol.udp.UdpTransport"><code class="docutils literal notranslate"><span class="pre">UdpTransport</span></code></a><ul>
 <li><a class="reference internal" href="#swimprotocol.udp.UdpTransport.config_type"><code class="docutils literal notranslate"><span class="pre">UdpTransport.config_type</span></code></a></li>
 <li><a class="reference internal" href="#swimprotocol.udp.UdpTransport.bind_host"><code class="docutils literal notranslate"><span class="pre">UdpTransport.bind_host</span></code></a></li>
 <li><a class="reference internal" href="#swimprotocol.udp.UdpTransport.bind_port"><code class="docutils literal notranslate"><span class="pre">UdpTransport.bind_port</span></code></a></li>
-<li><a class="reference internal" href="#swimprotocol.udp.UdpTransport.enter"><code class="docutils literal notranslate"><span class="pre">UdpTransport.enter()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#swimprotocol.udp.UdpProtocol"><code class="docutils literal notranslate"><span class="pre">UdpProtocol</span></code></a><ul>
-<li><a class="reference internal" href="#swimprotocol.udp.UdpProtocol.datagram_received"><code class="docutils literal notranslate"><span class="pre">UdpProtocol.datagram_received()</span></code></a></li>
+<li><a class="reference internal" href="#module-swimprotocol.udp.config"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.config</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.config.UdpConfig"><code class="docutils literal notranslate"><span class="pre">UdpConfig</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.config.UdpConfig.add_arguments"><code class="docutils literal notranslate"><span class="pre">UdpConfig.add_arguments()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.udp.config.UdpConfig.parse_args"><code class="docutils literal notranslate"><span class="pre">UdpConfig.parse_args()</span></code></a></li>
 </ul>
 </li>
-<li><a class="reference internal" href="#swimprotocol.udp.TcpProtocol"><code class="docutils literal notranslate"><span class="pre">TcpProtocol</span></code></a><ul>
-<li><a class="reference internal" href="#swimprotocol.udp.TcpProtocol.data_received"><code class="docutils literal notranslate"><span class="pre">TcpProtocol.data_received()</span></code></a></li>
-<li><a class="reference internal" href="#swimprotocol.udp.TcpProtocol.connection_lost"><code class="docutils literal notranslate"><span class="pre">TcpProtocol.connection_lost()</span></code></a></li>
 </ul>
 </li>
 <li><a class="reference internal" href="#docker-services">Docker Services</a></li>
@@ -435,6 +488,29 @@ indicate that <em>data</em> was malformed or incomplete.</p>
 <li><a class="reference internal" href="#swimprotocol.udp.pack.UdpPack"><code class="docutils literal notranslate"><span class="pre">UdpPack</span></code></a><ul>
 <li><a class="reference internal" href="#swimprotocol.udp.pack.UdpPack.pack"><code class="docutils literal notranslate"><span class="pre">UdpPack.pack()</span></code></a></li>
 <li><a class="reference internal" href="#swimprotocol.udp.pack.UdpPack.unpack"><code class="docutils literal notranslate"><span class="pre">UdpPack.unpack()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.udp.protocol"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.protocol</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol"><code class="docutils literal notranslate"><span class="pre">BaseProtocol</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.BaseProtocol.handle_packet"><code class="docutils literal notranslate"><span class="pre">BaseProtocol.handle_packet()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.UdpProtocol"><code class="docutils literal notranslate"><span class="pre">UdpProtocol</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.UdpProtocol.datagram_received"><code class="docutils literal notranslate"><span class="pre">UdpProtocol.datagram_received()</span></code></a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.TcpProtocol"><code class="docutils literal notranslate"><span class="pre">TcpProtocol</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.TcpProtocol.data_received"><code class="docutils literal notranslate"><span class="pre">TcpProtocol.data_received()</span></code></a></li>
+<li><a class="reference internal" href="#swimprotocol.udp.protocol.TcpProtocol.connection_lost"><code class="docutils literal notranslate"><span class="pre">TcpProtocol.connection_lost()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a class="reference internal" href="#module-swimprotocol.udp.send"><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp.send</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.send.UdpSend"><code class="docutils literal notranslate"><span class="pre">UdpSend</span></code></a><ul>
+<li><a class="reference internal" href="#swimprotocol.udp.send.UdpSend.run"><code class="docutils literal notranslate"><span class="pre">UdpSend.run()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -501,7 +577,7 @@ indicate that <em>data</em> was malformed or incomplete.</p>
         <li class="right" >
           <a href="swimprotocol.html" title="swimprotocol"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol.udp</span></code></a></li> 
       </ul>

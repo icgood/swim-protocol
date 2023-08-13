@@ -1,0 +1,257 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>swimprotocol.udp.config &#8212; swim-protocol 0.6.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../../_static/cloud.css?v=98ea126a" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
+    
+    <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js?v=add265a1"></script>
+    <script src="../../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../../_static/sphinx_highlight.js?v=4825356b"></script>
+
+    
+    
+     
+        <script src="../../../_static/jquery.cookie.js"></script>
+    
+
+    
+     
+        <script src="../../../_static/cloud.base.js"></script>
+    
+
+    
+     
+        <script src="../../../_static/cloud.js"></script>
+    
+
+    <link rel="index" title="Index" href="../../../genindex.html" />
+    <link rel="search" title="Search" href="../../../search.html" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+  </head><body>
+    <div class="relbar-top">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../../index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../udp.html" accesskey="U">swimprotocol.udp</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.udp.config</a></li> 
+      </ul>
+    </div>
+    </div>
+  
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body" role="main">
+            
+  <h1>Source code for swimprotocol.udp.config</h1><div class="highlight"><pre>
+<span></span>
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">socket</span>
+<span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">Namespace</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">closing</span><span class="p">,</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
+
+<span class="kn">from</span> <span class="nn">..address</span> <span class="kn">import</span> <span class="n">Address</span><span class="p">,</span> <span class="n">AddressParser</span>
+<span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">BaseConfig</span><span class="p">,</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">TransientConfigError</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;UdpConfig&#39;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="UdpConfig"><a class="viewcode-back" href="../../../swimprotocol.udp.html#swimprotocol.udp.UdpConfig">[docs]</a><span class="k">class</span> <span class="nc">UdpConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements :class:`~swimprotocol.config.BaseConfig`, adding additional</span>
+<span class="sd">    configuration required for :class:`~swimprotocol.udp.UdpTransport`.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        bind_host: The hostname or IP address to bind the UDP socket. The</span>
+<span class="sd">            hostname from the *local_name* address is used by default.</span>
+<span class="sd">        bind_port: The port number to bind the UDP socket. The port from the</span>
+<span class="sd">            *local_name* address is used by default.</span>
+<span class="sd">        default_host: The hostname or IP address to connect to if an address</span>
+<span class="sd">            string does not specify a hostname, e.g. ``&#39;:1234&#39;``.</span>
+<span class="sd">        default_port: The port number to connect to if an address string does</span>
+<span class="sd">            not specify a port number, e.g. ``&#39;myhost&#39;``.</span>
+<span class="sd">        discovery: Resolve the local address as a DNS **A**/**AAAA** record</span>
+<span class="sd">            containing peers. The local IP address will also be auto-discovered</span>
+<span class="sd">            by attempting to :meth:`~socket.socket.connect` to the hostname.</span>
+<span class="sd">        kwargs: Additional keyword arguments passed to the</span>
+<span class="sd">            :class:`~swimprotocol.config.BaseConfig` constructor.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">bind_host</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">bind_port</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">default_host</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">default_port</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+                 <span class="n">discovery</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">mtu_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">,</span>
+                 <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
+            <span class="n">default_host</span><span class="o">=</span><span class="n">default_host</span><span class="p">,</span>
+            <span class="n">default_port</span><span class="o">=</span><span class="n">default_port</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">discovery</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_discover</span><span class="p">(</span><span class="n">address_parser</span><span class="p">,</span> <span class="n">kwargs</span><span class="p">)</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind_host</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">bind_host</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bind_port</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">bind_port</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">address_parser</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">address_parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtu_size</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">mtu_size</span>
+
+<div class="viewcode-block" id="UdpConfig.add_arguments"><a class="viewcode-back" href="../../../swimprotocol.udp.html#swimprotocol.udp.UdpConfig.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
+                      <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;--&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">add_arguments</span><span class="p">(</span><span class="n">parser</span><span class="p">,</span> <span class="n">prefix</span><span class="o">=</span><span class="n">prefix</span><span class="p">)</span>
+        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;swim udp options&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">udp-bind&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;INTERFACE&#39;</span><span class="p">,</span>
+                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_bind&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The bind IP address.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">udp-bind-port&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;NUM&#39;</span><span class="p">,</span>
+                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_bind_port&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The bind port.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">udp-host&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span>
+                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_host&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The default remote hostname.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">udp-port&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;NUM&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
+                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_port&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The default port number.&#39;</span><span class="p">)</span>
+        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">udp-discovery&#39;</span><span class="p">,</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;store_true&#39;</span><span class="p">,</span>
+                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_discovery&#39;</span><span class="p">,</span>
+                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Find cluster with DNS discovery.&#39;</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="UdpConfig.parse_args"><a class="viewcode-back" href="../../../swimprotocol.udp.html#swimprotocol.udp.UdpConfig.parse_args">[docs]</a>    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">parse_args</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">args</span><span class="p">:</span> <span class="n">Namespace</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">env_prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;SWIM&#39;</span><span class="p">)</span> \
+            <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+        <span class="n">kwargs</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">parse_args</span><span class="p">(</span><span class="n">args</span><span class="p">,</span> <span class="n">env_prefix</span><span class="o">=</span><span class="n">env_prefix</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">kwargs</span> <span class="o">|</span> <span class="p">{</span>
+            <span class="s1">&#39;bind_host&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_udp_bind</span><span class="p">,</span>
+            <span class="s1">&#39;bind_port&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_udp_bind_port</span><span class="p">,</span>
+            <span class="s1">&#39;default_host&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_udp_host</span><span class="p">,</span>
+            <span class="s1">&#39;default_port&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_udp_port</span><span class="p">,</span>
+            <span class="s1">&#39;discovery&#39;</span><span class="p">:</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_udp_discovery</span><span class="p">}</span></div>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_discover</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">address_parser</span><span class="p">:</span> <span class="n">AddressParser</span><span class="p">,</span>
+                  <span class="n">kwargs</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">local_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;local_name&#39;</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+        <span class="n">given_peers</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">kwargs</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="s1">&#39;peers&#39;</span><span class="p">,</span> <span class="p">[])</span>
+        <span class="k">if</span> <span class="n">local_name</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">ConfigError</span><span class="p">(</span><span class="s1">&#39;The cluster instance needs a local name.&#39;</span><span class="p">)</span>
+        <span class="n">local_addr</span> <span class="o">=</span> <span class="n">address_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">local_name</span><span class="p">)</span>
+        <span class="n">resolved</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_resolve_name</span><span class="p">(</span><span class="n">local_addr</span><span class="o">.</span><span class="n">host</span><span class="p">)</span>
+        <span class="n">local_ip</span> <span class="o">=</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_find_local_ip</span><span class="p">(</span><span class="n">local_addr</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">local_addr</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">local_ip</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">resolved</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TransientConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Invalid local IP: </span><span class="si">{</span><span class="n">local_ip</span><span class="si">!r}</span><span class="s1"> not in </span><span class="si">{</span><span class="n">resolved</span><span class="si">!r}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">resolved</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">local_ip</span><span class="p">)</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">resolved</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TransientConfigError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s1">&#39;Could not find peers: </span><span class="si">{</span><span class="n">local_addr</span><span class="o">.</span><span class="n">host</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="n">resolved_peers</span> <span class="o">=</span> <span class="p">{</span><span class="nb">str</span><span class="p">(</span><span class="n">Address</span><span class="p">(</span><span class="n">peer_ip</span><span class="p">,</span> <span class="n">local_addr</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+                          <span class="k">for</span> <span class="n">peer_ip</span> <span class="ow">in</span> <span class="n">resolved</span><span class="p">}</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;local_name&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">Address</span><span class="p">(</span><span class="n">local_ip</span><span class="p">,</span> <span class="n">local_addr</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+        <span class="n">kwargs</span><span class="p">[</span><span class="s1">&#39;peers&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">resolved_peers</span> <span class="o">|</span> <span class="nb">set</span><span class="p">(</span><span class="n">given_peers</span><span class="p">))</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_resolve_name</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">set</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ipaddrlist</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">gethostbyname_ex</span><span class="p">(</span><span class="n">hostname</span><span class="p">)</span>
+        <span class="k">except</span> <span class="ne">OSError</span> <span class="k">as</span> <span class="n">exc</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TransientConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Could not resolve name: </span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">,</span>
+                                       <span class="n">wait_hint</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span> <span class="kn">from</span> <span class="nn">exc</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">ipaddrlist</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="n">TransientConfigError</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;Name resolved empty: </span><span class="si">{</span><span class="n">hostname</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">set</span><span class="p">(</span><span class="n">ipaddrlist</span><span class="p">)</span>
+
+    <span class="nd">@classmethod</span>
+    <span class="k">def</span> <span class="nf">_find_local_ip</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">hostname</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">port</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+        <span class="n">sock</span> <span class="o">=</span> <span class="n">socket</span><span class="o">.</span><span class="n">socket</span><span class="p">(</span><span class="n">socket</span><span class="o">.</span><span class="n">AF_INET</span><span class="p">,</span> <span class="n">socket</span><span class="o">.</span><span class="n">SOCK_DGRAM</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">sock</span><span class="p">),</span> <span class="n">suppress</span><span class="p">(</span><span class="ne">OSError</span><span class="p">):</span>
+            <span class="n">sock</span><span class="o">.</span><span class="n">connect</span><span class="p">((</span><span class="n">hostname</span><span class="p">,</span> <span class="n">port</span><span class="p">))</span>
+            <span class="n">sockname</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="n">sock</span><span class="o">.</span><span class="n">getsockname</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">sockname</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+        <span class="k">return</span> <span class="kc">None</span></div>
+</pre></div>
+
+            <div class="clearer"></div>
+          </div>
+        </div>
+      </div>
+      <div class="sphinxsidebar" role="navigation" aria-label="main navigation">
+        <div class="sphinxsidebarwrapper">
+<div id="searchbox" style="display: none" role="search">
+  <h3 id="searchlabel">Quick search</h3>
+    <div class="searchformwrapper">
+    <form class="search" action="../../../search.html" method="get">
+      <input type="text" name="q" aria-labelledby="searchlabel" autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"/>
+      <input type="submit" value="Go" />
+    </form>
+    </div>
+</div>
+<script>document.getElementById('searchbox').style.display = "block"</script>
+        </div>
+      </div>
+    
+    
+        <div class="sidebar-toggle-group no-js">
+            
+            <button class="sidebar-toggle" id="sidebar-hide" title="Hide the sidebar menu">
+                 «
+                <span class="show-for-small">hide menu</span>
+                
+            </button>
+            <button class="sidebar-toggle" id="sidebar-show" title="Show the sidebar menu">
+                
+                <span class="show-for-small">menu</span>
+                <span class="hide-for-small">sidebar</span>
+                 »
+            </button>
+        </div>
+    
+      <div class="clearer"></div>
+    </div>
+    <div class="relbar-bottom">
+        
+    <div class="related" role="navigation" aria-label="related navigation">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="../../../genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="../../../py-modindex.html" title="Python Module Index"
+             >modules</a> &nbsp; &nbsp;</li>
+    <li><a href="../../../index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
+
+          <li class="nav-item nav-item-1"><a href="../../index.html" >Module code</a> &#187;</li>
+          <li class="nav-item nav-item-2"><a href="../udp.html" >swimprotocol.udp</a> &#187;</li>
+        <li class="nav-item nav-item-this"><a href="">swimprotocol.udp.config</a></li> 
+      </ul>
+    </div>
+    </div>
+
+    <div class="footer" role="contentinfo">
+    &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
+    </div>
+    <!-- cloud_sptheme 1.4 -->
+  </body>
+</html>
