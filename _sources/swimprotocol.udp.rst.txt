@@ -43,8 +43,3 @@ successful::
 -------------------------
 
 .. automodule:: swimprotocol.udp.pack
-
-``swimprotocol.udp.protocol``
------------------------------
-
-.. automodule:: swimprotocol.udp.protocol

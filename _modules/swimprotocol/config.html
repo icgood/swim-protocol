@@ -6,14 +6,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>swimprotocol.config &#8212; swim-protocol 0.4.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <title>swimprotocol.config &#8212; swim-protocol 0.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css?v=98ea126a" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
 
     
     
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.config</a></li> 
@@ -112,8 +112,8 @@
 <span class="sd">    Args:</span>
 <span class="sd">        secret: The shared secret for cluster packet signatures.</span>
 <span class="sd">        local_name: The unique name of the local cluster member.</span>
-<span class="sd">        local_metadata: The local cluster member metadata.</span>
 <span class="sd">        peers: At least one name of another known node in the cluster.</span>
+<span class="sd">        local_metadata: The initial local cluster member metadata.</span>
 <span class="sd">        ping_interval: Time between :term:`ping` attempts to random cluster</span>
 <span class="sd">            members.</span>
 <span class="sd">        ping_timeout: Time to wait for an :term:`ack` after sending a</span>
@@ -134,10 +134,12 @@
 
 <span class="sd">    &quot;&quot;&quot;</span>
 
+    <span class="n">_empty</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span> <span class="n">secret</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
                  <span class="n">local_name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-                 <span class="n">local_metadata</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">],</span>
                  <span class="n">peers</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span>
+                 <span class="n">local_metadata</span><span class="p">:</span> <span class="n">Mapping</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span> <span class="o">=</span> <span class="n">_empty</span><span class="p">,</span>
                  <span class="n">ping_interval</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">1.0</span><span class="p">,</span>
                  <span class="n">ping_timeout</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.3</span><span class="p">,</span>
                  <span class="n">ping_req_count</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1</span><span class="p">,</span>
@@ -147,8 +149,8 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_signatures</span> <span class="o">=</span> <span class="n">Signatures</span><span class="p">(</span><span class="n">secret</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">local_name</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">local_name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">local_metadata</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">local_metadata</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">peers</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">peers</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">local_metadata</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">local_metadata</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ping_interval</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_interval</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ping_timeout</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_timeout</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ping_req_count</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">ping_req_count</span>
@@ -190,10 +192,6 @@
 
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="s1">&#39;swim options&#39;</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">metadata&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_metadata&#39;</span><span class="p">,</span>
-                           <span class="n">nargs</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="p">(</span><span class="s1">&#39;KEY&#39;</span><span class="p">,</span> <span class="s1">&#39;VAL&#39;</span><span class="p">),</span>
-                           <span class="n">default</span><span class="o">=</span><span class="p">[],</span> <span class="n">action</span><span class="o">=</span><span class="s1">&#39;append&#39;</span><span class="p">,</span>
-                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;Metadata for this node.&#39;</span><span class="p">)</span>
         <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">secret&#39;</span><span class="p">,</span> <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_secret&#39;</span><span class="p">,</span>
                            <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;STRING&#39;</span><span class="p">,</span>
                            <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The secret string used to verify messages.&#39;</span><span class="p">)</span>
@@ -257,12 +255,9 @@
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="n">secret</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_secret</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="s1">&#39;SECRET&#39;</span><span class="p">)</span>
         <span class="n">local_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_name</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="s1">&#39;NAME&#39;</span><span class="p">)</span>
-        <span class="n">local_metadata</span> <span class="o">=</span> <span class="p">{</span><span class="n">key</span><span class="p">:</span> <span class="n">val</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;utf-8&#39;</span><span class="p">)</span>
-                          <span class="k">for</span> <span class="n">key</span><span class="p">,</span> <span class="n">val</span> <span class="ow">in</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_metadata</span><span class="p">}</span>
         <span class="n">peers</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">swim_peers</span> <span class="ow">or</span> <span class="bp">cls</span><span class="o">.</span><span class="n">_get_env_list</span><span class="p">(</span><span class="n">env_prefix</span><span class="p">,</span> <span class="s1">&#39;PEERS&#39;</span><span class="p">)</span>
         <span class="k">return</span> <span class="p">{</span><span class="s1">&#39;secret&#39;</span><span class="p">:</span> <span class="n">secret</span><span class="p">,</span>
                 <span class="s1">&#39;local_name&#39;</span><span class="p">:</span> <span class="n">local_name</span><span class="p">,</span>
-                <span class="s1">&#39;local_metadata&#39;</span><span class="p">:</span> <span class="n">local_metadata</span><span class="p">,</span>
                 <span class="s1">&#39;peers&#39;</span><span class="p">:</span> <span class="n">peers</span><span class="p">}</span></div>
 
 <div class="viewcode-block" id="BaseConfig.from_args"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.config.BaseConfig.from_args">[docs]</a>    <span class="nd">@final</span>
@@ -331,7 +326,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.config</a></li> 
@@ -340,8 +335,8 @@
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

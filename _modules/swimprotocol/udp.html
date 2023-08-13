@@ -6,14 +6,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>swimprotocol.udp &#8212; swim-protocol 0.4.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <title>swimprotocol.udp &#8212; swim-protocol 0.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css?v=98ea126a" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
 
     
     
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.udp</a></li> 
@@ -67,19 +67,22 @@
 <span class="kn">import</span> <span class="nn">asyncio</span>
 <span class="kn">import</span> <span class="nn">socket</span>
 <span class="kn">from</span> <span class="nn">argparse</span> <span class="kn">import</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="n">Namespace</span>
+<span class="kn">from</span> <span class="nn">asyncio</span> <span class="kn">import</span> <span class="n">Queue</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">,</span> <span class="n">DatagramTransport</span><span class="p">,</span> <span class="n">DatagramProtocol</span>
 <span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">AsyncIterator</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">asynccontextmanager</span><span class="p">,</span> <span class="n">closing</span><span class="p">,</span> <span class="n">suppress</span>
+<span class="kn">from</span> <span class="nn">concurrent.futures</span> <span class="kn">import</span> <span class="n">ThreadPoolExecutor</span>
+<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">asynccontextmanager</span><span class="p">,</span> <span class="n">closing</span><span class="p">,</span> <span class="n">suppress</span><span class="p">,</span> <span class="n">AsyncExitStack</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span>
 
-<span class="kn">from</span> <span class="nn">.protocol</span> <span class="kn">import</span> <span class="n">SwimProtocol</span>
 <span class="kn">from</span> <span class="nn">.pack</span> <span class="kn">import</span> <span class="n">UdpPack</span>
 <span class="kn">from</span> <span class="nn">..address</span> <span class="kn">import</span> <span class="n">Address</span><span class="p">,</span> <span class="n">AddressParser</span>
 <span class="kn">from</span> <span class="nn">..config</span> <span class="kn">import</span> <span class="n">BaseConfig</span><span class="p">,</span> <span class="n">ConfigError</span><span class="p">,</span> <span class="n">TransientConfigError</span>
-<span class="kn">from</span> <span class="nn">..members</span> <span class="kn">import</span> <span class="n">Members</span>
+<span class="kn">from</span> <span class="nn">..members</span> <span class="kn">import</span> <span class="n">Member</span>
+<span class="kn">from</span> <span class="nn">..packet</span> <span class="kn">import</span> <span class="n">Packet</span>
+<span class="kn">from</span> <span class="nn">..tasks</span> <span class="kn">import</span> <span class="n">Subtasks</span>
 <span class="kn">from</span> <span class="nn">..transport</span> <span class="kn">import</span> <span class="n">Transport</span>
 <span class="kn">from</span> <span class="nn">..worker</span> <span class="kn">import</span> <span class="n">Worker</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;UdpConfig&#39;</span><span class="p">,</span> <span class="s1">&#39;UdpTransport&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;UdpConfig&#39;</span><span class="p">,</span> <span class="s1">&#39;UdpTransport&#39;</span><span class="p">,</span> <span class="s1">&#39;UdpProtocol&#39;</span><span class="p">,</span> <span class="s1">&#39;TcpProtocol&#39;</span><span class="p">]</span>
 
 
 <div class="viewcode-block" id="UdpConfig"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.UdpConfig">[docs]</a><span class="k">class</span> <span class="nc">UdpConfig</span><span class="p">(</span><span class="n">BaseConfig</span><span class="p">):</span>
@@ -108,6 +111,7 @@
                  <span class="n">default_host</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">default_port</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
                  <span class="n">discovery</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span>
+                 <span class="n">mtu_size</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1500</span><span class="p">,</span>
                  <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="n">address_parser</span> <span class="o">=</span> <span class="n">AddressParser</span><span class="p">(</span>
             <span class="n">default_host</span><span class="o">=</span><span class="n">default_host</span><span class="p">,</span>
@@ -118,6 +122,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">bind_host</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">bind_host</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">bind_port</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">bind_port</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">address_parser</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">address_parser</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mtu_size</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">mtu_size</span>
 
 <div class="viewcode-block" id="UdpConfig.add_arguments"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.UdpConfig.add_arguments">[docs]</a>    <span class="nd">@classmethod</span>
     <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
@@ -239,29 +244,107 @@
         <span class="k">return</span> <span class="n">bind_port</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_local_address</span><span class="o">.</span><span class="n">port</span>
 
 <div class="viewcode-block" id="UdpTransport.enter"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.UdpTransport.enter">[docs]</a>    <span class="nd">@asynccontextmanager</span>
-    <span class="k">async</span> <span class="k">def</span> <span class="nf">enter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">members</span><span class="p">:</span> <span class="n">Members</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="n">Worker</span><span class="p">]:</span>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">enter</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">worker</span><span class="p">:</span> <span class="n">Worker</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">AsyncIterator</span><span class="p">[</span><span class="kc">None</span><span class="p">]:</span>
         <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
-        <span class="n">transport</span><span class="p">,</span> <span class="n">protocol</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_datagram_endpoint</span><span class="p">(</span>
-            <span class="k">lambda</span><span class="p">:</span> <span class="n">SwimProtocol</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">address_parser</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">udp_pack</span><span class="p">),</span>
-            <span class="n">reuse_port</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">local_addr</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind_port</span><span class="p">))</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">protocol</span><span class="p">,</span> <span class="n">SwimProtocol</span><span class="p">)</span>
-        <span class="n">worker</span> <span class="o">=</span> <span class="n">Worker</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="p">,</span> <span class="n">members</span><span class="p">,</span> <span class="n">protocol</span><span class="p">)</span>
-        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">transport</span><span class="p">):</span>
-            <span class="k">yield</span> <span class="n">worker</span></div>
+        <span class="k">async</span> <span class="k">with</span> <span class="n">AsyncExitStack</span><span class="p">()</span> <span class="k">as</span> <span class="n">exit_stack</span><span class="p">:</span>
+            <span class="n">thread_pool</span> <span class="o">=</span> <span class="n">exit_stack</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">ThreadPoolExecutor</span><span class="p">())</span>
+            <span class="n">tcp_server</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_server</span><span class="p">(</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="n">TcpProtocol</span><span class="p">(</span><span class="n">thread_pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">udp_pack</span><span class="p">,</span>
+                                    <span class="n">worker</span><span class="o">.</span><span class="n">recv_queue</span><span class="p">),</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">bind_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind_port</span><span class="p">,</span> <span class="n">reuse_port</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+            <span class="n">udp_transport</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_datagram_endpoint</span><span class="p">(</span>
+                <span class="k">lambda</span><span class="p">:</span> <span class="n">UdpProtocol</span><span class="p">(</span><span class="n">thread_pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">udp_pack</span><span class="p">,</span>
+                                    <span class="n">worker</span><span class="o">.</span><span class="n">recv_queue</span><span class="p">),</span>
+                <span class="n">reuse_port</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">local_addr</span><span class="o">=</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bind_host</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">bind_port</span><span class="p">))</span>
+            <span class="n">send_task</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">run_send</span><span class="p">(</span><span class="n">thread_pool</span><span class="p">,</span> <span class="n">worker</span><span class="o">.</span><span class="n">send_queue</span><span class="p">,</span> <span class="n">udp_transport</span><span class="p">))</span>
+            <span class="n">exit_stack</span><span class="o">.</span><span class="n">enter_context</span><span class="p">(</span><span class="n">closing</span><span class="p">(</span><span class="n">udp_transport</span><span class="p">))</span>
+            <span class="k">await</span> <span class="n">exit_stack</span><span class="o">.</span><span class="n">enter_async_context</span><span class="p">(</span><span class="n">tcp_server</span><span class="p">)</span>
+            <span class="n">exit_stack</span><span class="o">.</span><span class="n">callback</span><span class="p">(</span><span class="n">send_task</span><span class="o">.</span><span class="n">cancel</span><span class="p">)</span>
+            <span class="k">yield</span></div>
 
-    <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">add_arguments</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">parser</span><span class="p">:</span> <span class="n">ArgumentParser</span><span class="p">,</span> <span class="o">*</span><span class="p">,</span>
-                      <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s1">&#39;--udp&#39;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">group</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">add_argument_group</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s1"> options&#39;</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">-bind&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;INTERFACE&#39;</span><span class="p">,</span>
-                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_bind&#39;</span><span class="p">,</span>
-                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The bind IP address.&#39;</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">-host&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;NAME&#39;</span><span class="p">,</span>
-                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_host&#39;</span><span class="p">,</span>
-                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The default remote hostname.&#39;</span><span class="p">)</span>
-        <span class="n">group</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">prefix</span><span class="si">}</span><span class="s1">-port&#39;</span><span class="p">,</span> <span class="n">metavar</span><span class="o">=</span><span class="s1">&#39;NUM&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">,</span>
-                           <span class="n">dest</span><span class="o">=</span><span class="s1">&#39;swim_udp_port&#39;</span><span class="p">,</span>
-                           <span class="n">help</span><span class="o">=</span><span class="s1">&#39;The default port number.&#39;</span><span class="p">)</span></div>
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">run_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_pool</span><span class="p">:</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span>
+                       <span class="n">send_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">[</span><span class="nb">tuple</span><span class="p">[</span><span class="n">Member</span><span class="p">,</span> <span class="n">Packet</span><span class="p">]],</span>
+                       <span class="n">udp_transport</span><span class="p">:</span> <span class="n">DatagramTransport</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">while</span> <span class="kc">True</span><span class="p">:</span>
+            <span class="n">member</span><span class="p">,</span> <span class="n">packet</span> <span class="o">=</span> <span class="k">await</span> <span class="n">send_queue</span><span class="o">.</span><span class="n">get</span><span class="p">()</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_run_send</span><span class="p">(</span><span class="n">thread_pool</span><span class="p">,</span> <span class="n">udp_transport</span><span class="p">,</span>
+                                               <span class="n">member</span><span class="p">,</span> <span class="n">packet</span><span class="p">))</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_run_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_pool</span><span class="p">:</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span>
+                        <span class="n">udp_transport</span><span class="p">:</span> <span class="n">DatagramTransport</span><span class="p">,</span>
+                        <span class="n">member</span><span class="p">:</span> <span class="n">Member</span><span class="p">,</span> <span class="n">packet</span><span class="p">:</span> <span class="n">Packet</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="n">packet_data</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span>
+            <span class="n">thread_pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">udp_pack</span><span class="o">.</span><span class="n">pack</span><span class="p">,</span> <span class="n">packet</span><span class="p">)</span>
+        <span class="n">address</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">address_parser</span><span class="o">.</span><span class="n">parse</span><span class="p">(</span><span class="n">member</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">packet_data</span><span class="p">)</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">mtu_size</span><span class="p">:</span>
+            <span class="n">udp_transport</span><span class="o">.</span><span class="n">sendto</span><span class="p">(</span><span class="n">packet_data</span><span class="p">,</span> <span class="p">(</span><span class="n">address</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">address</span><span class="o">.</span><span class="n">port</span><span class="p">))</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">asyncio</span><span class="o">.</span><span class="n">create_task</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_tcp_send</span><span class="p">(</span><span class="n">packet_data</span><span class="p">,</span> <span class="n">address</span><span class="p">))</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_tcp_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">packet_data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">address</span><span class="p">:</span> <span class="n">Address</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="n">tcp_transport</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">create_connection</span><span class="p">(</span>
+            <span class="n">Protocol</span><span class="p">,</span> <span class="n">address</span><span class="o">.</span><span class="n">host</span><span class="p">,</span> <span class="n">address</span><span class="o">.</span><span class="n">port</span><span class="p">)</span>
+        <span class="k">with</span> <span class="n">closing</span><span class="p">(</span><span class="n">tcp_transport</span><span class="p">):</span>
+            <span class="n">tcp_transport</span><span class="o">.</span><span class="n">write</span><span class="p">(</span><span class="n">packet_data</span><span class="p">)</span></div>
+
+
+<span class="k">class</span> <span class="nc">_BaseProtocol</span><span class="p">(</span><span class="n">Subtasks</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_pool</span><span class="p">:</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">udp_pack</span><span class="p">:</span> <span class="n">UdpPack</span><span class="p">,</span>
+                 <span class="n">recv_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">[</span><span class="n">Packet</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">thread_pool</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">thread_pool</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">udp_pack</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">udp_pack</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recv_queue</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">recv_queue</span>
+
+    <span class="k">async</span> <span class="k">def</span> <span class="nf">_handle_packet</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">loop</span> <span class="o">=</span> <span class="n">asyncio</span><span class="o">.</span><span class="n">get_running_loop</span><span class="p">()</span>
+        <span class="n">packet</span> <span class="o">=</span> <span class="k">await</span> <span class="n">loop</span><span class="o">.</span><span class="n">run_in_executor</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">thread_pool</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">udp_pack</span><span class="o">.</span><span class="n">unpack</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">packet</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="k">await</span> <span class="bp">self</span><span class="o">.</span><span class="n">recv_queue</span><span class="o">.</span><span class="n">put</span><span class="p">(</span><span class="n">packet</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="UdpProtocol"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.UdpProtocol">[docs]</a><span class="k">class</span> <span class="nc">UdpProtocol</span><span class="p">(</span><span class="n">_BaseProtocol</span><span class="p">,</span> <span class="n">DatagramProtocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements :class:`~asyncio.DatagramProtocol` to receive SWIM protocol</span>
+<span class="sd">    packets by UDP.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        thread_pool: A thread pool for CPU-heavy operations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="UdpProtocol.datagram_received"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.UdpProtocol.datagram_received">[docs]</a>    <span class="k">def</span> <span class="nf">datagram_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">addr</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_subtask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_packet</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div></div>
+
+
+<div class="viewcode-block" id="TcpProtocol"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.TcpProtocol">[docs]</a><span class="k">class</span> <span class="nc">TcpProtocol</span><span class="p">(</span><span class="n">_BaseProtocol</span><span class="p">,</span> <span class="n">Protocol</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Implements :class:`~asyncio.Protocol` to receive SWIM protocol packets</span>
+<span class="sd">    by TCP.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        thread_pool: A thread pool for CPU-heavy operations.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">thread_pool</span><span class="p">:</span> <span class="n">ThreadPoolExecutor</span><span class="p">,</span> <span class="n">udp_pack</span><span class="p">:</span> <span class="n">UdpPack</span><span class="p">,</span>
+                 <span class="n">recv_queue</span><span class="p">:</span> <span class="n">Queue</span><span class="p">[</span><span class="n">Packet</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">thread_pool</span><span class="p">,</span> <span class="n">udp_pack</span><span class="p">,</span> <span class="n">recv_queue</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buf</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+
+<div class="viewcode-block" id="TcpProtocol.data_received"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.TcpProtocol.data_received">[docs]</a>    <span class="k">def</span> <span class="nf">data_received</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buf</span> <span class="o">+=</span> <span class="n">data</span></div>
+
+<div class="viewcode-block" id="TcpProtocol.connection_lost"><a class="viewcode-back" href="../../swimprotocol.udp.html#swimprotocol.udp.TcpProtocol.connection_lost">[docs]</a>    <span class="k">def</span> <span class="nf">connection_lost</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">exc</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="ne">Exception</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_buf</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_buf</span> <span class="o">=</span> <span class="nb">bytearray</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">exc</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">run_subtask</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_handle_packet</span><span class="p">(</span><span class="n">data</span><span class="p">))</span></div></div>
 </pre></div>
 
             <div class="clearer"></div>
@@ -312,7 +395,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.udp</a></li> 
@@ -321,8 +404,8 @@
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>

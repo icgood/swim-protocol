@@ -6,14 +6,14 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>swimprotocol.sign &#8212; swim-protocol 0.4.0 documentation</title>
-    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
-    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css" />
+    <title>swimprotocol.sign &#8212; swim-protocol 0.5.0 documentation</title>
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css?v=fa44fd50" />
+    <link rel="stylesheet" type="text/css" href="../../_static/cloud.css?v=98ea126a" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
-    <script src="../../_static/doctools.js"></script>
-    <script src="../../_static/sphinx_highlight.js"></script>
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js?v=3fadbb4a"></script>
+    <script src="../../_static/doctools.js?v=888ff710"></script>
+    <script src="../../_static/sphinx_highlight.js?v=4825356b"></script>
 
     
     
@@ -46,7 +46,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" accesskey="U">Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.sign</a></li> 
@@ -68,13 +68,24 @@
 <span class="kn">import</span> <span class="nn">hmac</span>
 <span class="kn">import</span> <span class="nn">secrets</span>
 <span class="kn">import</span> <span class="nn">uuid</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Final</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Union</span>
 
 <span class="kn">from</span> <span class="nn">.__about__</span> <span class="kn">import</span> <span class="n">__version__</span>
 
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Signatures&#39;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;Signature&#39;</span><span class="p">,</span> <span class="s1">&#39;Signatures&#39;</span><span class="p">]</span>
 
-<span class="n">_SigTuple</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">]</span>
+
+<div class="viewcode-block" id="Signature"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signature">[docs]</a><span class="k">class</span> <span class="nc">Signature</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A salted digest, including the salt value.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        salt: Salt used to sign *digest*.</span>
+<span class="sd">        digest: The salted digest.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">salt</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">digest</span><span class="p">:</span> <span class="nb">bytes</span></div>
 
 
 <div class="viewcode-block" id="Signatures"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures">[docs]</a><span class="k">class</span> <span class="nc">Signatures</span><span class="p">:</span>
@@ -106,7 +117,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">digest_size</span><span class="p">:</span> <span class="n">Final</span> <span class="o">=</span> <span class="n">hashlib</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">hash_name</span><span class="p">)</span><span class="o">.</span><span class="n">digest_size</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">version</span> <span class="o">=</span> <span class="n">__version__</span><span class="o">.</span><span class="n">encode</span><span class="p">(</span><span class="s1">&#39;ascii&#39;</span><span class="p">)</span> <span class="k">if</span> <span class="n">check_version</span> <span class="k">else</span> <span class="sa">b</span><span class="s1">&#39;&#39;</span>
 
-<div class="viewcode-block" id="Signatures.sign"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">_SigTuple</span><span class="p">:</span>
+<div class="viewcode-block" id="Signatures.sign"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures.sign">[docs]</a>    <span class="k">def</span> <span class="nf">sign</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Signature</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Sign the data using a new random salt, returning the salt and the</span>
 <span class="sd">        resulting digest as a tuple.</span>
 
@@ -117,9 +128,9 @@
         <span class="n">salt</span> <span class="o">=</span> <span class="n">secrets</span><span class="o">.</span><span class="n">token_bytes</span><span class="p">(</span><span class="mi">16</span><span class="p">)</span>
         <span class="n">salted_data</span> <span class="o">=</span> <span class="sa">b</span><span class="s1">&#39;</span><span class="si">%s%s%s</span><span class="s1">&#39;</span> <span class="o">%</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">version</span><span class="p">,</span> <span class="n">salt</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">digest</span> <span class="o">=</span> <span class="n">hmac</span><span class="o">.</span><span class="n">digest</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">secret</span><span class="p">,</span> <span class="n">salted_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">hash_name</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">salt</span><span class="p">,</span> <span class="n">digest</span></div>
+        <span class="k">return</span> <span class="n">Signature</span><span class="p">(</span><span class="n">salt</span><span class="p">,</span> <span class="n">digest</span><span class="p">)</span></div>
 
-<div class="viewcode-block" id="Signatures.verify"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="n">_SigTuple</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<div class="viewcode-block" id="Signatures.verify"><a class="viewcode-back" href="../../swimprotocol.html#swimprotocol.sign.Signatures.verify">[docs]</a>    <span class="k">def</span> <span class="nf">verify</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">sig</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">bytes</span><span class="p">,</span> <span class="nb">bytes</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Verify that a signature is valid for the given salt and data.</span>
 
 <span class="sd">        Args:</span>
@@ -182,7 +193,7 @@
         <li class="right" >
           <a href="../../py-modindex.html" title="Python Module Index"
              >modules</a> &nbsp; &nbsp;</li>
-    <li><a href="../../index.html">swim-protocol 0.4.0 documentation</a> &#187;</li>
+    <li><a href="../../index.html">swim-protocol 0.5.0 documentation</a> &#187;</li>
 
           <li class="nav-item nav-item-1"><a href="../index.html" >Module code</a> &#187;</li>
         <li class="nav-item nav-item-this"><a href="">swimprotocol.sign</a></li> 
@@ -191,8 +202,8 @@
     </div>
 
     <div class="footer" role="contentinfo">
-        &#169; Copyright 2023, Ian Good.
-      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.0.1.
+    &#169; Copyright 2023, Ian Good.
+      Created using <a href="https://www.sphinx-doc.org/">Sphinx</a> 7.1.2.
     </div>
     <!-- cloud_sptheme 1.4 -->
   </body>
