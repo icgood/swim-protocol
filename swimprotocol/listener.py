@@ -1,10 +1,10 @@
 
 from __future__ import annotations
 
-from abc import abstractmethod
 from asyncio import Event
 from collections.abc import Sequence
-from typing import TypeVar, Generic, Protocol, Any, NoReturn
+from typing import Callable, TypeAlias, TypeVar, Generic, Any, NoReturn
+from typing_extensions import Concatenate, ParamSpec
 from weakref import WeakKeyDictionary
 
 from .tasks import DaemonTask, TaskOwner
@@ -13,40 +13,37 @@ __all__ = ['ListenerCallback', 'CallbackPoll', 'Listener']
 
 ListenT = TypeVar('ListenT')
 ListenT_contra = TypeVar('ListenT_contra', contravariant=True)
+ListenP = ParamSpec('ListenP')
+
+#: A callable that takes the notified item.
+ListenerCallback: TypeAlias = Callable[
+    Concatenate[ListenT_contra, ListenP],
+    Any]
 
 
-class ListenerCallback(Protocol[ListenT_contra]):
-
-    @abstractmethod
-    async def __call__(self, item: ListenT_contra, /) -> Any:
-        """Called asynchronousely with the argument passed to
-        :meth:`~Listener.notify`.
-
-        Args:
-            item: The object sent to the consumers.
-
-        """
-        ...
-
-
-class CallbackPoll(Generic[ListenT], DaemonTask, TaskOwner):
+class CallbackPoll(Generic[ListenT, ListenP], DaemonTask, TaskOwner):
     """Listens for items and running the callback.
 
     """
 
     def __init__(self, listener: Listener[ListenT],
-                 callback: ListenerCallback[ListenT]) -> None:
+                 callback: ListenerCallback[ListenT, ListenP],
+                 *args: ListenP.args, **kwargs: ListenP.kwargs) -> None:
         super().__init__()
         self._listener = listener
         self._callback = callback
+        self._args = args
+        self._kwargs = kwargs
 
     async def run(self) -> NoReturn:
         listener = self._listener
         callback = self._callback
+        args = self._args
+        kwargs = self._kwargs
         while True:
             items = await listener.poll()
             for item in items:
-                self.run_subtask(callback(item))
+                self.run_subtask(callback(item, *args, **kwargs))
 
 
 class Listener(Generic[ListenT]):
@@ -62,8 +59,9 @@ class Listener(Generic[ListenT]):
         self._waiting: WeakKeyDictionary[Event, list[ListenT]] = \
             WeakKeyDictionary()
 
-    def on_notify(self, callback: ListenerCallback[ListenT]) \
-            -> CallbackPoll[ListenT]:
+    def on_notify(self, callback: ListenerCallback[ListenT, ListenP],
+                  *args: ListenP.args, **kwargs: ListenP.kwargs) \
+            -> CallbackPoll[ListenT, ListenP]:
         """Provides a context manager that causes *callback* to be called when
         a producer calls :meth:`.notify`.
 
@@ -72,7 +70,7 @@ class Listener(Generic[ListenT]):
                 argument from :meth:`.notify`.
 
         """
-        return CallbackPoll(self, callback)
+        return CallbackPoll(self, callback, *args, **kwargs)
 
     async def poll(self) -> Sequence[ListenT]:
         """Wait until :meth:`.notify` is called and return all *item* objects.

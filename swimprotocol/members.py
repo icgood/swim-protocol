@@ -81,7 +81,7 @@ class Member:
         return hash(self.name)
 
     def __repr__(self) -> str:
-        return f'Member<{self.name} {self.status.name}>'
+        return f'<Member {self.name!r} {self.status.name}>'
 
     @property
     def source(self) -> Source:

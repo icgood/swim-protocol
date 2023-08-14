@@ -66,7 +66,6 @@ async def run(transport_type: type[Transport[BaseConfig]],
     worker = Worker(config, members)
     transport = transport_type(config, worker)
     read_local = partial(_read_local, base_path, members)
-    write_member = partial(_write_member, base_path)
     read_local()
     if sys.platform != 'win32':
         loop.add_signal_handler(signal.SIGHUP, read_local)
@@ -77,7 +76,7 @@ async def run(transport_type: type[Transport[BaseConfig]],
         await stack.enter_async_context(transport)
         await stack.enter_async_context(worker)
         await stack.enter_async_context(
-            members.listener.on_notify(write_member))
+            members.listener.on_notify(_write_member, base_path))
         await done.wait()
     _cleanup(base_path, members)
     return 0
@@ -126,7 +125,7 @@ def _read_local(base_path: Path, members: Members) -> None:
     members.update(local_member, new_metadata=local_metadata)
 
 
-async def _write_member(base_path: Path, member: Member) -> None:
+async def _write_member(member: Member, base_path: Path) -> None:
     if member.local:
         return
     member_path = base_path / member.name
