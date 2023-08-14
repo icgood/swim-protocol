@@ -7,12 +7,12 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="viewport" content="width=device-width, initial-scale=1" />
 
-    <title>swimprotocol &#8212; swim-protocol 0.6.0 documentation</title>
+    <title>swimprotocol &#8212; swim-protocol 0.6.1 documentation</title>
     <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=fa44fd50" />
     <link rel="stylesheet" type="text/css" href="_static/cloud.css?v=98ea126a" />
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Noticia+Text:400,i,b,bi|Open+Sans:400,i,b,bi|Roboto+Mono:400,i,b,bi&amp;display=swap" type="text/css" />
     
-    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=add265a1"></script>
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js?v=09aae1b8"></script>
     <script src="_static/doctools.js?v=888ff710"></script>
     <script src="_static/sphinx_highlight.js?v=4825356b"></script>
 
@@ -55,7 +55,7 @@
         <li class="right" >
           <a href="intro.html" title="SWIM Introduction"
              accesskey="P">previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.6.1 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></li> 
       </ul>
@@ -290,37 +290,25 @@ to the constructor.</p>
 </section>
 <section id="module-swimprotocol.listener">
 <span id="swimprotocol-listener"></span><h2><code class="docutils literal notranslate"><span class="pre">swimprotocol.listener</span></code><a class="headerlink" href="#module-swimprotocol.listener" title="Permalink to this heading">¶</a></h2>
-<dl class="py class">
+<dl class="py data">
 <dt class="sig sig-object py" id="swimprotocol.listener.ListenerCallback">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.listener.</span></span><span class="sig-name descname"><span class="pre">ListenerCallback</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#ListenerCallback"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.ListenerCallback" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Protocol" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Protocol</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenT_contra</span></code>]</p>
-<dl class="py method">
-<dt class="sig sig-object py" id="swimprotocol.listener.ListenerCallback.__call__">
-<em class="property"><span class="pre">abstract</span><span class="w"> </span><span class="pre">async</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">__call__</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">item</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#ListenerCallback.__call__"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.ListenerCallback.__call__" title="Permalink to this definition">¶</a></dt>
-<dd><p>Called asynchronousely with the argument passed to
-<a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>item</strong> (<em>ListenT_contra</em>) – The object sent to the consumers.</p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a></p>
-</dd>
-</dl>
-</dd></dl>
-
+<span class="sig-prename descclassname"><span class="pre">swimprotocol.listener.</span></span><span class="sig-name descname"><span class="pre">ListenerCallback</span></span><a class="headerlink" href="#swimprotocol.listener.ListenerCallback" title="Permalink to this definition">¶</a></dt>
+<dd><p>A callable that takes the notified item.</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code>[[<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Concatenate</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenT_contra</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenP</span></code>]], <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><code class="xref py py-obj docutils literal notranslate"><span class="pre">Any</span></code></a>]</p>
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="swimprotocol.listener.CallbackPoll">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.listener.</span></span><span class="sig-name descname"><span class="pre">CallbackPoll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#CallbackPoll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.CallbackPoll" title="Permalink to this definition">¶</a></dt>
-<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenT</span></code>], <a class="reference internal" href="#swimprotocol.tasks.DaemonTask" title="swimprotocol.tasks.DaemonTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">DaemonTask</span></code></a>, <a class="reference internal" href="#swimprotocol.tasks.TaskOwner" title="swimprotocol.tasks.TaskOwner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaskOwner</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">swimprotocol.listener.</span></span><span class="sig-name descname"><span class="pre">CallbackPoll</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">listener</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">callback</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#CallbackPoll"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.CallbackPoll" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Generic" title="(in Python v3.11)"><code class="xref py py-class docutils literal notranslate"><span class="pre">Generic</span></code></a>[<code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenT</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">ListenP</span></code>], <a class="reference internal" href="#swimprotocol.tasks.DaemonTask" title="swimprotocol.tasks.DaemonTask"><code class="xref py py-class docutils literal notranslate"><span class="pre">DaemonTask</span></code></a>, <a class="reference internal" href="#swimprotocol.tasks.TaskOwner" title="swimprotocol.tasks.TaskOwner"><code class="xref py py-class docutils literal notranslate"><span class="pre">TaskOwner</span></code></a></p>
 <p>Listens for items and running the callback.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>listener</strong> (<a class="reference internal" href="#swimprotocol.listener.Listener" title="swimprotocol.listener.Listener"><em>Listener</em></a><em>[</em><em>ListenT</em><em>]</em>) – </p></li>
-<li><p><strong>callback</strong> (<a class="reference internal" href="#swimprotocol.listener.ListenerCallback" title="swimprotocol.listener.ListenerCallback"><em>ListenerCallback</em></a><em>[</em><em>ListenT</em><em>]</em>) – </p></li>
+<li><p><strong>callback</strong> (<em>ListenerCallback</em><em>[</em><em>ListenT</em><em>, </em><em>ListenP</em><em>]</em>) – </p></li>
+<li><p><strong>args</strong> (<em>ListenP.args</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>ListenP.kwargs</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -349,16 +337,20 @@ with <a class="reference internal" href="#swimprotocol.listener.Listener.poll" t
 </dl>
 <dl class="py method">
 <dt class="sig sig-object py" id="swimprotocol.listener.Listener.on_notify">
-<span class="sig-name descname"><span class="pre">on_notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#Listener.on_notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.Listener.on_notify" title="Permalink to this definition">¶</a></dt>
+<span class="sig-name descname"><span class="pre">on_notify</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">callback</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/swimprotocol/listener.html#Listener.on_notify"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#swimprotocol.listener.Listener.on_notify" title="Permalink to this definition">¶</a></dt>
 <dd><p>Provides a context manager that causes <em>callback</em> to be called when
 a producer calls <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>callback</strong> (<a class="reference internal" href="#swimprotocol.listener.ListenerCallback" title="swimprotocol.listener.ListenerCallback"><em>ListenerCallback</em></a><em>[</em><em>ListenT</em><em>]</em>) – The callback function, which will be passed the <em>item</em>
-argument from <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>callback</strong> (<a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Callable" title="(in Python v3.11)"><em>Callable</em></a><em>[</em><em>[</em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Concatenate" title="(in Python v3.11)"><em>Concatenate</em></a><em>[</em><em>ListenT</em><em>, </em><em>~ListenP</em><em>]</em><em>]</em><em>, </em><a class="reference external" href="https://docs.python.org/3/library/typing.html#typing.Any" title="(in Python v3.11)"><em>Any</em></a><em>]</em>) – The callback function, which will be passed the <em>item</em>
+argument from <a class="reference internal" href="#swimprotocol.listener.Listener.notify" title="swimprotocol.listener.Listener.notify"><code class="xref py py-meth docutils literal notranslate"><span class="pre">notify()</span></code></a>.</p></li>
+<li><p><strong>args</strong> (<em>~ListenP</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>~ListenP</em>) – </p></li>
+</ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.listener.CallbackPoll" title="swimprotocol.listener.CallbackPoll"><em>CallbackPoll</em></a>[<em>ListenT</em>]</p>
+<dd class="field-even"><p><a class="reference internal" href="#swimprotocol.listener.CallbackPoll" title="swimprotocol.listener.CallbackPoll"><em>CallbackPoll</em></a>[<em>ListenT</em>, ~ListenP]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -1287,10 +1279,7 @@ packets. This method calls <a class="reference internal" href="#swimprotocol.wor
 </ul>
 </li>
 <li><a class="reference internal" href="#module-swimprotocol.listener"><code class="docutils literal notranslate"><span class="pre">swimprotocol.listener</span></code></a><ul>
-<li><a class="reference internal" href="#swimprotocol.listener.ListenerCallback"><code class="docutils literal notranslate"><span class="pre">ListenerCallback</span></code></a><ul>
-<li><a class="reference internal" href="#swimprotocol.listener.ListenerCallback.__call__"><code class="docutils literal notranslate"><span class="pre">ListenerCallback.__call__()</span></code></a></li>
-</ul>
-</li>
+<li><a class="reference internal" href="#swimprotocol.listener.ListenerCallback"><code class="docutils literal notranslate"><span class="pre">ListenerCallback</span></code></a></li>
 <li><a class="reference internal" href="#swimprotocol.listener.CallbackPoll"><code class="docutils literal notranslate"><span class="pre">CallbackPoll</span></code></a><ul>
 <li><a class="reference internal" href="#swimprotocol.listener.CallbackPoll.run"><code class="docutils literal notranslate"><span class="pre">CallbackPoll.run()</span></code></a></li>
 </ul>
@@ -1483,7 +1472,7 @@ packets. This method calls <a class="reference internal" href="#swimprotocol.wor
         <li class="right" >
           <a href="intro.html" title="SWIM Introduction"
              >previous</a> &nbsp; &nbsp;</li>
-    <li><a href="index.html">swim-protocol 0.6.0 documentation</a> &#187;</li>
+    <li><a href="index.html">swim-protocol 0.6.1 documentation</a> &#187;</li>
 
         <li class="nav-item nav-item-this"><a href=""><code class="docutils literal notranslate"><span class="pre">swimprotocol</span></code></a></li> 
       </ul>
