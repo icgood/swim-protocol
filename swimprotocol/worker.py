@@ -87,16 +87,16 @@ class Worker(DaemonTask, TaskOwner):
             packet = await self.recv_queue.get()
             source = self.members.get(packet.source.name,
                                       packet.source.validity)
+            self._notify_waiting(source)
+            for target in self._get_listening(source):
+                await self._send(target, Ack(source=source.source))
+
             if isinstance(packet, Ping):
                 await self._send(source, Ack(source=local.source))
             elif isinstance(packet, PingReq):
                 target = self.members.get(packet.target)
                 await self._send(target, Ping(source=local.source))
                 self._add_listening(source, target)
-            elif isinstance(packet, Ack):
-                self._notify_waiting(source)
-                for target in self._get_listening(source):
-                    await self._send(target, packet)
             elif isinstance(packet, Gossip):
                 member = self.members.get(packet.name)
                 ack = self._apply_gossip(local, source, member, packet)
