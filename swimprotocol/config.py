@@ -100,8 +100,6 @@ class BaseConfig:
     def _validate(self) -> None:
         if not self.local_name:
             raise ConfigError('This cluster instance needs a local name.')
-        elif not self.peers:
-            raise ConfigError('At least one cluster peer name is required.')
 
     @property
     def signatures(self) -> Signatures:
