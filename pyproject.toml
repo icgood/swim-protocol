@@ -32,15 +32,15 @@ authors = [
 description = 'SWIM protocol implementation for exchanging cluster membership status and metadata.'
 license = { file = 'LICENSE.md' }
 readme = { file = 'README.md', content-type = 'text/markdown' }
-requires-python = '~=3.10'
+requires-python = '~=3.11'
 classifiers = [
     'Development Status :: 3 - Alpha',
     'Intended Audience :: Developers',
     'Intended Audience :: Information Technology',
     'License :: OSI Approved :: MIT License',
     'Programming Language :: Python',
-    'Programming Language :: Python :: 3.10',
     'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3.12',
 ]
 dependencies = ['typing-extensions']
 
@@ -120,7 +120,7 @@ run-autopep8 = 'autopep8 --exit-code -dr swimprotocol test'
 check = ['run-pytest', 'run-autopep8', 'run-mypy', 'run-ruff']
 
 [[tool.hatch.envs.all.matrix]]
-python = ['3.10', '3.11']
+python = ['3.11', '3.12']
 
 [tool.hatch.envs.doc]
 features = ['doc']
